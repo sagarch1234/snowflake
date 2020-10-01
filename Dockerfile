@@ -4,6 +4,8 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update &&\
     apt-get install python3-dev default-libmysqlclient-dev gcc  -y &&\
+    apt-get install -y libssl-dev libffi-dev &&\
+    python -m pip install --upgrade pip &&\
     mkdir /snowflake-backend
 
 WORKDIR /snowflake-backend
@@ -16,8 +18,8 @@ EXPOSE 80
 
 RUN pip install -r /requirements.txt
 
-RUN python manage.py makemigrations &&\
-    python manage.py migrate
+# RUN python manage.py makemigrations &&\
+#     python manage.py migrate
 
 # RUN python manage.py loaddata roles businesses route_status route_type order_status service_city payment_status
 

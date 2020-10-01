@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  snowflake-optimizer:
+    container_name: Snowflake-Optimizer
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/snowflake-backend
+    ports:
+      - "8080:8080"
+    expose:
+        - "8080"
+    restart: always
+    command: "python manage.py runserver 0.0.0.0:8080"
+
+      
