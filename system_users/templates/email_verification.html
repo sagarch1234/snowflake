@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html>
+    <body>  
+        <div>
+            <span class="bold">
+                Hi {{ first_name }},
+            </span>
+        </div>
+        <div class="extra-margin">
+            <p>
+                <span>
+                    Please verify your email using the OTP {{ otp }}. Your account will be activated immediately after email verficiation.
+                </span>
+            </p>
+        </div>
+        <div class="extra-margin">
+            <span><i>Thank You!</i></span>
+            <span><i>Team Product Name.</i></span>
+        </div>
+    </body>
+</html>
+
+<style>
+    div{
+        display: block;
+        margin: 10px;
+    }
+    span{
+        display: block;
+        margin: 10px;
+    }
+    .bold{
+        font-weight: bold;
+    }
+    .extra-margin{
+        margin-top: 50px;
+    }
+</style>

@@ -1,0 +1,16 @@
+[
+    {
+        "model": "django.contrib.auth.models.group",
+        "pk": 1,
+        "fields": {
+            "role_name": "Admin"
+        }
+    },
+    {
+        "model": "django.contrib.auth.models.group",
+        "pk": 2,
+        "fields": {
+            "role_name": "Member"
+        }
+    }
+]

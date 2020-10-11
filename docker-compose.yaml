@@ -1,8 +1,17 @@
 version: "3"
 
 services:
+
+  redis:
+    container_name: redis-container
+    image: "redis:latest"
+    ports: 
+      - "6379:6379"
+    restart: always
+    command: "redis-server"
+
   snowflake-optimizer:
-    container_name: Snowflake-Optimizer
+    container_name: snowflake-optimizer
     build:
       context: .
       dockerfile: Dockerfile
@@ -14,5 +23,20 @@ services:
         - "8080"
     restart: always
     command: "python manage.py runserver 0.0.0.0:8080"
+    links: 
+      - redis
+    depends_on: 
+      - celery
+
+  celery:
+    container_name: celery-container
+    build: .
+    command: "celery  -A snowflake_optimizer worker -l INFO"
+    volumes:
+      - .:/snowflake-optimizer
+    restart: always
+    links:
+      - redis
+  
 
       
