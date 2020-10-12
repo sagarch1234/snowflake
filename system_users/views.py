@@ -6,10 +6,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-from system_users.models import User
-from system_users.serializers import RegisterUserSerializer, RetriveUserProfileSerializer
+from system_users.models import User, EmailVerificationOtp
+from system_users.serializers import RegisterUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer
+from system_users.utilities import store_otp, generate_otp, verify_otp_exist
+from system_users.tasks import send_forgot_password_otp_mail
 
 from django.db import transaction
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.hashers import check_password
+
 
 
 class RegisterUserView(APIView):
@@ -62,7 +67,7 @@ class RegisterUserView(APIView):
         else:
 
             return Response({
-                "message":"Verification mail has been sent to your email " + request.data['email'] +  ". Please provide the OTP to verify your email and active your account. " ,
+                "message":"Verification mail has been sent to your email '" + request.data['email'] +  "'. Please provide the OTP to verify your email and active your account. " ,
                 "status":status.HTTP_200_OK
             })
 
@@ -105,6 +110,64 @@ class RetriveUserProfileView(RetrieveAPIView):
         return Response(serialized_data.data)
 
 
+class ActivateAccountView(APIView):
+
+    '''
+    Before login into the paltform after registeration user will have to activate his/her account by verifying the registered email address.
+    '''
+
+    def put(self, request, format=None):
+
+        '''
+        This method will take email and otp in the query parameters as shown below.
+
+        {{host/url}}/users/activate-account/?email=jpatel99967@gmail.com&otp=8898
+        
+        If the otp of the provided email is same as the otp stored in the database for the provided email then the account will be activated and user will be able to login again.
+        '''
+
+        try:
+            
+            user = User.objects.get(email=request.query_params['email'])
+
+        except User.DoesNotExist:
+            
+            return Response({
+                "error" : "User with email '" + request.query_params['email'] + "' does not exist.",
+                "status" : status.HTTP_404_NOT_FOUND
+            })
+        
+        try:
+            
+            otp_instance = EmailVerificationOtp.objects.get(user=user)
+
+        except EmailVerificationOtp.DoesNotExist:
+            
+            return Response({
+                "error" : "Email verification request was never raised for '" + request.query_params['email'] + "'.",
+                "status" : status.HTTP_400_BAD_REQUEST
+            })
+        
+        if request.query_params['otp'] == str(otp_instance.otp):
+
+            otp_instance.delete()
+
+            user.is_active = True
+            user.is_email_varified = True
+
+            user.save(update_fields=['is_active', 'is_email_varified'])            
+
+            return Response({
+                "message" : "Your account has been activated.",
+                "status" : status.HTTP_200_OK
+            })
+
+        return Response({
+            "error":"Incorrect OTP.",
+            "status":status.HTTP_400_BAD_REQUEST
+        })
+
+            
 class ChangePasswordView(APIView):
 
     '''
@@ -112,4 +175,35 @@ class ChangePasswordView(APIView):
 
     Authentication is required for this view.
     '''
-    pass
+
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, format=None):
+
+        '''
+        '''
+        user_instance = get_object_or_404(User, pk=request.user.id)
+        
+        serialized_data = ChangePasswordSerializer(user_instance, data=request.data)
+
+        if serialized_data.is_valid():
+
+            if not check_password(request.data['current_password'], user_instance.password):
+
+                return Response({
+                    "error" : "Current password is not correct.",
+                    "status" : status.HTTP_400_BAD_REQUEST
+                })
+            
+            else:
+
+                user_instance = serialized_data.save()
+
+                return Response({
+                    "message" : "Your password has been updated. Please use your new password to login.",
+                    "status" : status.HTTP_200_OK
+                })
+
+        else:
+            return Response(serialized_data.errors)
+

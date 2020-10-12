@@ -102,3 +102,24 @@ class RetriveUserProfileSerializer(serializers.ModelSerializer):
         user_group_object_list = list(obj.groups.values('id', 'name'))
 
         return user_group_object_list
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    '''
+    '''
+    current_password = serializers.CharField(max_length=255, allow_blank=False, required=True, allow_null=False)
+    new_password = serializers.CharField(max_length=255, allow_blank=False, required=True, allow_null=False)
+
+    def update(self, instance, validated_data):
+
+        validated_data.pop('current_password')
+
+        if 'new_password' in validated_data:
+            password = validated_data.pop('new_password')
+            instance.set_password(password)
+
+        instance.new_password = validated_data.get('password', instance.password)
+        
+        instance.save(update_fields=['password'])
+
+        return instance

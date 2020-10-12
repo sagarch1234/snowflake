@@ -25,10 +25,14 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     
     path('admin/', admin.site.urls),
+
     path('api-auth/', include('rest_framework.urls')),
         
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
+    path('api/password-reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
 
-    path('users/', include('system_users.urls'))
+    path('api/users/', include('system_users.urls'))
+
 ]

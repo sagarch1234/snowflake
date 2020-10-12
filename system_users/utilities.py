@@ -78,4 +78,3 @@ def store_otp(otp, user_instance):
     otp_instance = store_otp.save()
 
     return otp
-    
