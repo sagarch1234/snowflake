@@ -34,16 +34,15 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         'current_user': reset_password_token.user,
         'username': reset_password_token.user.first_name,
         'email': reset_password_token.user.email,
-        'reset_password_url': "{}{}/?token={}".format(reverse('password_reset:reset-password-request'), 'confirm', reset_password_token.key)
+        'reset_password_url': "{}?token={}".format(reverse('password_reset:reset-password-request'), reset_password_token.key)
     }
 
-    send_forgot_password_otp_mail.delay(first_name=context['username'], email=context['email'], otp = context['reset_password_url'])
+    send_forgot_password_otp_mail.delay(first_name=context['username'], email=context['email'], otp=context['reset_password_url'])
 
 
 def user_post_save(sender, instance, created, signal, *args, **kwargs):
 
     if not created:
-        print(type(kwargs['update_fields']))
         
         if kwargs['update_fields'] is None:
 

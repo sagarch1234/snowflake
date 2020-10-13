@@ -1,13 +1,32 @@
 from rest_framework import serializers
+
 from system_users.models import User, CompanyDetails
 
 from django.contrib.auth.models import Group
-
 from django.db import transaction
 
-from system_users.utilities import verify_otp_exist
 
-from rest_framework import status
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+
+class TokenObtainPairSerializer(TokenObtainPairSerializer):
+    '''
+    This serializer is used by TokenObtainPairView.
+    This serializer was created to add an extra key value pair to the login response.
+    '''
+
+    def validate(self, attrs):
+
+        data = super().validate(attrs)
+
+        refresh = self.get_token(self.user)
+
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token)
+
+        data['group'] = list(self.user.groups.values('id', 'name'))
+
+        return data
 
 
 class CompanyDetailsSerializer(serializers.ModelSerializer):
@@ -83,8 +102,8 @@ class RegisterUserSerializer(serializers.ModelSerializer):
 
 
 class RetriveUserProfileSerializer(serializers.ModelSerializer):
-
     '''
+    This serializer is to retrive user profile.
     '''
     company_name = serializers.SerializerMethodField()
     user_group = serializers.SerializerMethodField()
@@ -106,6 +125,7 @@ class RetriveUserProfileSerializer(serializers.ModelSerializer):
 
 class ChangePasswordSerializer(serializers.Serializer):
     '''
+    This serializer is for system user to update the password when they ae logged in.
     '''
     current_password = serializers.CharField(max_length=255, allow_blank=False, required=True, allow_null=False)
     new_password = serializers.CharField(max_length=255, allow_blank=False, required=True, allow_null=False)

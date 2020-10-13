@@ -6,8 +6,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
+
 from system_users.models import User, EmailVerificationOtp
-from system_users.serializers import RegisterUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer
+from system_users.serializers import RegisterUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer, TokenObtainPairSerializer
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist
 from system_users.tasks import send_forgot_password_otp_mail
 
@@ -15,6 +16,15 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import check_password
 
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+
+class TokenObtainPairView(TokenObtainPairView):
+    '''
+    This is to over ride the default serializer provided to TokenObtainPairView from simple JWT.
+    To add extra key and value ('group' = group_name) to the login response we had to create and inherite the serializer class TokenObtainPairSerializer.
+    '''
+    serializer_class = TokenObtainPairSerializer
 
 
 class RegisterUserView(APIView):
