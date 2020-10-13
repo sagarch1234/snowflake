@@ -5,7 +5,6 @@ from system_users.models import User, CompanyDetails
 from django.contrib.auth.models import Group
 from django.db import transaction
 
-
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
@@ -77,7 +76,9 @@ class RegisterUserSerializer(serializers.ModelSerializer):
                 'required' : True,
                 'allow_blank' : False,
                 'allow_null' : False,
-                'write_only': True
+                'write_only': True,
+                # 'editable':False,
+                'read_only':False
             }
         }
     
@@ -99,6 +100,26 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         user_and_group = user.groups.add(user_group)
         
         return user
+
+    def update(self, instance, validated_data):
+
+        # if 'company' in validated_data:
+            
+        #     company_data = validated_data.pop('company')
+            
+        #     company_instance = instance.company
+
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.email = validated_data.get('emai', instance.email)
+        instance.mobile_number = validated_data.get('mobile_number', instance.mobile_number)
+
+        # company_instance.company_name = company_data.get('company_name', company_instance.company_name)
+        
+        instance.save()
+        # company_instance.save()
+
+        return instance
 
 
 class RetriveUserProfileSerializer(serializers.ModelSerializer):
