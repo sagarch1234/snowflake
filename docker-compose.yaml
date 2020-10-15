@@ -25,9 +25,9 @@ services:
     command: "python manage.py runserver 0.0.0.0:8080"
     links: 
       - redis
-    depends_on: 
-      - celery
-
+    # depends_on: 
+    #   - celery
+    
   celery:
     container_name: celery-container
     build: .
@@ -37,6 +37,8 @@ services:
     restart: always
     links:
       - redis
+    depends_on: 
+      - snowflake-optimizer
   
 
       

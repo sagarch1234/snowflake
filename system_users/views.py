@@ -5,8 +5,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
 from system_users.models import User, EmailVerificationOtp
-from system_users.serializers import RegisterUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer, TokenObtainPairSerializer
-from system_users.utilities import store_otp, generate_otp, verify_otp_exist, check_request_data
+from system_users.serializers import RegisterUpdateUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer, TokenObtainPairSerializer
+from system_users.utilities import store_otp, generate_otp, verify_otp_exist, check_request_data, check_user_group
 from system_users.tasks import send_forgot_password_otp_mail
 
 from django.db import transaction, IntegrityError
@@ -48,7 +48,7 @@ class RegisterUserView(APIView):
         '''
         '''
 
-        serialized_data = RegisterUserSerializer(data=request.data)
+        serialized_data = RegisterUpdateUserSerializer(data=request.data)
 
         if serialized_data.is_valid():
 
@@ -229,46 +229,33 @@ class UpdateProfile(APIView):
 
     '''
     This view will updated user profile information.
+
+    The following profile information can be updated.
     
     {
         "first_name": "Jeet",
         "last_name": "Patel",
         "mobile_number": 97651367798,
         "email": "jpatel99967@gmail.com",
-        "password": "123456",
-        "company": {
-            "company_name": "Hydrabad Inc"
-        }
     }
     '''
 
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        '''
+        '''
 
         return User.objects.get(pk=self.request.user.id)
 
     def put(self, request, format=None):
-
-        # data_checked = check_request_data(data=request.data)
-
-        # print("here 1")
-
-        # if data_checked['status'] == status.HTTP_400_BAD_REQUEST:
-
-        #     print(data_checked)
-
-        #     return data_checked
-        
-        # print(data_checked)
+        '''
+        '''
 
         queryset = self.get_queryset()
-        serialized_data = RegisterUserSerializer(queryset, data=request.data, partial=True)
-        # print(serialized_data)
+        serialized_data = RegisterUpdateUserSerializer(queryset, data=request.data, partial=True)
 
         if serialized_data.is_valid():
-
-            # print(serialized_data)
 
             try:
         
@@ -290,5 +277,28 @@ class UpdateProfile(APIView):
             return Response(serialized_data.errors)
         
         
+class InviteMemberView(APIView):
+    '''
+    '''
+    def post(self, resquest, format=None):
+        '''
+        '''
+        pass
 
 
+class UpdateUserGroup(APIView):
+    '''
+    '''
+    def post(self, request, format=None):
+        '''
+        '''
+        pass
+
+
+class UpdateCompanyDetaisView(APIView):
+    '''
+    '''
+    def post(self, request, format=None):
+        '''
+        '''
+        pass

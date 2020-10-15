@@ -6,6 +6,8 @@ import string
 
 from rest_framework import status
 
+# from .models import EmailVerificationOtp, User
+
 
 def generate_password():
 
@@ -82,6 +84,9 @@ def store_otp(otp, user_instance):
 
 
 def check_request_data(data):
+    '''
+    Not in use
+    '''
 
     if data is None:
 
@@ -94,3 +99,14 @@ def check_request_data(data):
             "message" : "Valid data.",
             "status" : status.HTTP_400_BAD_REQUEST
         }
+
+
+def check_user_group(group_name, group_list):
+    '''
+    Not in use
+    '''
+
+    for group in group_list:
+        if group['name'] == group_name:
+            return True
+    return False

@@ -5,5 +5,5 @@ import dotenv
 def load_env():
     "Get the path to the .env file and load it."
     project_dir = dirname(dirname(__file__))
+    # project_dir = r'..'
     dotenv.read_dotenv(join(project_dir, '.env'))
-    # load_dotenv(dotenv_path)

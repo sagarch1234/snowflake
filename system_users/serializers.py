@@ -8,6 +8,12 @@ from django.db import transaction
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
+class UpdateCompanyDetailsSerializer(serializers.ModelSerializer):
+    '''
+    '''
+    pass
+
+
 class TokenObtainPairSerializer(TokenObtainPairSerializer):
     '''
     This serializer is used by TokenObtainPairView.
@@ -44,7 +50,7 @@ class CompanyDetailsSerializer(serializers.ModelSerializer):
         }
 
 
-class RegisterUserSerializer(serializers.ModelSerializer):
+class RegisterUpdateUserSerializer(serializers.ModelSerializer):
     '''
     This serializer is for Register User view.
     '''
