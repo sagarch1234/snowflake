@@ -117,7 +117,7 @@ class RegisterUpdateUserSerializer(serializers.ModelSerializer):
 
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
-        instance.email = validated_data.get('emai', instance.email)
+        instance.email = validated_data.get('email', instance.email)
         instance.mobile_number = validated_data.get('mobile_number', instance.mobile_number)
 
         # company_instance.company_name = company_data.get('company_name', company_instance.company_name)
@@ -175,15 +175,22 @@ class ChangePasswordSerializer(serializers.Serializer):
 class InvitedMemberSerializer(serializers.ModelSerializer):
     '''
     '''
+    
+    invited_by = serializers.SerializerMethodField()
+
     class Meta:
         model = InvitedMembers
-        fields = ['email', 'is_onboarded']
+        fields = ['email', 'is_onboarded', 'token', 'invited_by']
         extra_kwargs = {
-            'is_onboarded' : {
-                'read_only' : True
-            },
             'email' : {
                 'required' : True
+            },
+            'token' : {
+                'required' : True,
+                'write_only' : True
             }
         }
-        
+    
+    def get_invited_by(self, obj):
+
+        return obj.first_name + obj.last_name,

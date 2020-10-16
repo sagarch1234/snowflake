@@ -9,6 +9,30 @@ import os
 
 
 @app.task
+def send_member_invite_mail(organisation_name, email, token, invited_by):
+
+    template = 'member_invite.html'
+
+    subject =  'You have been invited to join Snowflake Optimizer.'
+
+    body = render_to_string(
+        template, {
+            'organisation_name' : organisation_name,
+            'end_point' : "127.0.0.1:8080/api/users/invite-member/" + token,
+            'invited_by' : invited_by 
+        }
+    )
+
+    plain_body = strip_tags(body)
+
+    sender = os.environ.get('EMAIL_HOST_USER')
+
+    to = email
+
+    mail_status = send_mail(subject, plain_body, sender, [to], html_message=body, fail_silently=False,)
+
+
+@app.task
 def send_email_verification_mail(first_name, otp, email):
 
     template = 'email_verification.html'
@@ -17,7 +41,7 @@ def send_email_verification_mail(first_name, otp, email):
 
     body = render_to_string(
         template, {
-            'fist_name' : first_name,
+            'first_name' : first_name,
             'otp' : otp
         }
     )
@@ -40,7 +64,7 @@ def send_account_activation_mail(first_name, email):
 
     body = render_to_string(
         template, {
-            'fist_name' : first_name
+            'first_name' : first_name
         }
     )
 
@@ -62,7 +86,7 @@ def send_password_updated_mail(first_name, email):
 
     body = render_to_string(
         template, {
-            'fist_name' : first_name
+            'first_name' : first_name
             }
     )
 
@@ -84,7 +108,7 @@ def send_forgot_password_otp_mail(first_name, otp, email):
 
     body = render_to_string(
         template, {
-            'fist_name' : first_name,
+            'first_name' : first_name,
             'otp' : otp
         }
     )

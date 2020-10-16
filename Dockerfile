@@ -23,18 +23,18 @@ ENV DATABASE_HOST=34.71.45.17
 ENV DATABASE_PORT=3306
 
 ENV EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
-ENV EMAIL_HOST=smtp.gmail.com
+ENV EMAIL_HOST=smtp.office365.com
 ENV EMAIL_PORT=587
 ENV EMAIL_USE_TLS=True
 
-ENV EMAIL_HOST_USER=dropoff.manager@gmail.com
-ENV EMAIL_HOST_PASSWORD=dropoff@123
+ENV EMAIL_HOST_USER=SnowflakeOptimizer@emphasistech.net
+ENV EMAIL_HOST_PASSWORD=Sn0wFl@k3
 
 RUN pip install -r /requirements.txt
 
 RUN pip install -U "celery[redis]"
 
-# RUN python manage.py makemigrations &&\
-#     python manage.py migrate
+RUN python manage.py makemigrations &&\
+    python manage.py migrate
     
 CMD [ "python", "manage.py", "runserver", "0.0.0.0:80"]

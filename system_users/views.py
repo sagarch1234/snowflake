@@ -289,17 +289,23 @@ class InviteMemberView(APIView):
     def post(self, request, format=None):
         '''
         '''
+        encoded_jwt = jwt.encode({
+            'company_name':request.user.company.id,
+            'email': request.data['email'],
+            'exp' : time.time() + 10080}, SECRET_KEY, algorithm='HS256').decode('utf-8')
+
+        request.data['token'] = encoded_jwt
+
+        print(encoded_jwt)
+
         serialized_data = InvitedMemberSerializer(data=request.data)
 
         if serialized_data.is_valid():
 
-            encoded_jwt = jwt.encode({
-            'company_name':request.user.company.id,
-            'email': request.data['email'],
-            'exp' : time() + 10080}, SECRET_KEY, algorithm='HS256').decode('utf-8')
+            serialized_data.validated_data['invited_by'] = request.user
 
-            print(encoded_jwt)
-
+            print("serialized_data", serialized_data)
+            
             invite_instance = serialized_data.save()
 
             return Response({
