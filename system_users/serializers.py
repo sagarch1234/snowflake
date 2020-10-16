@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from system_users.models import User, CompanyDetails
+from system_users.models import User, CompanyDetails, InvitedMembers
 
 from django.contrib.auth.models import Group
 from django.db import transaction
@@ -170,3 +170,20 @@ class ChangePasswordSerializer(serializers.Serializer):
         instance.save(update_fields=['password'])
 
         return instance
+
+
+class InvitedMemberSerializer(serializers.ModelSerializer):
+    '''
+    '''
+    class Meta:
+        model = InvitedMembers
+        fields = ['email', 'is_onboarded']
+        extra_kwargs = {
+            'is_onboarded' : {
+                'read_only' : True
+            },
+            'email' : {
+                'required' : True
+            }
+        }
+        

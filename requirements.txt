@@ -40,3 +40,4 @@ redis==3.5.3
 # celery[redis]==5.0.0
 django-dotenv==1.4.2
 django-rest-passwordreset==1.1.0
+PyJWT==1.7.1

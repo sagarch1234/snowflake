@@ -76,4 +76,9 @@ class EmailVerificationOtp(BaseModel):
     def __str__(self):
 
         return 'EmailVerificationOtp Object ({})'.format(self.id)
-        
+
+class InvitedMembers(BaseModel):
+    '''
+    '''
+    email = models.EmailField(max_length=255, blank=False, unique= True)
+    is_onboarded = models.BooleanField(default=False, blank=False, null=False)

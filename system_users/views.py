@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
 from system_users.models import User, EmailVerificationOtp
-from system_users.serializers import RegisterUpdateUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer, TokenObtainPairSerializer
+from system_users.serializers import RegisterUpdateUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer, TokenObtainPairSerializer, InvitedMemberSerializer
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist, check_request_data, check_user_group
 from system_users.tasks import send_forgot_password_otp_mail
 
@@ -14,6 +14,10 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.hashers import check_password
 
 from rest_framework_simplejwt.views import TokenObtainPairView
+
+from snowflake_optimizer.settings import SECRET_KEY
+
+import jwt, time
 
 
 class TokenObtainPairView(TokenObtainPairView):
@@ -280,10 +284,33 @@ class UpdateProfile(APIView):
 class InviteMemberView(APIView):
     '''
     '''
-    def post(self, resquest, format=None):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, format=None):
         '''
         '''
-        pass
+        serialized_data = InvitedMemberSerializer(data=request.data)
+
+        if serialized_data.is_valid():
+
+            encoded_jwt = jwt.encode({
+            'company_name':request.user.company.id,
+            'email': request.data['email'],
+            'exp' : time() + 10080}, SECRET_KEY, algorithm='HS256').decode('utf-8')
+
+            print(encoded_jwt)
+
+            invite_instance = serialized_data.save()
+
+            return Response({
+                "message":"Invite Sent.",
+                "status" : status.HTTP_200_OK
+            })
+
+        else:
+
+            return Response(serialized_data.errors)
+
 
 
 class UpdateUserGroup(APIView):
