@@ -1,11 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.generics import  RetrieveAPIView
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 
 from system_users.models import User, EmailVerificationOtp
-from system_users.serializers import RegisterUpdateUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer, TokenObtainPairSerializer, InvitedMemberSerializer
+from system_users.serializers import RegisterUpdateUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer, TokenObtainPairSerializer, InvitedMemberSerializer, RegisterInvitedUserSerializer
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist, check_request_data, check_user_group
 from system_users.tasks import send_forgot_password_otp_mail
 
@@ -18,6 +18,86 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from snowflake_optimizer.settings import SECRET_KEY
 
 import jwt, time
+
+
+class RegisterInvitedMember(APIView):
+    '''
+    This view is to onboard invited users.
+
+    sample JSON -
+
+    {
+        "first_name": "Sagar",
+        "last_name": "Patel",
+        "mobile_number": 9765136448,
+        "password": "123456"
+    }
+
+    This view also need a query parameter 'token' to onboard the invited user.
+    '''
+
+    def post(self, request, format=None):
+        '''
+        '''
+        serialized_data = RegisterInvitedUserSerializer(data=request.data)
+
+        if serialized_data.is_valid():
+
+            try:
+                
+                decoded_jwt = jwt.decode(request.query_params['token'], SECRET_KEY, algorithms=['HS256'])
+
+            except ExpiredSignatureError as expired:
+                
+                return Response({
+                    "error" : "Invite has expired",
+                    "status" : status.HTTP_406_NOT_ACCEPTABLE
+                })
+            
+            except InvalidSignatureError as invalid:
+                return Response({
+                    "error" : "Invite token Invalid.",
+                    "status" : status.HTTP_406_NOT_ACCEPTABLE
+                })
+
+            serialized_data.validated_data['is_mobile_number_verified'] = False
+            serialized_data.validated_data['is_email_varified'] = True
+            serialized_data.validated_data['is_active'] = True
+            
+            serialized_data.validated_data['company'] = decoded_jwt['company_name']
+            serialized_data.validated_data['email'] = decoded_jwt['email']
+
+            serialized_data.validated_data['user_group'] = 'Organisation Member'
+
+            try:
+            
+                user = serialized_data.save()
+            
+            except IntegrityError as error:
+
+                return Response ({
+                    "error": str(error),
+                    "status": status.HTTP_226_IM_USED
+                    })
+            
+        
+        else:
+        
+            return Response(serialized_data.errors)
+
+        if user == None:
+
+            return Response({
+                "message" : "Oppsss.. something went wrong.",
+                "status" : status.HTTP_409_CONFLICT
+            })
+
+        else:
+
+            return Response({
+                "message":"Your account has been created and activated." ,
+                "status":status.HTTP_200_OK
+            })
 
 
 class TokenObtainPairView(TokenObtainPairView):
@@ -289,43 +369,88 @@ class InviteMemberView(APIView):
     def post(self, request, format=None):
         '''
         '''
-        encoded_jwt = jwt.encode({
-            'company_name':request.user.company.id,
-            'email': request.data['email'],
-            'exp' : time.time() + 10080}, SECRET_KEY, algorithm='HS256').decode('utf-8')
-
-        request.data['token'] = encoded_jwt
-
-        print(encoded_jwt)
-
-        serialized_data = InvitedMemberSerializer(data=request.data)
-
-        if serialized_data.is_valid():
-
-            serialized_data.validated_data['invited_by'] = request.user
-
-            print("serialized_data", serialized_data)
+        try:
             
-            invite_instance = serialized_data.save()
+            user_existance = User.objects.get(email=request.data['email'])
 
+        except User.DoesNotExist:
+            
+            encoded_jwt = jwt.encode({
+                'company_name':request.user.company.company_name,
+                'email': request.data['email'],
+                'exp' : time.time() + 10080}, SECRET_KEY, algorithm='HS256').decode('utf-8')
+
+            request.data['token'] = encoded_jwt
+
+            serialized_data = InvitedMemberSerializer(data=request.data)
+
+            if serialized_data.is_valid():
+
+                serialized_data.validated_data['invited_by'] = request.user
+                    
+                invit_instance = serialized_data.save()
+
+                return Response({
+                    "message":"Invite Sent.",
+                    "status" : status.HTTP_200_OK
+                })
+
+            else:
+
+                return Response(serialized_data.errors)
+
+        if not user_existance is None:
+            
             return Response({
-                "message":"Invite Sent.",
-                "status" : status.HTTP_200_OK
+                "error" : "User already associated with this email address.",
+                "status" : status.HTTP_400_BAD_REQUEST
+            })
+        
+
+class VerifyInviteView(APIView):
+    '''
+    This view is to verify the invite token.
+    It need only one query_parameter - `token`
+    No request body is required.
+    '''
+    def post(self, request, format=None):
+        '''
+        '''
+        try:
+            
+            decoded_jwt = jwt.decode(request.query_params['token'], SECRET_KEY, algorithms=['HS256'])
+
+        except ExpiredSignatureError as expired:
+            
+            return Response({
+                "error" : "Invite has expired",
+                "status" : status.HTTP_406_NOT_ACCEPTABLE
+            })
+        
+        except InvalidSignatureError as invalid:
+        
+            return Response({
+                "error" : "Invite token Invalid.",
+                "status" : status.HTTP_406_NOT_ACCEPTABLE
             })
 
-        else:
+        return Response({
+            "message" : "Invite Validated.",
+            "status" : status.HTTP_202_ACCEPTED
+        })
 
-            return Response(serialized_data.errors)
 
-
-
-class UpdateUserGroup(APIView):
+class ResendInviteView(APIView):
     '''
     '''
     def post(self, request, format=None):
         '''
         '''
         pass
+
+
+class ResendForgotPasswordVerificationView(APIView):
+    pass
 
 
 class UpdateCompanyDetaisView(APIView):

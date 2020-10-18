@@ -77,6 +77,7 @@ class EmailVerificationOtp(BaseModel):
 
         return 'EmailVerificationOtp Object ({})'.format(self.id)
 
+
 class InvitedMembers(BaseModel):
     '''
     '''

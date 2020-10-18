@@ -14,7 +14,6 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
 
-import socket
 
 def invited_member_post_save(sender, instance, created, signal, *args, **kwargs):
 
@@ -66,17 +65,25 @@ def user_post_save(sender, instance, created, signal, *args, **kwargs):
 
     if created:
 
-        otp_exist = verify_otp_exist(instance.id)
+        if instance.is_email_varified:
 
-        if otp_exist['status'] == status.HTTP_404_NOT_FOUND:
+            print("user is of type Organisation Member.")
 
-            otp = store_otp(otp = generate_otp(), user_instance = instance)
-
-        elif otp_exist['status'] == status.HTTP_302_FOUND:
-
-            otp = otp_exist['otp']
+            send_account_activation_mail.delay(first_name=instance.first_name, email=instance.email)
         
-        send_email_verification_mail.delay(first_name=instance.first_name, otp=otp, email=instance.email)
+        else:
+
+            otp_exist = verify_otp_exist(instance.id)
+
+            if otp_exist['status'] == status.HTTP_404_NOT_FOUND:
+
+                otp = store_otp(otp = generate_otp(), user_instance = instance)
+
+            elif otp_exist['status'] == status.HTTP_302_FOUND:
+
+                otp = otp_exist['otp']
+                
+            send_email_verification_mail.delay(first_name=instance.first_name, otp=otp, email=instance.email)
 
         
             
