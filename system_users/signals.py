@@ -18,7 +18,7 @@ from django_rest_passwordreset.signals import reset_password_token_created
 def invited_member_post_save(sender, instance, created, signal, *args, **kwargs):
 
     if created:
-        invited_by = instance.invited_by.first_name + instance.invited_by.last_name
+        invited_by = instance.invited_by.first_name + ' ' + instance.invited_by.last_name
         send_member_invite_mail.delay(organisation_name=instance.invited_by.company.company_name, token=instance.token, email=instance.email, invited_by=invited_by)
 
 
@@ -39,7 +39,7 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         'current_user': reset_password_token.user,
         'username': reset_password_token.user.first_name,
         'email': reset_password_token.user.email,
-        'reset_password_url': "{}?token={}".format(reverse('password_reset:reset-password-request'), reset_password_token.key)
+        'reset_password_url': "{}".format(reset_password_token.key)
     }
 
     send_forgot_password_otp_mail.delay(first_name=context['username'], email=context['email'], otp=context['reset_password_url'])
@@ -67,7 +67,7 @@ def user_post_save(sender, instance, created, signal, *args, **kwargs):
 
         if instance.is_email_varified:
 
-            print("user is of type Organisation Member.")
+            print("User is of type Organisation Member.")
 
             send_account_activation_mail.delay(first_name=instance.first_name, email=instance.email)
         

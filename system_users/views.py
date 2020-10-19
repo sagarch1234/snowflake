@@ -8,6 +8,8 @@ from system_users.models import User, EmailVerificationOtp
 from system_users.serializers import RegisterUpdateUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer, TokenObtainPairSerializer, InvitedMemberSerializer, RegisterInvitedUserSerializer
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist, check_request_data, check_user_group
 from system_users.tasks import send_forgot_password_otp_mail
+from system_users.permissions import IsInviteOwner
+from system_users.constants import ORGANISATION_MEMBER, SUOER_ADMIN
 
 from django.db import transaction, IntegrityError
 from django.shortcuts import get_object_or_404, render
@@ -67,7 +69,7 @@ class RegisterInvitedMember(APIView):
             serialized_data.validated_data['company'] = decoded_jwt['company_name']
             serialized_data.validated_data['email'] = decoded_jwt['email']
 
-            serialized_data.validated_data['user_group'] = 'Organisation Member'
+            serialized_data.validated_data['user_group'] = ORGANISATION_MEMBER
 
             try:
             
@@ -140,7 +142,7 @@ class RegisterUserView(APIView):
             serialized_data.validated_data['is_email_varified'] = False
             serialized_data.validated_data['is_active'] = False
 
-            serialized_data.validated_data['user_group'] = 'Super Admin'
+            serialized_data.validated_data['user_group'] = SUOER_ADMIN
 
             try:
             
@@ -309,7 +311,7 @@ class ChangePasswordView(APIView):
             return Response(serialized_data.errors)
 
 
-class UpdateProfile(APIView):
+class UpdateProfileView(APIView):
 
     '''
     This view will updated user profile information.
@@ -388,7 +390,7 @@ class InviteMemberView(APIView):
 
                 serialized_data.validated_data['invited_by'] = request.user
                     
-                invit_instance = serialized_data.save()
+                invite_instance = serialized_data.save()
 
                 return Response({
                     "message":"Invite Sent.",
@@ -442,15 +444,25 @@ class VerifyInviteView(APIView):
 
 class ResendInviteView(APIView):
     '''
+    This view will regenerate token, update it into the InvitedMembers model and resend member invite mail. 
+
+    This view require a query_params as invite_id.
     '''
+    permission_classes = [IsAuthenticated & IsInviteOwner]
+
     def post(self, request, format=None):
         '''
         '''
-        pass
+        try:
+        
+            invited_member_obj = InvitedMembers.objects.get(pk=request.query_params['invite_id'])
 
-
-class ResendForgotPasswordVerificationView(APIView):
-    pass
+        except InvitedMembers.DoesNotExist:
+            
+            return Response({
+                "error" : "Invite was never sent to the provided email.",
+                "status" : status.HTTP_404_NOT_FOUND
+            })
 
 
 class UpdateCompanyDetaisView(APIView):
