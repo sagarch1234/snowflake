@@ -1,5 +1,8 @@
 from django.urls import path, include
-from system_users.views import RegisterUserView, RetriveUserProfileView, ActivateAccountView, ChangePasswordView, UpdateProfileView, InviteMemberView, VerifyInviteView, RegisterInvitedMember, ResendInviteView
+from system_users.views import (
+    RegisterUserView, RetriveUserProfileView, ActivateAccountView, ChangePasswordView, UpdateProfileView,
+    InviteMemberView, VerifyInviteView, RegisterInvitedMember, ResendInviteView, ListInvitedMembers
+    )
 
 urlpatterns = [
     path('register/', RegisterUserView.as_view()),
@@ -10,5 +13,6 @@ urlpatterns = [
     path('invite-member/', InviteMemberView.as_view()),
     path('verify-invite/', VerifyInviteView.as_view()),
     path('register-invited-member/', RegisterInvitedMember.as_view()),
-    path('resend-invite/', ResendInviteView.as_view())
+    path('resend-invite/', ResendInviteView.as_view()),
+    path('list-invited-members/', ListInvitedMembers.as_view())
 ]

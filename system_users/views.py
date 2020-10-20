@@ -1,11 +1,16 @@
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.generics import  RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 
 from system_users.models import User, EmailVerificationOtp, InvitedMembers
-from system_users.serializers import RegisterUpdateUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer, TokenObtainPairSerializer, InvitedMemberSerializer, RegisterInvitedUserSerializer
+from system_users.serializers import (
+    RegisterUpdateUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer, TokenObtainPairSerializer, InvitedMemberSerializer,
+    RegisterInvitedUserSerializer)
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist, check_request_data, check_user_group
 from system_users.tasks import send_forgot_password_otp_mail
 from system_users.permissions import IsInviteOwner
@@ -14,6 +19,7 @@ from system_users.constants import ORGANISATION_MEMBER, SUOER_ADMIN
 from django.db import transaction, IntegrityError
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.hashers import check_password
+from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -528,3 +534,19 @@ class UpdateCompanyDetaisView(APIView):
         '''
         '''
         pass
+
+
+class ListInvitedMembers(ListAPIView):
+    '''
+    '''
+    permission_classes = [IsAuthenticated]
+    
+    serializer_class = InvitedMemberSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filterset_fields = ['is_onboarded']
+    ordering=['-id']
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        queryset = InvitedMembers.objects.filter(invited_by=self.request.user)
+        return queryset

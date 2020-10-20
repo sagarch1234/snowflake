@@ -247,9 +247,15 @@ class InvitedMemberSerializer(serializers.ModelSerializer):
     
     def get_invited_by(self, obj):
 
-        return obj.first_name + obj.last_name,
+        invited_by = {
+            'name' : obj.invited_by.first_name + ' ' + obj.invited_by.last_name,
+        }
+
+        return invited_by
     
     def update(self, instance, validated_data):
         instance.token = validated_data.get('token', instance.token)
         instance.save(update_fields=['token'])
         return instance
+
+    

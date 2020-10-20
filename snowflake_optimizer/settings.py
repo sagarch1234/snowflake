@@ -57,7 +57,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 CORS_ORIGIN_ALLOW_ALL = True
 
 
@@ -81,12 +80,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'snowflake_optimizer.wsgi.application'
 
-REST_FRAMEWORK = {
+# REST_FRAMEWORK = {
     
-    'DEFAULT_AUTHENTICATION_CLASSES': (   
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
-}
+#     'DEFAULT_AUTHENTICATION_CLASSES': (   
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     )
+#     'DEFAULT_FILTER_BACKENDS': 'django_filters.rest_framework.DjangoFilterBackend',
+#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+#     'PAGE_SIZE': 16,
+# }
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework_simplejwt.authentication.JWTAuthentication'],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 16,
+    }
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
