@@ -17,4 +17,5 @@ INVITE_MEMBER = 'You have been invited to join Snowflake Optimizer.'
 
 #user group
 ORGANISATION_MEMBER = 'Organisation Member'
-SUOER_ADMIN = 'Super Admin'
+SUPER_ADMIN = 'Super Admin'
+ORGANISATION_MEMBER = 'Organisation Admin'

@@ -14,9 +14,13 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
 
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
 
 def invited_member_post_save(sender, instance, created, signal, *args, **kwargs):
-    print("here 1")
 
     if created:
         invited_by = instance.invited_by.first_name + ' ' + instance.invited_by.last_name
@@ -24,14 +28,12 @@ def invited_member_post_save(sender, instance, created, signal, *args, **kwargs)
     
     if not created:
 
-        print("here 2")
-
         if kwargs['update_fields'] is None:
 
             print('No updated fields.')
+            logger.warning('No updated fields.')
     
         elif 'token' in kwargs['update_fields']:
-            print("here 3")
 
             invited_by = instance.invited_by.first_name + ' ' + instance.invited_by.last_name
             send_member_invite_mail.delay(organisation_name=instance.invited_by.company.company_name, token=instance.token, email=instance.email, invited_by=invited_by)

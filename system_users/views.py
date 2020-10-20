@@ -13,8 +13,8 @@ from system_users.serializers import (
     RegisterInvitedUserSerializer)
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist, check_request_data, check_user_group
 from system_users.tasks import send_forgot_password_otp_mail
-from system_users.permissions import IsInviteOwner
-from system_users.constants import ORGANISATION_MEMBER, SUOER_ADMIN
+from system_users.permissions import IsInviteOwner, WhitelistCompanyAdmin
+from system_users.constants import ORGANISATION_MEMBER, ORGANISATION_MEMBER
 
 from django.db import transaction, IntegrityError
 from django.shortcuts import get_object_or_404, render
@@ -167,7 +167,7 @@ class RegisterUserView(APIView):
             serialized_data.validated_data['is_email_varified'] = False
             serialized_data.validated_data['is_active'] = False
 
-            serialized_data.validated_data['user_group'] = SUOER_ADMIN
+            serialized_data.validated_data['user_group'] = ORGANISATION_MEMBER
 
             try:
             
@@ -539,7 +539,7 @@ class UpdateCompanyDetaisView(APIView):
 class ListInvitedMembers(ListAPIView):
     '''
     '''
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated & WhitelistCompanyAdmin]
     
     serializer_class = InvitedMemberSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
@@ -550,3 +550,7 @@ class ListInvitedMembers(ListAPIView):
     def get_queryset(self):
         queryset = InvitedMembers.objects.filter(invited_by=self.request.user)
         return queryset
+
+
+class ListCompanyUsers(ListAPIView):
+    pass
