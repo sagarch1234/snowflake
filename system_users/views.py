@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
-from system_users.models import User, EmailVerificationOtp
+from system_users.models import User, EmailVerificationOtp, InvitedMembers
 from system_users.serializers import RegisterUpdateUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer, TokenObtainPairSerializer, InvitedMemberSerializer, RegisterInvitedUserSerializer
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist, check_request_data, check_user_group
 from system_users.tasks import send_forgot_password_otp_mail
@@ -41,6 +41,25 @@ class RegisterInvitedMember(APIView):
     def post(self, request, format=None):
         '''
         '''
+        
+        try:
+            
+            invited_member_obj = InvitedMembers.objects.get(token=request.query_params['token'])
+
+        except InvitedMembers.DoesNotExist:
+            
+            return Response({
+                "error" : "Invite not found.",
+                "status" : status.HTTP_400_BAD_REQUEST
+            })
+        
+        if invited_member_obj.is_onboarded == True:
+
+            return Response({
+                "error" : "You account has already been created.",
+                "status" : status.HTTP_400_BAD_REQUEST
+            })
+
         serialized_data = RegisterInvitedUserSerializer(data=request.data)
 
         if serialized_data.is_valid():
@@ -393,7 +412,7 @@ class InviteMemberView(APIView):
                 invite_instance = serialized_data.save()
 
                 return Response({
-                    "message":"Invite Sent.",
+                    "message":"Invite sent.",
                     "status" : status.HTTP_200_OK
                 })
 
@@ -453,6 +472,7 @@ class ResendInviteView(APIView):
     def post(self, request, format=None):
         '''
         '''
+        # check if user has already been invited.
         try:
         
             invited_member_obj = InvitedMembers.objects.get(pk=request.query_params['invite_id'])
@@ -462,6 +482,42 @@ class ResendInviteView(APIView):
             return Response({
                 "error" : "Invite was never sent to the provided email.",
                 "status" : status.HTTP_404_NOT_FOUND
+            })
+        # check if users is already registered.
+        try:
+            
+            user_existance = User.objects.get(email=request.data['email'])
+
+        except User.DoesNotExist:
+            
+            encoded_jwt = jwt.encode({
+                'company_name':request.user.company.company_name,
+                'email': request.data['email'],
+                'exp' : time.time() + 10080}, SECRET_KEY, algorithm='HS256').decode('utf-8')
+
+            request.data['token'] = encoded_jwt
+
+            serialized_data = InvitedMemberSerializer(invited_member_obj, data=request.data)
+
+            if serialized_data.is_valid():
+                    
+                invite_instance = serialized_data.save()
+                print(invite_instance)
+
+                return Response({
+                    "message":"Invite sent again.",
+                    "status" : status.HTTP_200_OK
+                })
+
+            else:
+
+                return Response(serialized_data.errors)
+            
+        if not user_existance is None:
+            
+            return Response({
+                "error" : "User already associated with this email address.",
+                "status" : status.HTTP_400_BAD_REQUEST
             })
 
 

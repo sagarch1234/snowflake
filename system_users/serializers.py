@@ -70,6 +70,10 @@ class RegisterInvitedUserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
 
         user_and_group = user.groups.add(user_group)
+
+        update_invite_onboarding = InvitedMembers.objects.get(email=user.email)
+        update_invite_onboarding.is_onboarded = True
+        update_invite_onboarding.save()
         
         return user
 
@@ -244,3 +248,8 @@ class InvitedMemberSerializer(serializers.ModelSerializer):
     def get_invited_by(self, obj):
 
         return obj.first_name + obj.last_name,
+    
+    def update(self, instance, validated_data):
+        instance.token = validated_data.get('token', instance.token)
+        instance.save(update_fields=['token'])
+        return instance
