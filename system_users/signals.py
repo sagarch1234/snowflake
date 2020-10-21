@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 
 from system_users.tasks import send_email_verification_mail, send_account_activation_mail, send_password_updated_mail, send_forgot_password_otp_mail, send_member_invite_mail
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist
+from system_users.constants import INVITE_MEMBER
 
 from rest_framework import status
 
@@ -36,7 +37,8 @@ def invited_member_post_save(sender, instance, created, signal, *args, **kwargs)
         elif 'token' in kwargs['update_fields']:
 
             invited_by = instance.invited_by.first_name + ' ' + instance.invited_by.last_name
-            send_member_invite_mail.delay(organisation_name=instance.invited_by.company.company_name, token=instance.token, email=instance.email, invited_by=invited_by)
+            url = INVITE_MEMBER + instance.token
+            send_member_invite_mail.delay(organisation_name=instance.invited_by.company.company_name, token=url, email=instance.email, invited_by=invited_by)
 
 
 
