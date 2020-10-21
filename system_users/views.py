@@ -554,18 +554,18 @@ class ListInvitedMembers(ListAPIView):
         return queryset
 
 
-class ListCompanyUsers(ListAPIView):
+class ListCompanyUsersView(ListAPIView):
     '''
     '''
     permission_classes = [IsAuthenticated & WhitelistCompanyAdmin]
     
-    serializer_class = CompanyDetailsSerializer
+    serializer_class = RegisterUpdateUserSerializer
     filter_backends = [OrderingFilter, SearchFilter]
     ordering=['-id']
-    search_fields = ['company_name']
+    search_fields = ['first_name', 'last_name', 'email']
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
-        queryset = User.objects.filter(company=request.user.company)
+        queryset = User.objects.filter(company=self.request.user.company)
         return queryset
     

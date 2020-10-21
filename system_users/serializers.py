@@ -109,10 +109,11 @@ class RegisterUpdateUserSerializer(serializers.ModelSerializer):
     This serializer is for Register User view.
     '''
     company = CompanyDetailsSerializer()
+    user_group = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'mobile_number', 'company', 'password']
+        fields = ['id', 'first_name', 'last_name', 'email', 'mobile_number', 'company', 'password','user_group']
         extra_kwargs = {
             'first_name' : {
                 'required' : True,
@@ -141,7 +142,9 @@ class RegisterUpdateUserSerializer(serializers.ModelSerializer):
                 'read_only':False
             }
         }
-    
+    def get_user_group(self, obj):
+        return list(obj.groups.values('id', 'name'))
+
     @transaction.atomic
     def create(self, validated_data):
 
