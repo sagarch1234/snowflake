@@ -7,10 +7,11 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 
-from system_users.models import User, EmailVerificationOtp, InvitedMembers
+from system_users.models import User, EmailVerificationOtp, InvitedMembers, CompanyDetails
 from system_users.serializers import (
-    RegisterUpdateUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer, TokenObtainPairSerializer, InvitedMemberSerializer,
-    RegisterInvitedUserSerializer)
+    RegisterUpdateUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer,
+    TokenObtainPairSerializer, InvitedMemberSerializer, RegisterInvitedUserSerializer,
+    CompanyDetailsSerializer)
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist, check_request_data, check_user_group
 from system_users.tasks import send_forgot_password_otp_mail
 from system_users.permissions import IsInviteOwner, WhitelistCompanyAdmin
@@ -542,8 +543,9 @@ class ListInvitedMembers(ListAPIView):
     permission_classes = [IsAuthenticated & WhitelistCompanyAdmin]
     
     serializer_class = InvitedMemberSerializer
-    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
     filterset_fields = ['is_onboarded']
+    search_fields = ['email']
     ordering=['-id']
     pagination_class = PageNumberPagination
 
@@ -553,4 +555,17 @@ class ListInvitedMembers(ListAPIView):
 
 
 class ListCompanyUsers(ListAPIView):
-    pass
+    '''
+    '''
+    permission_classes = [IsAuthenticated & WhitelistCompanyAdmin]
+    
+    serializer_class = CompanyDetailsSerializer
+    filter_backends = [OrderingFilter, SearchFilter]
+    ordering=['-id']
+    search_fields = ['company_name']
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        queryset = User.objects.filter(company=request.user.company)
+        return queryset
+    

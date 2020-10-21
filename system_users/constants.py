@@ -19,3 +19,5 @@ INVITE_MEMBER = 'You have been invited to join Snowflake Optimizer.'
 ORGANISATION_MEMBER = 'Organisation Member'
 SUPER_ADMIN = 'Super Admin'
 ORGANISATION_MEMBER = 'Organisation Admin'
+
+#email templates

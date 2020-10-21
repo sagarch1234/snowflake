@@ -14,5 +14,6 @@ urlpatterns = [
     path('verify-invite/', VerifyInviteView.as_view()),
     path('register-invited-member/', RegisterInvitedMember.as_view()),
     path('resend-invite/', ResendInviteView.as_view()),
-    path('list-invited-members/', ListInvitedMembers.as_view())
+    path('list-invited-members/', ListInvitedMembers.as_view()),
+    path('list-company-members/', ListInvitedMembers.as_view())
 ]
