@@ -16,7 +16,7 @@ class IsCompanyOwner(BasePermission):
         try:
             company = CompanyDetails.objects.get(pk=request.query_params['id']).id
         except CompanyDetails.DoesNotExist:
-            company = 0
+            return False
         
         return request.user.company.id == company
 
@@ -30,7 +30,7 @@ class IsInviteOwner(BasePermission):
         try:
             invited_by = InvitedMembers.objects.get(pk=request.query_params['invite_id']).invited_by.id
         except InvitedMembers.DoesNotExist:
-            invited_by = 0
+            return False
         
         return request.user.id == invited_by
 

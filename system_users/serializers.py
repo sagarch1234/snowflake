@@ -1,12 +1,76 @@
 from rest_framework import serializers
 
-from system_users.models import User, CompanyDetails, InvitedMembers
+from system_users.models import User, CompanyDetails, InvitedMembers, InvitedSuperUsers
 
 from django.contrib.auth.models import Group
 from django.db import transaction
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+
+class InvitedSuperUserSerializerView(serializers.ModelSerializer):
+    '''
+    '''
+    class Meta:
+        model = InvitedSuperUsers
+        fields = ['id','email', 'is_onboarded', 'token', 'invited_by']
+        extra_kwargs = {
+            'email' : {
+                'required' : True
+            },
+            'token' : {
+                'required' : True,
+                'write_only' : True
+            }
+        }
+
+
+class RegisterSuperAdminSerializer(serializers.ModelSerializer):
+    '''
+    '''
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'mobile_number', 'password']
+        extra_kwargs = {
+            'first_name' : {
+                'required' : True,
+                'allow_null' : False,
+                'allow_blank' : False
+            },
+            'last_name' : {
+                'required' : True,
+                'allow_null' : False,
+                'allow_blank' : False
+            },
+            'mobile_number' : {
+                'required' : False,
+            },
+            'password' : {
+                'required' : True,
+                'allow_blank' : False,
+                'allow_null' : False,
+                'write_only': True,
+                'read_only':False
+            }
+        }       
+
+    @transaction.atomic
+    def create(self, validated_data):
+
+        user_group = validated_data.pop('user_group')
+
+        user_group = Group.objects.get(name=user_group)
+
+        user = User.objects.create_user(**validated_data)
+
+        user_and_group = user.groups.add(user_group)
+
+        update_invite_onboarding = InvitedMembers.objects.get(email=user.email)
+        update_invite_onboarding.is_onboarded = True
+        update_invite_onboarding.save()
+        
+        return user
+        
 
 class ResendVerificationMailSerializer(serializers.Serializer):
     '''
@@ -49,7 +113,7 @@ class RegisterInvitedUserSerializer(serializers.ModelSerializer):
                 'allow_blank' : False
             },
             'mobile_number' : {
-                'required' : True,
+                'required' : False,
             },
             'password' : {
                 'required' : True,
@@ -271,5 +335,3 @@ class InvitedMemberSerializer(serializers.ModelSerializer):
         instance.token = validated_data.get('token', instance.token)
         instance.save(update_fields=['token'])
         return instance
-
-    

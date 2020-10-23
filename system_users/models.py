@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db.models import signals
 
-from system_users.signals import user_post_save, invited_member_post_save
+from system_users.signals import user_post_save, invited_member_post_save, invited_super_user_post_save
 from system_users.manager import UserManager
 
 
@@ -40,9 +40,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=255, blank=False)
 
     email = models.EmailField(max_length=255, blank=False, unique= True)
-    mobile_number = models.BigIntegerField(blank=False, unique=True)
+    mobile_number = models.BigIntegerField(blank=True, unique=True)
     
-    company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE, blank=False)
+    company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE, blank=True, null=True)
         
     password = models.TextField(blank=False, null=False)
         
@@ -87,3 +87,14 @@ class InvitedMembers(BaseModel):
     is_onboarded = models.BooleanField(default=False, blank=False, null=False)
 
 signals.post_save.connect(invited_member_post_save, sender=InvitedMembers)
+
+
+class InvitedSuperUsers(BaseModel):
+    '''
+    '''
+    email = models.EmailField(max_length=255, blank=False, unique= True)
+    token = models.TextField(blank=False, null=False)
+    invited_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+    is_onboarded = models.BooleanField(default=False, blank=False, null=False)
+
+signals.post_save.connect(invited_super_user_post_save, sender=InvitedSuperUsers)

@@ -2,7 +2,7 @@ from django.urls import path, include
 from system_users.views import (
     RegisterUserView, RetriveUserProfileView, ActivateAccountView, ChangePasswordView, UpdateProfileView,
     InviteMemberView, VerifyInviteView, RegisterInvitedMember, ResendInviteView, ListInvitedMembers, ListCompanyUsersView,
-    UpdateCompanyDetaisView, ResendEmailVerificationView, ListCompaniesView
+    UpdateCompanyDetaisView, ResendEmailVerificationView, ListCompaniesView, SuperUserInviteView
     )
 
 urlpatterns = [
@@ -19,5 +19,6 @@ urlpatterns = [
     path('list-company-members/', ListCompanyUsersView.as_view()),
     path('update-company-details/', UpdateCompanyDetaisView.as_view()),
     path('resend-email-verification/', ResendEmailVerificationView.as_view()),
-    path('list-companies/', ListCompaniesView.as_view())
+    path('list-companies/', ListCompaniesView.as_view()),
+    path('invite-super-user/', SuperUserInviteView.as_view())
 ]

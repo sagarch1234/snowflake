@@ -30,7 +30,9 @@ services:
     
   celery:
     container_name: celery-container
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile.celery
     command: "celery  -A snowflake_optimizer worker -l INFO"
     volumes:
       - .:/snowflake-optimizer

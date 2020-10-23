@@ -11,7 +11,8 @@ from system_users.models import User, EmailVerificationOtp, InvitedMembers, Comp
 from system_users.serializers import (
     RegisterUpdateUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer,
     TokenObtainPairSerializer, InvitedMemberSerializer, RegisterInvitedUserSerializer,
-    CompanyDetailsSerializer, ResendVerificationMailSerializer)
+    CompanyDetailsSerializer, ResendVerificationMailSerializer, RegisterSuperAdminSerializer,
+    InvitedSuperUserSerializerView)
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist
 from system_users.tasks import send_forgot_password_otp_mail, send_email_verification_mail
 from system_users.permissions import IsInviteOwner, WhitelistOrganisationAdmin, IsCompanyOwner, WhitelistSuperAdmin
@@ -660,12 +661,52 @@ class ListCompaniesView(ListAPIView):
         return queryset
 
 
-class SuperUserInvite(APIView):
+class SuperUserInviteView(APIView):
     '''
     Invite more super users to the system.
     '''
+    
+    permission_classes = [IsAuthenticated & WhitelistSuperAdmin]
+
     def post(self, request, format=None):
-        pass
+        '''
+        '''
+        try:
+            
+            user_existance = User.objects.get(email=request.data['email'])
+
+        except User.DoesNotExist:
+            
+            encoded_jwt = jwt.encode({
+                'email': request.data['email'],
+                'exp' : time.time() + 10080}, SECRET_KEY, algorithm='HS256').decode('utf-8')
+
+            request.data['token'] = encoded_jwt
+            request.data['invited_by'] = request.user.id
+
+            serialized_data = InvitedSuperUserSerializerView(data=request.data)
+
+            if serialized_data.is_valid():
+
+                serialized_data.validated_data['invited_by'] = request.user
+                    
+                invite_instance = serialized_data.save()
+
+                return Response({
+                    "message":"Invite sent.",
+                    "status" : status.HTTP_200_OK
+                })
+
+            else:
+
+                return Response(serialized_data.errors)
+
+        if not user_existance is None:
+            
+            return Response({
+                "error" : "User already associated with this email address.",
+                "status" : status.HTTP_400_BAD_REQUEST
+            })
 
 
 class ResendSuperUserInvite(APIView):

@@ -5,9 +5,34 @@ from django.core.mail import send_mail
 
 from snowflake_optimizer.celery import app
 
-from system_users.constants import LOGIN_URL, FORGOT_PASSWORD, FORGOT_PASSWORD_SUBJECT, ACCOUNT_PASSWORD_UPDATED, ACCOUNT_ACTIVATED, EMAIL_VERIFICATION, INVITE_MEMBER
+from system_users.constants import (
+    LOGIN_URL, FORGOT_PASSWORD_URL, FORGOT_PASSWORD_SUBJECT, ACCOUNT_PASSWORD_UPDATED,
+    ACCOUNT_ACTIVATED, EMAIL_VERIFICATION, INVITE_MEMBER, INVITE_SUPER_USER, INVITE_MEMBER_URL)
 
 import os
+
+
+@app.task
+def send_super_user_invite_mail(email, token, invited_by):
+
+    template = 'invite_super_user.html'
+
+    subject =  INVITE_SUPER_USER
+
+    body = render_to_string(
+        template, {
+            'end_point' : token,
+            'invited_by' : invited_by 
+        }
+    )
+
+    plain_body = strip_tags(body)
+
+    sender = os.environ.get('EMAIL_HOST_USER')
+
+    to = email
+
+    mail_status = send_mail(subject, plain_body, sender, [to], html_message=body, fail_silently=False,)
 
 
 @app.task
@@ -20,7 +45,7 @@ def send_member_invite_mail(organisation_name, email, token, invited_by):
     body = render_to_string(
         template, {
             'organisation_name' : organisation_name,
-            'end_point' : "127.0.0.1:8080/api/users/invite-member/" + token,
+            'end_point' :  token,
             'invited_by' : invited_by 
         }
     )
@@ -113,7 +138,7 @@ def send_forgot_password_otp_mail(first_name, otp, email):
         template, {
             'first_name' : first_name,
             'otp' : otp,
-            'forgot_password' : FORGOT_PASSWORD
+            'forgot_password' : FORGOT_PASSWORD_URL
         }
     )
 
