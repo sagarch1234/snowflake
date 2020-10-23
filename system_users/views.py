@@ -16,7 +16,7 @@ from system_users.serializers import (
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist
 from system_users.tasks import send_forgot_password_otp_mail, send_email_verification_mail
 from system_users.permissions import IsInviteOwner, WhitelistOrganisationAdmin, IsCompanyOwner, WhitelistSuperAdmin
-from system_users.constants import ORGANISATION_MEMBER
+from system_users.constants import ORGANISATION_MEMBER, SUPER_ADMIN
 
 from django.db import transaction, IntegrityError
 from django.shortcuts import get_object_or_404, render
@@ -49,10 +49,28 @@ class RegisterInvitedMember(APIView):
     def post(self, request, format=None):
         '''
         '''
+        try:
+                
+            decoded_jwt = jwt.decode(request.query_params['token'], SECRET_KEY, algorithms=['HS256'])
+
+        except ExpiredSignatureError as expired:
+                
+            return Response({
+                "error" : "Invite has expired",
+                "status" : status.HTTP_406_NOT_ACCEPTABLE
+            })
+            
+        except InvalidSignatureError as invalid:
+
+            return Response({
+                "error" : "Invite token Invalid.",
+                "status" : status.HTTP_406_NOT_ACCEPTABLE
+            })
+
         
         try:
             
-            invited_member_obj = InvitedMembers.objects.get(token=request.query_params['token'])
+            invited_member_obj = InvitedMembers.objects.get(email=decoded_jwt['email'])
 
         except InvitedMembers.DoesNotExist:
             
@@ -71,23 +89,6 @@ class RegisterInvitedMember(APIView):
         serialized_data = RegisterInvitedUserSerializer(data=request.data)
 
         if serialized_data.is_valid():
-
-            try:
-                
-                decoded_jwt = jwt.decode(request.query_params['token'], SECRET_KEY, algorithms=['HS256'])
-
-            except ExpiredSignatureError as expired:
-                
-                return Response({
-                    "error" : "Invite has expired",
-                    "status" : status.HTTP_406_NOT_ACCEPTABLE
-                })
-            
-            except InvalidSignatureError as invalid:
-                return Response({
-                    "error" : "Invite token Invalid.",
-                    "status" : status.HTTP_406_NOT_ACCEPTABLE
-                })
 
             serialized_data.validated_data['is_mobile_number_verified'] = False
             serialized_data.validated_data['is_email_varified'] = True
@@ -763,14 +764,105 @@ class ResendSuperUserInvite(APIView):
             })
 
 
-class VerifySuperUserInvite(APIView):
+class RegisterSuperAdminView(APIView):
     '''
-    Verify the token of invited super user.
     '''
     def post(self, request, format=None):
-        '''
-        '''
-        pass
+        try:
+                
+            decoded_jwt = jwt.decode(request.query_params['token'], SECRET_KEY, algorithms=['HS256'])
+            print(decoded_jwt)
+
+        except ExpiredSignatureError as expired:
+                
+            return Response({
+                "error" : "Invite has expired",
+                "status" : status.HTTP_406_NOT_ACCEPTABLE
+            })
+            
+        except InvalidSignatureError as invalid:
+
+            return Response({
+                "error" : "Invite token Invalid.",
+                "status" : status.HTTP_406_NOT_ACCEPTABLE
+            })
+
+        try:
+            
+            invited_member_obj = InvitedSuperUsers.objects.get(email=decoded_jwt['email'])
+
+        except InvitedSuperUsers.DoesNotExist:
+            
+            return Response({
+                "error" : "Invite not found.",
+                "status" : status.HTTP_400_BAD_REQUEST
+            })
+        
+        if invited_member_obj.is_onboarded == True:
+
+            return Response({
+                "error" : "You account has already been created.",
+                "status" : status.HTTP_400_BAD_REQUEST
+            })
+
+        serialized_data = RegisterSuperAdminSerializer(data=request.data)
+
+        if serialized_data.is_valid():
+
+            serialized_data.validated_data['is_mobile_number_verified'] = False
+            serialized_data.validated_data['is_email_varified'] = True
+            serialized_data.validated_data['is_active'] = True
+            
+            # serialized_data.validated_data['company'] = decoded_jwt['company_name']
+            serialized_data.validated_data['email'] = decoded_jwt['email']
+
+            serialized_data.validated_data['user_group'] = SUPER_ADMIN
+
+            try:
+            
+                user = serialized_data.save()
+            
+            except IntegrityError as error:
+
+                return Response ({
+                    "error": str(error),
+                    "status": status.HTTP_226_IM_USED
+                    })
+            
+        else:
+        
+            return Response(serialized_data.errors)
+
+        if user == None:
+
+            return Response({
+                "message" : "Oppsss.. something went wrong.",
+                "status" : status.HTTP_409_CONFLICT
+            })
+
+        else:
+
+            return Response({
+                "message":"Your account has been created and activated." ,
+                "status":status.HTTP_200_OK
+            })
+
+
+class ListInvitedSuperAdminView(ListAPIView):
+    '''
+    '''
+    permission_classes = [IsAuthenticated & WhitelistSuperAdmin]
+    
+    serializer_class = InvitedSuperUserSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
+    filterset_fields = ['is_onboarded']
+    search_fields = ['email']
+    ordering=['-id']
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        queryset = InvitedSuperUsers.objects.all()
+        return queryset
 
 
 class ConnectInstanceView(APIView):

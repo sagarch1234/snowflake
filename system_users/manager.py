@@ -7,7 +7,7 @@ class UserManager(BaseUserManager):
     This is a User model's manager class.
     """
     
-    def create_user(self, first_name, last_name, email, mobile_number, password, company, is_mobile_number_verified=None, is_email_varified=None, is_active=None):
+    def create_user(self, first_name, last_name, email, password, mobile_number=None, is_mobile_number_verified=None, company=None, is_email_varified=None, is_active=None):
 
         """
         This method will create a User object.
@@ -29,7 +29,6 @@ class UserManager(BaseUserManager):
             mobile_number = mobile_number, 
             password  = password, 
             company = company, 
-            # group = group,
             is_mobile_number_verified = is_mobile_number_verified,
             is_email_varified = is_email_varified,
             is_active = is_active

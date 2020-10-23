@@ -84,7 +84,7 @@ class RegisterSuperAdminSerializer(serializers.ModelSerializer):
 
         user_and_group = user.groups.add(user_group)
 
-        update_invite_onboarding = InvitedMembers.objects.get(email=user.email)
+        update_invite_onboarding = InvitedSuperUsers.objects.get(email=user.email)
         update_invite_onboarding.is_onboarded = True
         update_invite_onboarding.save()
         
