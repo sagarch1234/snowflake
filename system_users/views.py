@@ -863,13 +863,3 @@ class ListInvitedSuperAdminView(ListAPIView):
     def get_queryset(self):
         queryset = InvitedSuperUsers.objects.all()
         return queryset
-
-
-class ConnectInstanceView(APIView):
-    '''
-    Help customers to connect their snowflake instances.
-    '''
-    def post(self, request, format=None):
-        '''
-        '''
-        pass
