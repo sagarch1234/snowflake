@@ -7,12 +7,12 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 
-from system_users.models import User, EmailVerificationOtp, InvitedMembers, CompanyDetails
+from system_users.models import User, EmailVerificationOtp, InvitedMembers, CompanyDetails, InvitedSuperUsers
 from system_users.serializers import (
     RegisterUpdateUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer,
     TokenObtainPairSerializer, InvitedMemberSerializer, RegisterInvitedUserSerializer,
     CompanyDetailsSerializer, ResendVerificationMailSerializer, RegisterSuperAdminSerializer,
-    InvitedSuperUserSerializerView)
+    InvitedSuperUserSerializer)
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist
 from system_users.tasks import send_forgot_password_otp_mail, send_email_verification_mail
 from system_users.permissions import IsInviteOwner, WhitelistOrganisationAdmin, IsCompanyOwner, WhitelistSuperAdmin
@@ -510,7 +510,6 @@ class ResendInviteView(APIView):
             if serialized_data.is_valid():
                     
                 invite_instance = serialized_data.save()
-                print(invite_instance)
 
                 return Response({
                     "message":"Invite sent again.",
@@ -597,6 +596,9 @@ class ResendEmailVerificationView(APIView):
     '''
     This view is to resend email verification mail to activate system account.
     '''
+    
+    permission_classes = [IsAuthenticated & WhitelistSuperAdmin]
+
     def post(self, request, formate=None):
         '''
         '''
@@ -684,7 +686,7 @@ class SuperUserInviteView(APIView):
             request.data['token'] = encoded_jwt
             request.data['invited_by'] = request.user.id
 
-            serialized_data = InvitedSuperUserSerializerView(data=request.data)
+            serialized_data = InvitedSuperUserSerializer(data=request.data)
 
             if serialized_data.is_valid():
 
@@ -714,7 +716,51 @@ class ResendSuperUserInvite(APIView):
     Resend invite mail to the invited user.
     '''
     def post(self, request, format=None):
-        pass
+        # check if user has already been invited.
+        try:
+        
+            invited_member_obj = InvitedSuperUsers.objects.get(pk=request.query_params['invite_id'])
+
+        except InvitedMembers.DoesNotExist:
+            
+            return Response({
+                "error" : "Invite was never sent to the provided email.",
+                "status" : status.HTTP_404_NOT_FOUND
+            })
+        # check if users is already registered.
+        try:
+            
+            user_existance = User.objects.get(email=request.data['email'])
+
+        except User.DoesNotExist:
+            
+            encoded_jwt = jwt.encode({
+                'email': request.data['email'],
+                'exp' : time.time() + 10080}, SECRET_KEY, algorithm='HS256').decode('utf-8')
+
+            request.data['token'] = encoded_jwt
+
+            serialized_data = InvitedSuperUserSerializer(invited_member_obj, data=request.data)
+
+            if serialized_data.is_valid():
+                    
+                invite_instance = serialized_data.save()
+
+                return Response({
+                    "message":"Invite sent again.",
+                    "status" : status.HTTP_200_OK
+                })
+
+            else:
+
+                return Response(serialized_data.errors)
+            
+        if not user_existance is None:
+            
+            return Response({
+                "error" : "User already associated with this email address.",
+                "status" : status.HTTP_400_BAD_REQUEST
+            })
 
 
 class VerifySuperUserInvite(APIView):

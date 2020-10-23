@@ -8,9 +8,12 @@ from django.db import transaction
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
-class InvitedSuperUserSerializerView(serializers.ModelSerializer):
+class InvitedSuperUserSerializer(serializers.ModelSerializer):
     '''
     '''
+    
+    invited_by = serializers.SerializerMethodField()
+
     class Meta:
         model = InvitedSuperUsers
         fields = ['id','email', 'is_onboarded', 'token', 'invited_by']
@@ -21,8 +24,24 @@ class InvitedSuperUserSerializerView(serializers.ModelSerializer):
             'token' : {
                 'required' : True,
                 'write_only' : True
+            },
+            'invited_by' : {
+                'required' : False
             }
         }
+
+    def update(self, instance, validated_data):
+        instance.token = validated_data.get('token', instance.token)
+        instance.save(update_fields=['token'])
+        return instance
+    
+    def get_invited_by(self, obj):
+
+        invited_by = {
+            'name' : obj.invited_by.first_name + ' ' + obj.invited_by.last_name,
+        }
+
+        return invited_by
 
 
 class RegisterSuperAdminSerializer(serializers.ModelSerializer):

@@ -6,7 +6,6 @@ from system_users.signals import user_post_save, invited_member_post_save, invit
 from system_users.manager import UserManager
 
 
-
 class BaseModel(models.Model):
     
     '''
@@ -65,8 +64,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         return 'User Object ({})'.format(self.id)
 
-signals.post_save.connect(user_post_save, sender=User)
-
 
 class EmailVerificationOtp(BaseModel):
 
@@ -86,8 +83,6 @@ class InvitedMembers(BaseModel):
     invited_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
     is_onboarded = models.BooleanField(default=False, blank=False, null=False)
 
-signals.post_save.connect(invited_member_post_save, sender=InvitedMembers)
-
 
 class InvitedSuperUsers(BaseModel):
     '''
@@ -97,4 +92,7 @@ class InvitedSuperUsers(BaseModel):
     invited_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
     is_onboarded = models.BooleanField(default=False, blank=False, null=False)
 
+
 signals.post_save.connect(invited_super_user_post_save, sender=InvitedSuperUsers)
+signals.post_save.connect(user_post_save, sender=User)
+signals.post_save.connect(invited_member_post_save, sender=InvitedMembers)
