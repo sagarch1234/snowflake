@@ -7,6 +7,19 @@ from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404
 
 
+class IsCompanyOwner(BasePermission):
+    '''
+    '''
+    def has_object_permission(self, request, view):
+        '''
+        '''
+        try:
+            company = CompanyDetails.objects.get(pk=request.query_params['id']).id
+        except CompanyDetails.DoesNotExist:
+            company = 0
+        
+        return request.user.company.id == company
+
 
 class IsInviteOwner(BasePermission):
     '''
@@ -22,7 +35,7 @@ class IsInviteOwner(BasePermission):
         return request.user.id == invited_by
 
 
-class WhitelistCompanyAdmin(BasePermission):
+class WhitelistOrganisationAdmin(BasePermission):
     '''
     '''
     def has_permission(self, request, view):

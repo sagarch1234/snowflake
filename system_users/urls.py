@@ -1,7 +1,8 @@
 from django.urls import path, include
 from system_users.views import (
     RegisterUserView, RetriveUserProfileView, ActivateAccountView, ChangePasswordView, UpdateProfileView,
-    InviteMemberView, VerifyInviteView, RegisterInvitedMember, ResendInviteView, ListInvitedMembers, ListCompanyUsersView
+    InviteMemberView, VerifyInviteView, RegisterInvitedMember, ResendInviteView, ListInvitedMembers, ListCompanyUsersView,
+    UpdateCompanyDetaisView
     )
 
 urlpatterns = [
@@ -15,5 +16,6 @@ urlpatterns = [
     path('register-invited-member/', RegisterInvitedMember.as_view()),
     path('resend-invite/', ResendInviteView.as_view()),
     path('list-invited-members/', ListInvitedMembers.as_view()),
-    path('list-company-members/', ListCompanyUsersView.as_view())
+    path('list-company-members/', ListCompanyUsersView.as_view()),
+    path('update-company-details/', UpdateCompanyDetaisView.as_view())
 ]

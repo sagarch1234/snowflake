@@ -14,7 +14,7 @@ from system_users.serializers import (
     CompanyDetailsSerializer)
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist, check_request_data, check_user_group
 from system_users.tasks import send_forgot_password_otp_mail
-from system_users.permissions import IsInviteOwner, WhitelistCompanyAdmin
+from system_users.permissions import IsInviteOwner, WhitelistOrganisationAdmin, IsCompanyOwner
 from system_users.constants import ORGANISATION_MEMBER, ORGANISATION_MEMBER
 
 from django.db import transaction, IntegrityError
@@ -392,7 +392,7 @@ class UpdateProfileView(APIView):
 class InviteMemberView(APIView):
     '''
     '''
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin]
 
     def post(self, request, format=None):
         '''
@@ -531,16 +531,38 @@ class ResendInviteView(APIView):
 class UpdateCompanyDetaisView(APIView):
     '''
     '''
-    def post(self, request, format=None):
+    
+    permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin & IsCompanyOwner]
+
+    def get_queryset(self):
+
+        return CompanyDetails.objects.get(pk=self.request.data['id'])
+
+    def put(self, request, format=None):
         '''
         '''
-        pass
+        
+        company_instance  = self.get_queryset()
+
+        serialized_data = CompanyDetailsSerializer(company_instance, data=request.data)
+
+        if serialized_data.is_valid():
+            
+            updated_instance = serialized_data.save()
+
+            return Response({
+                "message":"Company details has been updated.",
+                "status":status.HTTP_200_OK
+            })
+     
+        else:
+            return Response(serialized_data.errors)
 
 
 class ListInvitedMembers(ListAPIView):
     '''
     '''
-    permission_classes = [IsAuthenticated & WhitelistCompanyAdmin]
+    permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin & IsCompanyOwner]
     
     serializer_class = InvitedMemberSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
@@ -557,7 +579,7 @@ class ListInvitedMembers(ListAPIView):
 class ListCompanyUsersView(ListAPIView):
     '''
     '''
-    permission_classes = [IsAuthenticated & WhitelistCompanyAdmin]
+    permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin]
     
     serializer_class = RegisterUpdateUserSerializer
     filter_backends = [OrderingFilter, SearchFilter]

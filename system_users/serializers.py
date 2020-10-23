@@ -189,16 +189,21 @@ class RetriveUserProfileSerializer(serializers.ModelSerializer):
     '''
     This serializer is to retrive user profile.
     '''
-    company_name = serializers.SerializerMethodField()
+    company = serializers.SerializerMethodField()
     user_group = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'mobile_number', 'company_name', 'user_group']
+        fields = ['first_name', 'last_name', 'email', 'mobile_number', 'company', 'user_group']
     
-    def get_company_name(self, obj):
+    def get_company(self, obj):
 
-        return obj.company.company_name
+        company = {
+            "id" : obj.company.id,
+            "company_name" : obj.company.company_name
+        }
+
+        return company
     
     def get_user_group(self, obj):
 
