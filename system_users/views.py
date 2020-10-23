@@ -14,7 +14,7 @@ from system_users.serializers import (
     CompanyDetailsSerializer, ResendVerificationMailSerializer)
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist
 from system_users.tasks import send_forgot_password_otp_mail, send_email_verification_mail
-from system_users.permissions import IsInviteOwner, WhitelistOrganisationAdmin, IsCompanyOwner
+from system_users.permissions import IsInviteOwner, WhitelistOrganisationAdmin, IsCompanyOwner, WhitelistSuperAdmin
 from system_users.constants import ORGANISATION_MEMBER
 
 from django.db import transaction, IntegrityError
@@ -639,14 +639,25 @@ class ResendEmailVerificationView(APIView):
                     "error" : "User's email already varified.",
                     "status": status.HTTP_200_OK
                 })
-            
-            
+                
 
 class ListCompaniesView(ListAPIView):
     '''
     This view will list companies registered with this system with their Organistion Admin details.
     '''
-    pass
+    permission_classes = [IsAuthenticated & WhitelistSuperAdmin]
+
+    serializer_class = CompanyDetailsSerializer
+    filter_backends = [OrderingFilter, SearchFilter]
+    ordering = ['-id']
+    search_fields = ['company_name']
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+
+        queryset = CompanyDetails.objects.all()
+
+        return queryset
 
 
 class SuperUserInvite(APIView):
