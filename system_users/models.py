@@ -39,7 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=255, blank=False)
 
     email = models.EmailField(max_length=255, blank=False, unique= True)
-    mobile_number = models.BigIntegerField(blank=True, unique=True)
+    mobile_number = models.BigIntegerField(blank=True)
     
     company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE, blank=True, null=True)
         
