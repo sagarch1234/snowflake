@@ -5,7 +5,7 @@ LOGIN_URL = 'http://127.0.0.1:3000'
 
 #forgot password page
 FORGOT_PASSWORD = 'http://127.0.0.1:3000/pages/validate-token?token='
-INVITE_MEMBER = 'http://localhost:3000/verify-invite?token='
+INVITE_MEMBER = 'http://127.0.0.1:3000/verify-invite?token='
 
 
 #email subjects 

@@ -1,7 +1,7 @@
 from rest_framework.permissions import BasePermission
 
 from system_users.models import InvitedMembers, User
-from system_users.constants import SUPER_ADMIN
+from system_users.constants import ORGANISATION_MEMBER
 
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404
@@ -32,4 +32,4 @@ class WhitelistCompanyAdmin(BasePermission):
 
         current_user_group = list(request.user.groups.values('name'))
         
-        return str(Group.objects.get(name=SUPER_ADMIN)) == current_user_group[0]['name']
+        return str(Group.objects.get(name=ORGANISATION_MEMBER)) == current_user_group[0]['name']

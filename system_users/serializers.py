@@ -237,7 +237,7 @@ class InvitedMemberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = InvitedMembers
-        fields = ['email', 'is_onboarded', 'token', 'invited_by']
+        fields = ['id','email', 'is_onboarded', 'token', 'invited_by']
         extra_kwargs = {
             'email' : {
                 'required' : True
