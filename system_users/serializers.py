@@ -8,6 +8,12 @@ from django.db import transaction
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
+class ResendVerificationMailSerializer(serializers.Serializer):
+    '''
+    '''
+    email = serializers.EmailField(required=True)
+
+
 class CompanyDetailsSerializer(serializers.ModelSerializer):
     '''
     This class has been extended by RegisterUserSerializer.

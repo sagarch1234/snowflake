@@ -65,7 +65,7 @@ def verify_otp_exist(user_id):
     except EmailVerificationOtp.DoesNotExist:
 
         return {
-            "message" : "OTP was not generated for the provicded user.",
+            "message" : "OTP was not generated for the provided user.",
             "status" : status.HTTP_404_NOT_FOUND
         }
 
@@ -82,31 +82,3 @@ def store_otp(otp, user_instance):
 
     return otp
 
-
-def check_request_data(data):
-    '''
-    Not in use
-    '''
-
-    if data is None:
-
-        return {
-            "message" : "Invalid data.",
-            "status" : status.HTTP_400_BAD_REQUEST
-        }
-
-    return {
-            "message" : "Valid data.",
-            "status" : status.HTTP_400_BAD_REQUEST
-        }
-
-
-def check_user_group(group_name, group_list):
-    '''
-    Not in use
-    '''
-
-    for group in group_list:
-        if group['name'] == group_name:
-            return True
-    return False

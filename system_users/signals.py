@@ -31,7 +31,6 @@ def invited_member_post_save(sender, instance, created, signal, *args, **kwargs)
 
         if kwargs['update_fields'] is None:
 
-            print('No updated fields.')
             logger.warning('No updated fields.')
     
         elif 'token' in kwargs['update_fields']:
@@ -39,8 +38,6 @@ def invited_member_post_save(sender, instance, created, signal, *args, **kwargs)
             invited_by = instance.invited_by.first_name + ' ' + instance.invited_by.last_name
             url = INVITE_MEMBER + instance.token
             send_member_invite_mail.delay(organisation_name=instance.invited_by.company.company_name, token=url, email=instance.email, invited_by=invited_by)
-
-
 
 
 @receiver(reset_password_token_created)
@@ -72,7 +69,7 @@ def user_post_save(sender, instance, created, signal, *args, **kwargs):
         
         if kwargs['update_fields'] is None:
 
-            print('No updated fields.')
+            logger.warning('No updated fields.')
 
         else:
 
@@ -88,7 +85,7 @@ def user_post_save(sender, instance, created, signal, *args, **kwargs):
 
         if instance.is_email_varified:
 
-            print("User is of type Organisation Member.")
+            logger.warning("User is of type Organisation Member.")
 
             send_account_activation_mail.delay(first_name=instance.first_name, email=instance.email)
         

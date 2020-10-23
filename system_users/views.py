@@ -11,9 +11,9 @@ from system_users.models import User, EmailVerificationOtp, InvitedMembers, Comp
 from system_users.serializers import (
     RegisterUpdateUserSerializer, RetriveUserProfileSerializer, ChangePasswordSerializer,
     TokenObtainPairSerializer, InvitedMemberSerializer, RegisterInvitedUserSerializer,
-    CompanyDetailsSerializer)
-from system_users.utilities import store_otp, generate_otp, verify_otp_exist, check_request_data, check_user_group
-from system_users.tasks import send_forgot_password_otp_mail
+    CompanyDetailsSerializer, ResendVerificationMailSerializer)
+from system_users.utilities import store_otp, generate_otp, verify_otp_exist
+from system_users.tasks import send_forgot_password_otp_mail, send_email_verification_mail
 from system_users.permissions import IsInviteOwner, WhitelistOrganisationAdmin, IsCompanyOwner
 from system_users.constants import ORGANISATION_MEMBER
 
@@ -590,4 +590,96 @@ class ListCompanyUsersView(ListAPIView):
     def get_queryset(self):
         queryset = User.objects.filter(company=self.request.user.company)
         return queryset
-    
+
+
+class ResendEmailVerificationView(APIView):
+    '''
+    This view is to resend email verification mail to activate system account.
+    '''
+    def post(self, request, formate=None):
+        '''
+        '''
+        serialized_data = ResendVerificationMailSerializer(data=request.data)
+
+        if serialized_data.is_valid():
+            
+            try:
+
+                user_instance = User.objects.get(email=request.data['email'])
+            
+            except User.DoesNotExist:
+            
+                return Response({
+                    "error" : "User never registered.",
+                    "status" : status.HTTP_200_OK
+                })
+            
+            if user_instance.is_email_varified == False:
+                            
+                otp_exist = verify_otp_exist(user_instance.id)
+
+                if otp_exist['status'] == status.HTTP_404_NOT_FOUND:
+
+                    otp = store_otp(otp = generate_otp(), user_instance = user_instance)
+
+                elif otp_exist['status'] == status.HTTP_302_FOUND:
+
+                    otp = otp_exist['otp']
+                
+                send_email_verification_mail.delay(first_name=user_instance.first_name, otp=otp, email=user_instance.email)
+
+                return Response({
+                    "message":"verification mail has been sent to '" + user_instance.email + "'.",
+                    "status":status.HTTP_200_OK
+                })
+
+            elif user_instance.is_email_varified == True:
+
+                return Response({
+                    "error" : "User's email already varified.",
+                    "status": status.HTTP_200_OK
+                })
+            
+            
+
+class ListCompaniesView(ListAPIView):
+    '''
+    This view will list companies registered with this system with their Organistion Admin details.
+    '''
+    pass
+
+
+class SuperUserInvite(APIView):
+    '''
+    Invite more super users to the system.
+    '''
+    def post(self, request, format=None):
+        pass
+
+
+class ResendSuperUserInvite(APIView):
+    '''
+    Resend invite mail to the invited user.
+    '''
+    def post(self, request, format=None):
+        pass
+
+
+class VerifySuperUserInvite(APIView):
+    '''
+    Verify the token of invited super user.
+    '''
+    def post(self, request, format=None):
+        '''
+        '''
+        pass
+
+
+class ConnectInstanceView(APIView):
+    '''
+    Help customers to connect their snowflake instances.
+    '''
+    def post(self, request, format=None):
+        '''
+        '''
+        pass
