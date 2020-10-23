@@ -15,7 +15,7 @@ from system_users.serializers import (
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist, check_request_data, check_user_group
 from system_users.tasks import send_forgot_password_otp_mail
 from system_users.permissions import IsInviteOwner, WhitelistOrganisationAdmin, IsCompanyOwner
-from system_users.constants import ORGANISATION_MEMBER, ORGANISATION_MEMBER
+from system_users.constants import ORGANISATION_MEMBER
 
 from django.db import transaction, IntegrityError
 from django.shortcuts import get_object_or_404, render
