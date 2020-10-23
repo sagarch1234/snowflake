@@ -18,7 +18,7 @@ ACCOUNT_PASSWORD_UPDATED = 'Your account password has been changed.'
 ACCOUNT_ACTIVATED = 'Account activated.'
 EMAIL_VERIFICATION = 'Verify your email to activate your account.'
 INVITE_MEMBER = 'You have been invited to join Snowflake Optimizer.'
-INVITE_SUPER_USER = 'You have been invited to Snowflake Optimizer as a Super Admin.'
+INVITE_SUPER_USER = 'You have been invited to join Snowflake Optimizer as a Super Admin.'
 
 
 #user group
