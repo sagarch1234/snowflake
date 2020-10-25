@@ -24,6 +24,6 @@ INVITE_SUPER_USER = 'You have been invited to join Snowflake Optimizer as a Supe
 #user group
 ORGANISATION_MEMBER = 'Organisation Member'
 SUPER_ADMIN = 'Super Admin'
-ORGANISATION_MEMBER = 'Organisation Admin'
+ORGANISATION_ADMIN = 'Organisation Admin'
 
 #email templates

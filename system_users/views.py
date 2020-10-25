@@ -16,7 +16,7 @@ from system_users.serializers import (
 from system_users.utilities import store_otp, generate_otp, verify_otp_exist
 from system_users.tasks import send_forgot_password_otp_mail, send_email_verification_mail
 from system_users.permissions import IsInviteOwner, WhitelistOrganisationAdmin, IsCompanyOwner, WhitelistSuperAdmin
-from system_users.constants import ORGANISATION_MEMBER, SUPER_ADMIN
+from system_users.constants import ORGANISATION_MEMBER, SUPER_ADMIN, ORGANISATION_ADMIN
 
 from django.db import transaction, IntegrityError
 from django.shortcuts import get_object_or_404, render
@@ -170,7 +170,7 @@ class RegisterUserView(APIView):
             serialized_data.validated_data['is_email_varified'] = False
             serialized_data.validated_data['is_active'] = False
 
-            serialized_data.validated_data['user_group'] = ORGANISATION_MEMBER
+            serialized_data.validated_data['user_group'] = ORGANISATION_ADMIN
 
             try:
             
