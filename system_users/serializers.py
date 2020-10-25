@@ -287,10 +287,14 @@ class RetriveUserProfileSerializer(serializers.ModelSerializer):
     
     def get_company(self, obj):
 
-        company = {
-            "id" : obj.company.id,
-            "company_name" : obj.company.company_name
-        }
+        if not obj.company is None:
+
+            company = {
+                "id" : obj.company.id,
+                "company_name" : obj.company.company_name
+            }
+        else:
+            company = None
 
         return company
     
