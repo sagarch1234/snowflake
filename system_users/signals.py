@@ -27,8 +27,14 @@ def invited_super_user_post_save(sender, instance, created, signal, *args, **kwa
 
     if created:
 
-        invited_by = instance.invited_by.first_name + ' ' + instance.invited_by.last_name
-        
+        if not instance.invited_by is None:
+
+            invited_by = instance.invited_by.first_name + ' ' + instance.invited_by.last_name
+            
+        if instance.invited_by is None:
+
+            invited_by = "Snowflake Optimizer's Super Admin"
+
         url = INVITE_SUPER_ADMIN + instance.token
         
         send_super_user_invite_mail.delay(token=url, email=instance.email, invited_by=invited_by)

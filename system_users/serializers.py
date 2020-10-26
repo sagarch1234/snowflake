@@ -220,7 +220,7 @@ class RegisterUpdateUserSerializer(serializers.ModelSerializer):
                 'allow_blank' : False
             },
             'mobile_number' : {
-                'required' : True,
+                'required' : False,
             },
             'password' : {
                 'required' : True,

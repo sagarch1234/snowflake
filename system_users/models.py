@@ -89,7 +89,7 @@ class InvitedSuperUsers(BaseModel):
     '''
     email = models.EmailField(max_length=255, blank=False, unique= True)
     token = models.TextField(blank=False, null=False)
-    invited_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
+    invited_by = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     is_onboarded = models.BooleanField(default=False, blank=False, null=False)
 
 
