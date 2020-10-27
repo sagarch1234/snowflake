@@ -39,12 +39,16 @@ class RegisterInvitedMember(APIView):
     {
         "first_name": "Sagar",
         "last_name": "Patel",
-        "mobile_number": 9765136448,
+        "mobile_number": 9765136448, #optional
         "password": "123456"
     }
 
     This view also need a query parameter 'token' to onboard the invited user.
+    The invited member will be onboarded as Organisation Member. 
+    This view is only for Organisation Admin. 
     '''
+    
+    permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin]
 
     def post(self, request, format=None):
         '''
@@ -82,7 +86,7 @@ class RegisterInvitedMember(APIView):
         if invited_member_obj.is_onboarded == True:
 
             return Response({
-                "error" : "You account has already been created.",
+                "error" : "You account has already been created or the email has already taken. Please try using another email.",
                 "status" : status.HTTP_400_BAD_REQUEST
             })
 
@@ -148,13 +152,15 @@ class RegisterUserView(APIView):
     {
         "first_name": "Jeet",
         "last_name": "Patel",
-        "mobile_number": 9765136677,
+        "mobile_number": 9765136677, #optional
         "email": "jpatel9996@gmail.com",
         "password": "123456",
         "company": {
             "company_name": "Hello Inc"
         }
     }
+    This view does not require authentication.
+    This view will register user as an Organisation Admin.
     '''
 
     def post(self, request, format=None):
@@ -221,7 +227,7 @@ class RetriveUserProfileView(RetrieveAPIView):
         "user_group": [
             {
                 "id" : 1,
-                "name" : "Admin" 
+                "name" : "Organisation Admin" 
             }
         ]
     }
@@ -245,6 +251,8 @@ class ActivateAccountView(APIView):
 
     '''
     Before login into the paltform after registeration user will have to activate his/her account by verifying the registered email address.
+
+    {{host}}/api/users/activate-account/?email=&otp=
     '''
 
     def put(self, request, format=None):
@@ -254,7 +262,9 @@ class ActivateAccountView(APIView):
 
         {{host/url}}/users/activate-account/?email=jpatel99967@gmail.com&otp=8898
         
-        If the otp of the provided email is same as the otp stored in the database for the provided email then the account will be activated and user will be able to login again.
+        If the otp of the provided email is same as the otp stored in the database for the provided email then the account will be activated and user will be able to login.
+        This is a mandtory step after registering as an organisation admins to active account.
+        This view doesn't require authentication.
         '''
 
         try:
@@ -305,6 +315,12 @@ class ChangePasswordView(APIView):
     This view will help user change their current password.
 
     Authentication is required for this view.
+
+    Sample JSON -
+    {
+        "change_password":"",
+        "new_password":""
+    }
     '''
 
     permission_classes = [IsAuthenticated]
@@ -352,6 +368,8 @@ class UpdateProfileView(APIView):
         "mobile_number": 97651367798,
         "email": "jpatel99967@gmail.com",
     }
+
+    Not all the above mentioned key values are required every time. Only send the key values which needs to be updated. (Partial updates works fine for this view.)
     '''
 
     permission_classes = [IsAuthenticated]
@@ -393,7 +411,15 @@ class UpdateProfileView(APIView):
         
 class InviteMemberView(APIView):
     '''
+    Organisation Admin can invite members to join the company profile. The invited member will be onboarded as Organisation Member.
+    This view is only for Organisation Admin.
+
+    Sample JSON -
+    {
+        "email":""
+    }
     '''
+
     permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin]
 
     def post(self, request, format=None):
@@ -439,8 +465,11 @@ class InviteMemberView(APIView):
 
 class VerifyInviteView(APIView):
     '''
-    This view is to verify the invite token.
+    This view is to verify the invite token generated to onboard Organisation Member and Super Admin.
     It need only one query_parameter - `token`
+
+    {{host}}/api/users/verify-invite/?token=
+
     No request body is required.
     '''
     def post(self, request, format=None):
@@ -474,7 +503,15 @@ class ResendInviteView(APIView):
     '''
     This view will regenerate token, update it into the InvitedMembers model and resend member invite mail. 
 
-    This view require a query_params as invite_id.
+    This view require a `query_params` as `invite_id` and `email` in JSON body as shown below -
+
+    {{host}}/api/users/resend-invite/?invite_id=17
+    
+    Sample input data -
+
+    {
+        "email":""
+    }
     '''
     permission_classes = [IsAuthenticated & IsInviteOwner]
 
@@ -531,6 +568,11 @@ class ResendInviteView(APIView):
 
 class UpdateCompanyDetaisView(APIView):
     '''
+    This view allows Organisation Admin to update the Company Detials. 
+    {
+        "id":,
+        "company_name":""
+    } 
     '''
     
     permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin & IsCompanyOwner]
@@ -562,6 +604,16 @@ class UpdateCompanyDetaisView(APIView):
 
 class ListInvitedMembers(ListAPIView):
     '''
+    This will list all the email address to which the invite has been sent.
+    This will only list the email address to which the requested user has sent the invites.
+    It provide the search funcationality on 'email'.
+    It also has pagination.
+    This view returns a list ordered in descending of id.
+
+    {{host}}/api/users/list-invited-members/?is_onboarded=&search=&page=
+
+    `is_onboarded` is a boolean value. If you want to list the onboarded users then pass `is_onboarded=True` or else `is_onboarded=False`
+
     '''
     permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin & IsCompanyOwner]
     
@@ -579,6 +631,12 @@ class ListInvitedMembers(ListAPIView):
 
 class ListCompanyUsersView(ListAPIView):
     '''
+    This view will list all the users belonging to the same company.
+    It provide the search funcationality on 'first_name', 'last_name' and 'email'.
+    It also has pagination.
+    This view returns a list ordered in descending of id.
+
+    {{host}}/api/users/list-companies/?search=&page=
     '''
     permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin]
     
@@ -595,7 +653,13 @@ class ListCompanyUsersView(ListAPIView):
 
 class ResendEmailVerificationView(APIView):
     '''
-    This view is to resend email verification mail to activate system account.
+    This view is to resend email verification mail to activate user account.
+
+    Sample request body -
+    
+    {
+        "email":""
+    }
     '''
     
     permission_classes = [IsAuthenticated & WhitelistSuperAdmin]
@@ -648,6 +712,12 @@ class ResendEmailVerificationView(APIView):
 class ListCompaniesView(ListAPIView):
     '''
     This view will list companies registered with this system with their Organistion Admin details.
+    This view has the search funcationality which works on `company_name`.
+    It also has pagination.
+    This view returns a list ordered in descending of id.
+
+    {{host}}/api/users/list-companies/?search=&page=
+
     '''
     permission_classes = [IsAuthenticated & WhitelistSuperAdmin]
 
@@ -666,7 +736,14 @@ class ListCompaniesView(ListAPIView):
 
 class SuperUserInviteView(APIView):
     '''
-    Invite more super users to the system.
+    Invite super users to the system.
+    The invited member will be onboarded as Super Admin.
+    This view is only for Super Admin.
+
+    Sample JSON -
+    {
+        "email":""
+    }
     '''
     
     permission_classes = [IsAuthenticated & WhitelistSuperAdmin]
@@ -714,8 +791,19 @@ class SuperUserInviteView(APIView):
 
 class ResendSuperUserInvite(APIView):
     '''
-    Resend invite mail to the invited user.
+    This view will regenerate token, update it into the InvitedSuperUsers model and resend member invite mail. 
+
+    This view require a `query_params` as `invite_id` and `email` in JSON body as shown below -
+
+    {{host}}/api/users/resend-super-user-invite/?invite_id=17
+    
+    Sample input data -
+
+    {
+        "email":""
+    }
     '''
+
     def post(self, request, format=None):
         # check if user has already been invited.
         try:
@@ -766,6 +854,20 @@ class ResendSuperUserInvite(APIView):
 
 class RegisterSuperAdminView(APIView):
     '''
+    This view is to onboard invited users.
+
+    sample JSON -
+
+    {
+        "first_name": "Sagar",
+        "last_name": "Patel",
+        "mobile_number": 9765136448, #optional
+        "password": "123456"
+    }
+
+    This view also need a query parameter 'token' to onboard the invited user.
+    The invited member will be onboarded as Super Member. 
+    This view is only for Super Admin.
     '''
     def post(self, request, format=None):
         try:
@@ -850,6 +952,15 @@ class RegisterSuperAdminView(APIView):
 
 class ListInvitedSuperAdminView(ListAPIView):
     '''
+    This will list all the email address to which the invite has been sent.
+    This will only list the email address to which the requested user has sent the invites.
+    It provide the search funcationality on 'email'.
+    It also has pagination.
+    This view returns a list ordered in descending of id.
+
+    {{host}}/api/users/list-invited-super-admins/?is_onboarded=false&email=&page=
+
+    `is_onboarded` is a boolean value. If you want to list the onboarded users then pass `is_onboarded=True` or else `is_onboarded=False`
     '''
     permission_classes = [IsAuthenticated & WhitelistSuperAdmin]
     
