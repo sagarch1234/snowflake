@@ -53,6 +53,7 @@ class RegisterInvitedMember(APIView):
     def post(self, request, format=None):
         '''
         '''
+        #check if the provided token is valid.
         try:
                 
             decoded_jwt = jwt.decode(request.query_params['token'], SECRET_KEY, algorithms=['HS256'])
@@ -71,7 +72,7 @@ class RegisterInvitedMember(APIView):
                 "status" : status.HTTP_406_NOT_ACCEPTABLE
             })
 
-        
+        #cross check if user is invited or not.
         try:
             
             invited_member_obj = InvitedMembers.objects.get(email=decoded_jwt['email'])
@@ -82,11 +83,12 @@ class RegisterInvitedMember(APIView):
                 "error" : "Invite not found.",
                 "status" : status.HTTP_400_BAD_REQUEST
             })
-        
+
+        # check if the invited member is onboarded or not.
         if invited_member_obj.is_onboarded == True:
 
             return Response({
-                "error" : "You account has already been created or the email has already taken. Please try using another email.",
+                "error" : "You account has already been created.",
                 "status" : status.HTTP_400_BAD_REQUEST
             })
 
@@ -96,11 +98,12 @@ class RegisterInvitedMember(APIView):
 
             serialized_data.validated_data['is_mobile_number_verified'] = False
             serialized_data.validated_data['is_email_varified'] = True
+            # this will active user account and allow user to login.
             serialized_data.validated_data['is_active'] = True
-            
+            #this will make user join the same company through which the invitation was sent to the user.
             serialized_data.validated_data['company'] = decoded_jwt['company_name']
             serialized_data.validated_data['email'] = decoded_jwt['email']
-
+            #this will make user join as an Organisation Member.
             serialized_data.validated_data['user_group'] = ORGANISATION_MEMBER
 
             try:
@@ -113,7 +116,6 @@ class RegisterInvitedMember(APIView):
                     "error": str(error),
                     "status": status.HTTP_226_IM_USED
                     })
-            
         
         else:
         
@@ -167,15 +169,16 @@ class RegisterUserView(APIView):
 
         '''
         '''
-
         serialized_data = RegisterUpdateUserSerializer(data=request.data)
 
         if serialized_data.is_valid():
 
             serialized_data.validated_data['is_mobile_number_verified'] = False
+            #user will have to verify email.
             serialized_data.validated_data['is_email_varified'] = False
+            #user wont be able to login as email has not been verified.
             serialized_data.validated_data['is_active'] = False
-
+            #register user as an organisation Member
             serialized_data.validated_data['user_group'] = ORGANISATION_ADMIN
 
             try:
@@ -266,7 +269,7 @@ class ActivateAccountView(APIView):
         This is a mandtory step after registering as an organisation admins to active account.
         This view doesn't require authentication.
         '''
-
+        #check if user exist in database.
         try:
             
             user = User.objects.get(email=request.query_params['email'])
@@ -277,7 +280,7 @@ class ActivateAccountView(APIView):
                 "error" : "User with email '" + request.query_params['email'] + "' does not exist.",
                 "status" : status.HTTP_404_NOT_FOUND
             })
-        
+        # check if otp has been generated and get the generated otp.
         try:
             
             otp_instance = EmailVerificationOtp.objects.get(user=user)
@@ -288,14 +291,15 @@ class ActivateAccountView(APIView):
                 "error" : "Email verification request was never raised for '" + request.query_params['email'] + "'.",
                 "status" : status.HTTP_400_BAD_REQUEST
             })
-        
+        # compare the provided otp and the otp in database.
         if request.query_params['otp'] == str(otp_instance.otp):
-
+            #delete otp if it exist.
             otp_instance.delete()
-
+            #active user account.
             user.is_active = True
+            #mark user email as verified.
             user.is_email_varified = True
-
+            #update user instance in database.
             user.save(update_fields=['is_active', 'is_email_varified'])            
 
             return Response({
@@ -329,12 +333,13 @@ class ChangePasswordView(APIView):
 
         '''
         '''
+        # check user existance and get the user instance.
         user_instance = get_object_or_404(User, pk=request.user.id)
         
         serialized_data = ChangePasswordSerializer(user_instance, data=request.data)
 
         if serialized_data.is_valid():
-
+            #compare password of user in database with the current_password received in request.data .
             if not check_password(request.data['current_password'], user_instance.password):
 
                 return Response({
@@ -375,15 +380,11 @@ class UpdateProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        '''
-        '''
 
         return User.objects.get(pk=self.request.user.id)
 
     def put(self, request, format=None):
-        '''
-        '''
-
+        #get the query set
         queryset = self.get_queryset()
         serialized_data = RegisterUpdateUserSerializer(queryset, data=request.data, partial=True)
 
@@ -423,25 +424,30 @@ class InviteMemberView(APIView):
     permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin]
 
     def post(self, request, format=None):
-        '''
-        '''
+
+        # check if the user with the same email already exist or not.
+        
         try:
             
             user_existance = User.objects.get(email=request.data['email'])
 
         except User.DoesNotExist:
+
+            #generate the encoded jwt if user does not exist.
             
             encoded_jwt = jwt.encode({
                 'company_name':request.user.company.company_name,
                 'email': request.data['email'],
                 'exp' : time.time() + 10080}, SECRET_KEY, algorithm='HS256').decode('utf-8')
 
+            #add the encoded_jwt to the request.data
             request.data['token'] = encoded_jwt
 
             serialized_data = InvitedMemberSerializer(data=request.data)
 
             if serialized_data.is_valid():
 
+                #provide the instance of the user who requested to invited a user.
                 serialized_data.validated_data['invited_by'] = request.user
                     
                 invite_instance = serialized_data.save()
@@ -473,8 +479,7 @@ class VerifyInviteView(APIView):
     No request body is required.
     '''
     def post(self, request, format=None):
-        '''
-        '''
+        # decode and validated provided jwt token.
         try:
             
             decoded_jwt = jwt.decode(request.query_params['token'], SECRET_KEY, algorithms=['HS256'])
@@ -516,8 +521,7 @@ class ResendInviteView(APIView):
     permission_classes = [IsAuthenticated & IsInviteOwner]
 
     def post(self, request, format=None):
-        '''
-        '''
+        
         # check if user has already been invited.
         try:
         
@@ -582,9 +586,7 @@ class UpdateCompanyDetaisView(APIView):
         return CompanyDetails.objects.get(pk=self.request.data['id'])
 
     def put(self, request, format=None):
-        '''
-        '''
-        
+        #get company instance which has to be updated.
         company_instance  = self.get_queryset()
 
         serialized_data = CompanyDetailsSerializer(company_instance, data=request.data)
@@ -665,12 +667,11 @@ class ResendEmailVerificationView(APIView):
     permission_classes = [IsAuthenticated & WhitelistSuperAdmin]
 
     def post(self, request, formate=None):
-        '''
-        '''
+        
         serialized_data = ResendVerificationMailSerializer(data=request.data)
 
         if serialized_data.is_valid():
-            
+            #check if user exist in the database.
             try:
 
                 user_instance = User.objects.get(email=request.data['email'])
@@ -681,19 +682,19 @@ class ResendEmailVerificationView(APIView):
                     "error" : "User never registered.",
                     "status" : status.HTTP_200_OK
                 })
-            
+            #check if user's email is already verified or not.
             if user_instance.is_email_varified == False:
-                            
+                #check if otp exist.  
                 otp_exist = verify_otp_exist(user_instance.id)
 
                 if otp_exist['status'] == status.HTTP_404_NOT_FOUND:
-
+                    #generate and store otp if it does not exist
                     otp = store_otp(otp = generate_otp(), user_instance = user_instance)
 
                 elif otp_exist['status'] == status.HTTP_302_FOUND:
 
                     otp = otp_exist['otp']
-                
+                # send email with the otp.
                 send_email_verification_mail.delay(first_name=user_instance.first_name, otp=otp, email=user_instance.email)
 
                 return Response({
@@ -749,14 +750,13 @@ class SuperUserInviteView(APIView):
     permission_classes = [IsAuthenticated & WhitelistSuperAdmin]
 
     def post(self, request, format=None):
-        '''
-        '''
+        # check if email exist in database.
         try:
             
             user_existance = User.objects.get(email=request.data['email'])
 
         except User.DoesNotExist:
-            
+            #generate encoded jwt
             encoded_jwt = jwt.encode({
                 'email': request.data['email'],
                 'exp' : time.time() + 10080}, SECRET_KEY, algorithm='HS256').decode('utf-8')
@@ -822,7 +822,7 @@ class ResendSuperUserInvite(APIView):
             user_existance = User.objects.get(email=request.data['email'])
 
         except User.DoesNotExist:
-            
+            #generate encoded jwt.
             encoded_jwt = jwt.encode({
                 'email': request.data['email'],
                 'exp' : time.time() + 10080}, SECRET_KEY, algorithm='HS256').decode('utf-8')
@@ -870,10 +870,10 @@ class RegisterSuperAdminView(APIView):
     This view is only for Super Admin.
     '''
     def post(self, request, format=None):
+        #decode received jwt
         try:
                 
             decoded_jwt = jwt.decode(request.query_params['token'], SECRET_KEY, algorithms=['HS256'])
-            print(decoded_jwt)
 
         except ExpiredSignatureError as expired:
                 
@@ -888,7 +888,7 @@ class RegisterSuperAdminView(APIView):
                 "error" : "Invite token Invalid.",
                 "status" : status.HTTP_406_NOT_ACCEPTABLE
             })
-
+        #verify if email exist in the invite list.
         try:
             
             invited_member_obj = InvitedSuperUsers.objects.get(email=decoded_jwt['email'])
@@ -899,7 +899,7 @@ class RegisterSuperAdminView(APIView):
                 "error" : "Invite not found.",
                 "status" : status.HTTP_400_BAD_REQUEST
             })
-        
+        #check if the invited memeber is already onboarded or not.
         if invited_member_obj.is_onboarded == True:
 
             return Response({
@@ -912,12 +912,14 @@ class RegisterSuperAdminView(APIView):
         if serialized_data.is_valid():
 
             serialized_data.validated_data['is_mobile_number_verified'] = False
+            #mark email as verified.
             serialized_data.validated_data['is_email_varified'] = True
+            #activate user account so that user could login when registered.
             serialized_data.validated_data['is_active'] = True
             
             # serialized_data.validated_data['company'] = decoded_jwt['company_name']
             serialized_data.validated_data['email'] = decoded_jwt['email']
-
+            #onboard user as Super Admin.
             serialized_data.validated_data['user_group'] = SUPER_ADMIN
 
             try:
