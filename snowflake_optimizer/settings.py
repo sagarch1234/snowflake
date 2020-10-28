@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_rest_passwordreset',
     'rest_framework',
-    'system_users'
+    'system_users',
+    'advertisement'
 ]
 
 MIDDLEWARE = [
@@ -164,3 +165,8 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 
 CELERY_BROKER_URL = 'redis://redis:6379/0'
+
+
+#image upload
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

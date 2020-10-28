@@ -93,6 +93,7 @@ class InvitedSuperUsers(BaseModel):
     is_onboarded = models.BooleanField(default=False, blank=False, null=False)
 
 
+
 signals.post_save.connect(invited_super_user_post_save, sender=InvitedSuperUsers)
 signals.post_save.connect(user_post_save, sender=User)
 signals.post_save.connect(invited_member_post_save, sender=InvitedMembers)
