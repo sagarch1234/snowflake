@@ -664,8 +664,6 @@ class ResendEmailVerificationView(APIView):
     }
     '''
     
-    permission_classes = [IsAuthenticated & WhitelistSuperAdmin]
-
     def post(self, request, formate=None):
         
         serialized_data = ResendVerificationMailSerializer(data=request.data)

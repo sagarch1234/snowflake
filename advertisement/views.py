@@ -46,7 +46,8 @@ class ListAdvertisementView(ListAPIView):
     
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
-    filter_backends = [OrderingFilter]
+    filter_backends = [OrderingFilter, DjangoFilterBackend]
+    filterset_fields = ['side', 'is_applied']
     ordering=['-id']
     pagination_class = PageNumberPagination
 
