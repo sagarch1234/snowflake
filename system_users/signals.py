@@ -43,7 +43,7 @@ def invited_super_user_post_save(sender, instance, created, signal, *args, **kwa
 
         if kwargs['update_fields'] is None:
 
-            logger.warning('No updated fields.')
+            logger.warning('No notification fields were updated.')
     
         elif 'token' in kwargs['update_fields']:
 
@@ -66,7 +66,7 @@ def invited_member_post_save(sender, instance, created, signal, *args, **kwargs)
 
         if kwargs['update_fields'] is None:
 
-            logger.warning('No updated fields.')
+            logger.warning('No notification fields were updated.')
     
         elif 'token' in kwargs['update_fields']:
 

@@ -63,7 +63,7 @@ class RegisterSuperAdminSerializer(serializers.ModelSerializer):
             },
             'mobile_number' : {
                 'required' : False,
-                'allow_blank' : True
+                'allow_null' : True
             },
             'password' : {
                 'required' : True,
@@ -134,7 +134,7 @@ class RegisterInvitedUserSerializer(serializers.ModelSerializer):
             },
             'mobile_number' : {
                 'required' : False,
-                'allow_blank' : True
+                'allow_null' : True
             },
             'password' : {
                 'required' : True,
@@ -223,7 +223,7 @@ class RegisterUpdateUserSerializer(serializers.ModelSerializer):
             },
             'mobile_number' : {
                 'required' : False,
-                'allow_blank' : True
+                'allow_null' : True
             },
             'password' : {
                 'required' : True,
