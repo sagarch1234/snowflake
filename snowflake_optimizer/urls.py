@@ -34,6 +34,8 @@ urlpatterns = [
 
     path('api/users/', include('system_users.urls')),
 
-    path('api/advertisement/', include('advertisement.urls'))
+    path('api/advertisement/', include('advertisement.urls')),
+
+    path('api/snowflake-connector/', include('snowflake_connector.urls'))
 
 ]
