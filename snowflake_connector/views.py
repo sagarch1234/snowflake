@@ -4,15 +4,21 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import ListAPIView
 
 from snowflake_connector.connection import connect_snowflake_instance
 from snowflake_connector.serializers import InstancesSerializer
+from snowflake_connector.models import Instances
 
 import jwt
 
 from snowflake_optimizer.settings import SECRET_KEY
 
 from system_users.permissions import WhitelistOrganisationAdmin
+
+from rest_framework.filters import SearchFilter, OrderingFilter
+
+from rest_framework.pagination import PageNumberPagination
 
 
 class AddInstanceView(APIView):
@@ -56,5 +62,20 @@ class AddInstanceView(APIView):
                 return Response(connection)
                                     
         else:
-            
+
             return Response(serialized_data.errors)
+
+
+class ListInstancesView(ListAPIView):
+    '''
+    '''
+    permission_classes = [IsAuthenticated]
+
+    serializer_class = InstancesSerializer
+    filter_backends = [OrderingFilter, SearchFilter]
+    ordering = ['-id']
+    search_fields = ['instance_name']
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        return Instances.objects.filter(company=self.request.user.company)
