@@ -105,3 +105,5 @@ class UpdateInstanceview(APIView):
 
             elif connection['status'] == status.HTTP_400_BAD_REQUEST:
                 return Response(connection)
+        else:
+            return Response(serialized_data.errors)
