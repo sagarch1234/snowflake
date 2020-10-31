@@ -110,7 +110,7 @@ class UpdateInstanceview(APIView):
             return Response(serialized_data.errors)
 
 
-class TestConnectionsView(APIView):
+class ReconnectAllInstances(APIView):
     '''
     '''
     permission_classes = [IsAuthenticated & (WhitelistOrganisationAdmin | WhitelistOrganisationMember)]
@@ -144,6 +144,29 @@ class TestConnectionsView(APIView):
 
             return Response({
                 "connected_instances" : connected_instances,
-                "connection_refused" : connection_refused
+                "could_not_connect" : connection_refused
             })
         
+
+class ReconnectInstance(APIView):
+    '''
+    '''
+    permission_classes = [IsAuthenticated & (WhitelistOrganisationAdmin | WhitelistOrganisationMember)]
+
+    def post(self, request, format=None):
+        
+        instance_object = get_object_or_404(Instances, pk=request.query_params['instance_id'])
+
+        connection = connect_snowflake_instance(instance_object.instance_user, instance_object.instance_password, instance_object.instance_account)
+
+        if connection['status'] == status.HTTP_200_OK:
+            
+            return Response({
+                "message" :"Connection successful.",
+                "status" : status.HTTP_200_OK
+            })
+            
+        elif connection['status'] == status.HTTP_400_BAD_REQUEST:
+
+            return Response(connection)
+
