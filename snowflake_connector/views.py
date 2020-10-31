@@ -1,24 +1,22 @@
-from django.shortcuts import render
+import jwt
+
+from django.shortcuts import render, get_object_or_404
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import ListAPIView
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.pagination import PageNumberPagination
 
 from snowflake_connector.connection import connect_snowflake_instance
 from snowflake_connector.serializers import InstancesSerializer
 from snowflake_connector.models import Instances
 
-import jwt
-
 from snowflake_optimizer.settings import SECRET_KEY
 
 from system_users.permissions import WhitelistOrganisationAdmin
-
-from rest_framework.filters import SearchFilter, OrderingFilter
-
-from rest_framework.pagination import PageNumberPagination
 
 
 class AddInstanceView(APIView):
@@ -79,3 +77,31 @@ class ListInstancesView(ListAPIView):
 
     def get_queryset(self):
         return Instances.objects.filter(company=self.request.user.company)
+
+
+class UpdateInstanceview(APIView):
+    '''
+    To update the instace credentials.
+    '''
+
+    def put(self, request, format=None):
+
+        instance_object = get_object_or_404(Instances, pk=request.query_params['instance_id'])
+        
+        serialized_data = InstancesSerializer(instance_object, data=request.data, partial=False)
+
+        if serialized_data.is_valid():
+            
+            connection = connect_snowflake_instance(serialized_data.validated_data['instance_user'], serialized_data.validated_data['instance_password'], serialized_data.validated_data['instance_account'])
+            
+            if connection['status'] == status.HTTP_200_OK:
+                
+                updated_instance = serialized_data.save()
+                
+                return Response({
+                    "message":"Connection Successful. Instance details updated.",
+                    "status" : status.HTTP_200_OK
+                })
+
+            elif connection['status'] == status.HTTP_400_BAD_REQUEST:
+                return Response(connection)
