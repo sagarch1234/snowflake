@@ -16,14 +16,14 @@ from snowflake_connector.models import Instances
 
 from snowflake_optimizer.settings import SECRET_KEY
 
-from system_users.permissions import WhitelistOrganisationAdmin
+from system_users.permissions import WhitelistOrganisationAdmin, WhitelistOrganisationMember
 
 
 class AddInstanceView(APIView):
     '''
     This view is for Organisation Admins to add instances to the systems.
     '''
-    permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin]
+    permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin & WhitelistOrganisationMember]
 
     def post(self, request, format=None):
         
@@ -67,7 +67,7 @@ class AddInstanceView(APIView):
 class ListInstancesView(ListAPIView):
     '''
     '''
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated & WhitelistOrganisationMember & WhitelistOrganisationAdmin]
 
     serializer_class = InstancesSerializer
     filter_backends = [OrderingFilter, SearchFilter]
@@ -83,6 +83,7 @@ class UpdateInstanceview(APIView):
     '''
     To update the instace credentials.
     '''
+    permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin & WhitelistOrganisationMember]
 
     def put(self, request, format=None):
 
@@ -107,3 +108,42 @@ class UpdateInstanceview(APIView):
                 return Response(connection)
         else:
             return Response(serialized_data.errors)
+
+
+class TestConnectionsView(APIView):
+    '''
+    '''
+    permission_classes = [IsAuthenticated & (WhitelistOrganisationAdmin | WhitelistOrganisationMember)]
+
+    def post(self, request, format=None):
+
+        connection_refused = []
+        connected_instances = []
+        
+        instnaces_list = Instances.objects.filter(company=request.user.company)
+
+        for instnace in instnaces_list:
+
+            connection = connect_snowflake_instance(instnace.instance_user, instnace.instance_password, instnace.instance_account)
+
+            if connection['status'] == status.HTTP_200_OK:
+            
+                serialized_instance = InstancesSerializer(instnace)
+                
+                connected_instances.append(serialized_instance.data)
+
+            elif connection['status'] == status.HTTP_400_BAD_REQUEST:
+
+                serialized_instance = InstancesSerializer(instnace)
+
+                serialized_instance.data = {
+                    "error" : connection
+                }
+
+                connection_refused.append(serialized_instance.data)
+
+            return Response({
+                "connected_instances" : connected_instances,
+                "connection_refused" : connection_refused
+            })
+        

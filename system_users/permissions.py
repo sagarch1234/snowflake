@@ -62,3 +62,16 @@ class WhitelistSuperAdmin(BasePermission):
         current_user_group = list(request.user.groups.values('name'))
         
         return str(Group.objects.get(name=SUPER_ADMIN)) == current_user_group[0]['name']
+
+
+class WhitelistOrganisationMember(BasePermission):
+    '''
+    '''
+    def has_permission(self, request, view):
+        '''
+        '''
+        user = get_object_or_404(User, pk=request.user.id)
+
+        current_user_group = list(request.user.groups.values('name'))
+        
+        return str(Group.objects.get(name=ORGANISATION_MEMBER)) == current_user_group[0]['name']
