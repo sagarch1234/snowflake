@@ -13,6 +13,7 @@ from rest_framework.pagination import PageNumberPagination
 from snowflake_connector.connection import connect_snowflake_instance
 from snowflake_connector.serializers import InstancesSerializer
 from snowflake_connector.models import Instances
+from snowflake_connector.permissions import IsInstanceAccessible
 
 from snowflake_optimizer.settings import SECRET_KEY
 
@@ -23,7 +24,7 @@ class AddInstanceView(APIView):
     '''
     This view is for Organisation Admins to add instances to the systems.
     '''
-    permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin & WhitelistOrganisationMember]
+    permission_classes = [IsAuthenticated & (WhitelistOrganisationAdmin | WhitelistOrganisationMember)]
 
     def post(self, request, format=None):
         
@@ -67,7 +68,7 @@ class AddInstanceView(APIView):
 class ListInstancesView(ListAPIView):
     '''
     '''
-    permission_classes = [IsAuthenticated & WhitelistOrganisationMember & WhitelistOrganisationAdmin]
+    permission_classes = [IsAuthenticated & (WhitelistOrganisationMember | WhitelistOrganisationAdmin)]
 
     serializer_class = InstancesSerializer
     filter_backends = [OrderingFilter, SearchFilter]
@@ -83,7 +84,7 @@ class UpdateInstanceview(APIView):
     '''
     To update the instace credentials.
     '''
-    permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin & WhitelistOrganisationMember]
+    permission_classes = [IsAuthenticated & (WhitelistOrganisationAdmin | WhitelistOrganisationMember) & IsInstanceAccessible]
 
     def put(self, request, format=None):
 
@@ -110,7 +111,7 @@ class UpdateInstanceview(APIView):
             return Response(serialized_data.errors)
 
 
-class ReconnectAllInstances(APIView):
+class ReconnectAllInstancesView(APIView):
     '''
     '''
     permission_classes = [IsAuthenticated & (WhitelistOrganisationAdmin | WhitelistOrganisationMember)]
@@ -148,10 +149,10 @@ class ReconnectAllInstances(APIView):
             })
         
 
-class ReconnectInstance(APIView):
+class ReconnectInstanceView(APIView):
     '''
     '''
-    permission_classes = [IsAuthenticated & (WhitelistOrganisationAdmin | WhitelistOrganisationMember)]
+    permission_classes = [IsAuthenticated & (WhitelistOrganisationAdmin | WhitelistOrganisationMember) & IsInstanceAccessible]
 
     def post(self, request, format=None):
         
@@ -170,3 +171,17 @@ class ReconnectInstance(APIView):
 
             return Response(connection)
 
+
+class RemoveInstanceView(APIView):
+    '''
+    '''
+    
+    permission_classes = [IsAuthenticated & (WhitelistOrganisationAdmin | WhitelistOrganisationMember) & IsInstanceAccessible]
+
+    def delete(self, request, format=None):
+        instance_object = get_object_or_404(Instances, pk=request.query_params['instance_id'])
+        instance_object.delete()
+        return Response({
+            "message":"Snowflake database instance deleted.",
+            "status":status.HTTP_200_OK
+        })
