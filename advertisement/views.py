@@ -14,7 +14,7 @@ from advertisement.models import Advertisement
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from system_users.permissions import WhitelistSuperAdmin
+from system_users.permissions import WhitelistSuperAdmin, WhitelistOrganisationMember, WhitelistOrganisationAdmin
 
 
 class CreateAdvertisementView(APIView):
@@ -42,7 +42,7 @@ class CreateAdvertisementView(APIView):
 
 class ListAdvertisementView(ListAPIView):
 
-    permission_classes = [IsAuthenticated & WhitelistSuperAdmin]
+    permission_classes = [IsAuthenticated]
     
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
