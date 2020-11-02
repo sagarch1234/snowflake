@@ -1,16 +1,16 @@
 
 
 #login Page 
-LOGIN_URL = 'http://127.0.0.1:3000'
+LOGIN_URL = 'http://52.188.9.154/'
 
 #forgot password page
-FORGOT_PASSWORD_URL = 'http://127.0.0.1:3000/pages/validate-token?token='
+FORGOT_PASSWORD_URL = 'http://52.188.9.154/pages/validate-token?token='
 
 #member invite page
-INVITE_MEMBER_URL = 'http://127.0.0.1:3000/verify-invite?token='
+INVITE_MEMBER_URL = 'http://52.188.9.154/verify-invite?token='
 
 #super admin invite page
-INVITE_SUPER_ADMIN = 'http://127.0.0.1:3000/verify-super-admin-invite?token='
+INVITE_SUPER_ADMIN = 'http://52.188.9.154/verify-super-admin-invite?token='
 
 #email subjects 
 FORGOT_PASSWORD_SUBJECT = 'OTP to reset your password.'
