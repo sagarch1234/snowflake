@@ -41,3 +41,4 @@ django-rest-passwordreset==1.1.0
 PyJWT==1.7.1
 
 Pillow==2.2.1
+django-storages-azure==1.6.8
