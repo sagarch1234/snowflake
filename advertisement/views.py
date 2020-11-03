@@ -17,6 +17,18 @@ from django_filters.rest_framework import DjangoFilterBackend
 from system_users.permissions import WhitelistSuperAdmin, WhitelistOrganisationMember, WhitelistOrganisationAdmin
 
 
+class ShowAdvertisementsView(ListAPIView):
+    '''
+    '''
+
+    permission_classes = [IsAuthenticated]
+    
+    queryset = Advertisement.objects.filter(is_applied=True)
+    serializer_class = AdvertisementSerializer
+    filter_backends = [OrderingFilter]
+    ordering=['-id']
+
+
 class CreateAdvertisementView(APIView):
 
     permission_classes = [IsAuthenticated & WhitelistSuperAdmin]
@@ -42,7 +54,7 @@ class CreateAdvertisementView(APIView):
 
 class ListAdvertisementView(ListAPIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated & WhitelistSuperAdmin]
     
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
