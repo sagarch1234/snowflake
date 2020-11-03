@@ -17,6 +17,9 @@ class InstancesSerializer(serializers.ModelSerializer):
             },
             'instance_password' : {
                 'write_only' : True
+            },
+            'company' : {
+                'required' : False
             }
         }
     def get_company(self, obj):

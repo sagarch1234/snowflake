@@ -71,12 +71,17 @@ class ListInstancesView(ListAPIView):
     permission_classes = [IsAuthenticated & (WhitelistOrganisationMember | WhitelistOrganisationAdmin)]
 
     serializer_class = InstancesSerializer
+
     filter_backends = [OrderingFilter, SearchFilter]
+    
     ordering = ['-id']
+    
     search_fields = ['instance_name']
+    
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
+    
         return Instances.objects.filter(company=self.request.user.company)
 
 
@@ -97,6 +102,8 @@ class UpdateInstanceview(APIView):
             connection = connect_snowflake_instance(serialized_data.validated_data['instance_user'], serialized_data.validated_data['instance_password'], serialized_data.validated_data['instance_account'])
             
             if connection['status'] == status.HTTP_200_OK:
+
+                serialized_data.validated_data['company'] = request.user.company
                 
                 updated_instance = serialized_data.save()
                 
@@ -106,8 +113,11 @@ class UpdateInstanceview(APIView):
                 })
 
             elif connection['status'] == status.HTTP_400_BAD_REQUEST:
+
                 return Response(connection)
+        
         else:
+        
             return Response(serialized_data.errors)
 
 
@@ -137,11 +147,11 @@ class ReconnectAllInstancesView(APIView):
 
                 serialized_instance = InstancesSerializer(instnace)
 
-                serialized_instance.data = {
-                    "error" : connection
-                }
+                instance = serialized_instance.data
 
-                connection_refused.append(serialized_instance.data)
+                instance['issue'] = connection
+
+                connection_refused.append(instance)
 
             return Response({
                 "connected_instances" : connected_instances,
@@ -179,8 +189,11 @@ class RemoveInstanceView(APIView):
     permission_classes = [IsAuthenticated & (WhitelistOrganisationAdmin | WhitelistOrganisationMember) & IsInstanceAccessible]
 
     def delete(self, request, format=None):
+
         instance_object = get_object_or_404(Instances, pk=request.query_params['instance_id'])
+        
         instance_object.delete()
+        
         return Response({
             "message":"Snowflake database instance deleted.",
             "status":status.HTTP_200_OK
