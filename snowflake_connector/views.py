@@ -19,6 +19,10 @@ from snowflake_optimizer.settings import SECRET_KEY
 
 from system_users.permissions import WhitelistOrganisationAdmin, WhitelistOrganisationMember
 
+import jwt
+
+from snowflake_optimizer.settings import SECRET_KEY
+
 
 class AddInstanceView(APIView):
     '''
@@ -31,6 +35,7 @@ class AddInstanceView(APIView):
         serialized_data = InstancesSerializer(data=request.data)
 
         if serialized_data.is_valid():
+            print(serialized_data)
             
             #check and connect to instance
 
@@ -104,6 +109,8 @@ class UpdateInstanceview(APIView):
             if connection['status'] == status.HTTP_200_OK:
 
                 serialized_data.validated_data['company'] = request.user.company
+                #encrypt instance password.
+                serialized_data.validated_data['instance_password'] = jwt.encode({"password":serialized_data.validated_data['instance_password']}, SECRET_KEY, algorithm='HS256').decode('utf-8')
                 
                 updated_instance = serialized_data.save()
                 
