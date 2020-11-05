@@ -145,15 +145,12 @@ class ReconnectAllInstancesView(APIView):
 
             connection = connect_snowflake_instance(instnace.instance_user, decoded_password['password'], instnace.instance_account)
 
-            print(instnace.instance_user, decoded_password['password'], instnace.instance_account)
-
             if connection['status'] == status.HTTP_200_OK:
             
                 serialized_instance = InstancesSerializer(instnace)
                 
                 connected_instances.append(serialized_instance.data)
-                print(serialized_instance.data)
-                print(connected_instances)
+
 
             elif connection['status'] == status.HTTP_400_BAD_REQUEST:
 
