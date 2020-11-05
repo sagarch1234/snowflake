@@ -35,7 +35,6 @@ class AddInstanceView(APIView):
         serialized_data = InstancesSerializer(data=request.data)
 
         if serialized_data.is_valid():
-            print(serialized_data)
             
             #check and connect to instance
 
@@ -142,7 +141,9 @@ class ReconnectAllInstancesView(APIView):
 
         for instnace in instnaces_list:
 
-            connection = connect_snowflake_instance(instnace.instance_user, instnace.instance_password, instnace.instance_account)
+            decoded_password = jwt.decode(instnace.instance_password, SECRET_KEY, algorithms=['HS256'])
+
+            connection = connect_snowflake_instance(instnace.instance_user, decoded_password['password'], instnace.instance_account)
 
             if connection['status'] == status.HTTP_200_OK:
             
@@ -175,7 +176,11 @@ class ReconnectInstanceView(APIView):
         
         instance_object = get_object_or_404(Instances, pk=request.query_params['instance_id'])
 
-        connection = connect_snowflake_instance(instance_object.instance_user, instance_object.instance_password, instance_object.instance_account)
+        decoded_password = jwt.decode(instance_object.instance_password, SECRET_KEY, algorithms=['HS256'])
+
+        print(instance_object.instance_user, decoded_password, instance_object.instance_account)
+
+        connection = connect_snowflake_instance(instance_object.instance_user, decoded_password['password'], instance_object.instance_account)
 
         if connection['status'] == status.HTTP_200_OK:
             

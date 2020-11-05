@@ -14,22 +14,20 @@ logging.basicConfig(
 def connect_snowflake_instance(user, password, account):
 
     try:
-        logger.info("Connecting to snowflake instance.")
-        return {
-            "connection_object" : snowflake.connector.connect(user=user, password=password, account=account, role='ACCOUNTADMIN'),
-            "message" : "Connection successful.",
-            "status" : status.HTTP_200_OK
-            }
+        connection = snowflake.connector.connect(user=user, password=password, account=account, role='ACCOUNTADMIN')
     
     except Exception as error_message:
 
-        logger.error('Error Message {0} '.format(error_message.raw_msg))
-        logger.error('Error Number {0}'.format(error_message.errno))
         return {
             "error_no" : error_message.errno,
             "error_message" : error_message.raw_msg,
             "status" : status.HTTP_400_BAD_REQUEST
         }
+    return {
+        "connection_object" : connection,
+        "message" : "Connection successful.",
+        "status" : status.HTTP_200_OK
+    }
      
 
 # connection = connect_snowflake_instance(user='jeet', password='Jeet@123', account='fp43891.us-central1.gcp')

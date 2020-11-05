@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'system_users',
     'advertisement',
+    'drf_yasg',
     'snowflake_connector'
 ]
 
@@ -59,6 +60,15 @@ MIDDLEWARE = [
 ]
 CORS_ORIGIN_ALLOW_ALL = True
 
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS' : {
+        "Auth Token eg [Bearer (JWT)]" : {
+            "type":"apiKey",
+            "name":"Authorization",
+            "in":"header" 
+        }
+    }
+}
 
 ROOT_URLCONF = 'snowflake_optimizer.urls'
 
@@ -86,6 +96,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     }
 
 # Database
