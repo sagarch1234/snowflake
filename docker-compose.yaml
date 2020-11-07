@@ -15,6 +15,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: sostagingacr.azurecr.io/snowflake-optimizer
     volumes:
       - .:/snowflake-backend
     ports:
@@ -33,6 +34,7 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile.celery
+    image: sostagingacr.azurecr.io/celery
     command: "celery  -A snowflake_optimizer worker -l INFO"
     volumes:
       - .:/snowflake-optimizer
