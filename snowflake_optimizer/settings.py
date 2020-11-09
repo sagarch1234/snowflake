@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'system_users',
     'advertisement',
     'drf_yasg',
-    'snowflake_connector'
+    'snowflake_connector',
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -102,14 +103,26 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = { 
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql', 
+#         'NAME': 'snowflake',
+#         'USER': 'dropoff',
+#         'PASSWORD': 'dropoff@123',
+#         'HOST': '34.71.45.17',
+#         'PORT': 3306,
+#         'ATOMIC_REQUESTS':True,
+#     }
+# }
+
 DATABASES = { 
     'default': {
-        'ENGINE': 'django.db.backends.mysql', 
+        'ENGINE': 'django.db.backends.postgresql', 
         'NAME': 'snowflake',
-        'USER': 'dropoff',
-        'PASSWORD': 'dropoff@123',
-        'HOST': '34.71.45.17',
-        'PORT': 3306,
+        'USER': 'staging_admin',
+        'PASSWORD': 'so@root_123',
+        'HOST': 'so-staging-db.postgres.database.azure.com',
+        'PORT': 5432,
         'ATOMIC_REQUESTS':True,
     }
 }
@@ -171,3 +184,19 @@ CELERY_BROKER_URL = 'redis://redis:6379/0'
 #image upload
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, '<directory that houses the static files>/static'),
+]
+
+AZURE_ACCOUNT_NAME = '<azure container name>'
+AZURE_ACCOUNT_KEY = '<azure account key for this container>'
+AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
+AZURE_LOCATION = '<blob container name>'
+AZURE_CONTAINER = '<blob container name>'
+
+STATIC_LOCATION = 'static'
+STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+
+STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+DEFAULT_FILE_STORAGE = 'mysite.custom_azure.AzureMediaStorage'

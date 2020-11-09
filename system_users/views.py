@@ -484,14 +484,14 @@ class VerifyInviteView(APIView):
             
             decoded_jwt = jwt.decode(request.query_params['token'], SECRET_KEY, algorithms=['HS256'])
 
-        except ExpiredSignatureError as expired:
+        except jwt.ExpiredSignatureError as expired:
             
             return Response({
                 "error" : "Invite has expired",
                 "status" : status.HTTP_406_NOT_ACCEPTABLE
             })
         
-        except InvalidSignatureError as invalid:
+        except jwt.InvalidSignatureError as invalid:
         
             return Response({
                 "error" : "Invite token Invalid.",

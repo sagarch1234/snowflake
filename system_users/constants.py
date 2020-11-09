@@ -1,16 +1,17 @@
-
+#UI Host
+UI_HOST = 'https://calm-meadow-01cfdeb10.azurestaticapps.net/'
 
 #login Page 
-LOGIN_URL = 'http://52.188.9.154/'
+LOGIN_URL = UI_HOST
 
 #forgot password page
-FORGOT_PASSWORD_URL = 'http://52.188.9.154/pages/validate-token?token='
+FORGOT_PASSWORD_URL = UI_HOST+'/validate-token?token='
 
 #member invite page
-INVITE_MEMBER_URL = 'http://52.188.9.154/verify-invite?token='
+INVITE_MEMBER_URL = UI_HOST+'/verify-invite?token='
 
 #super admin invite page
-INVITE_SUPER_ADMIN = 'http://52.188.9.154/verify-super-admin-invite?token='
+INVITE_SUPER_ADMIN = UI_HOST+'/verify-super-admin-invite?token='
 
 #email subjects 
 FORGOT_PASSWORD_SUBJECT = 'OTP to reset your password.'
