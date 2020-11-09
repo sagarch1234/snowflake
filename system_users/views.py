@@ -48,7 +48,6 @@ class RegisterInvitedMember(APIView):
     This view is only for Organisation Admin. 
     '''
     
-    permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin]
 
     def post(self, request, format=None):
         '''
