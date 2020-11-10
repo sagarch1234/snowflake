@@ -35,10 +35,10 @@ schema_view = get_schema_view(
       title="Snowflake Optimizer's API",
       default_version='v1',
       description="Base URL configuration for Snowflake Optimizer.",
-      terms_of_service="https://www.google.com/policies/terms/",
       contact=openapi.Contact(email="SnowflakeOptimizer@emphasistech.net"),
       license=openapi.License(name="BSD License"),
    ),
+   url='https://calm-meadow-01cfdeb10.azurestaticapps.net/',
    public=True,
    permission_classes=(permissions.AllowAny,),
 )

@@ -185,19 +185,19 @@ CELERY_BROKER_URL = 'redis://redis:6379/0'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # MEDIA_URL = '/media/'
 
-DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+# DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+# STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 
 AZURE_ACCOUNT_NAME = 'sostagingstore'
 AZURE_ACCOUNT_KEY = 'M9F+gOlsYmcIsje5O+J+ajlv0M2KAsua9vm2VAymyl4QlETFdtW2AeYISk1rzQ1110jv0eISIf/lXcj+nJP0tg==>'
 AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
-# AZURE_LOCATION = '<blob container name>'
+AZURE_LOCATION = 'sostagingcontainer'
 AZURE_CONTAINER = 'sostagingcontainer'
 
-STATIC_LOCATION = 'static'
-MEDIA_LOCATION = "media"
-STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
-MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
+# STATIC_LOCATION = 'static'
+# MEDIA_LOCATION = "media"
+# STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+# MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
 
 
 
