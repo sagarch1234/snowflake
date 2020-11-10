@@ -1,5 +1,5 @@
 #UI Host
-UI_HOST = 'https://calm-meadow-01cfdeb10.azurestaticapps.net/'
+UI_HOST = 'https://calm-meadow-01cfdeb10.azurestaticapps.net'
 
 #login Page 
 LOGIN_URL = UI_HOST

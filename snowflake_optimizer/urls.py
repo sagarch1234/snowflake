@@ -26,8 +26,6 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-# from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
-
 
 
 schema_view = get_schema_view(
@@ -45,6 +43,11 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
+
+    #redirect user to the API documentation.
+    # path('swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     
     #login and refresh token using simple-jwt package
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -61,10 +64,5 @@ urlpatterns = [
 
     #redirect to snowflake-connector app where user can connect their snowflake instances with our system and can also perform operations like test connection, update connection etc.
     path('api/snowflake-connector/', include('snowflake_connector.urls')),
-
-    #redirect user to the API documentation.
-    path('swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
 ]
