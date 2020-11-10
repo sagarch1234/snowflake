@@ -1,6 +1,7 @@
 import jwt
 
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.models import Group
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -17,7 +18,8 @@ from snowflake_connector.permissions import IsInstanceAccessible
 
 from snowflake_optimizer.settings import SECRET_KEY
 
-from system_users.permissions import WhitelistOrganisationAdmin, WhitelistOrganisationMember
+from system_users.permissions import WhitelistOrganisationAdmin, WhitelistOrganisationMember, WhitelistSuperAdmin
+from system_users.constants import SUPER_ADMIN
 
 import jwt
 
@@ -71,8 +73,13 @@ class AddInstanceView(APIView):
 
 class ListInstancesView(ListAPIView):
     '''
+    This view will list all the instances of a company.
+    Authentication is required to access this view.
+    If authenticated user is of type ```SUPER ADMIN``` then provide ```comapny_id``` as a ```query_parameter```.
+    ```comapny_id``` as a ```query_parameter``` is not required if authenticated user is of type other then  ```SUPER ADMIN```.
+     
     '''
-    permission_classes = [IsAuthenticated & (WhitelistOrganisationMember | WhitelistOrganisationAdmin)]
+    permission_classes = [IsAuthenticated & (WhitelistOrganisationMember | WhitelistOrganisationAdmin | WhitelistSuperAdmin)]
 
     serializer_class = InstancesSerializer
 
@@ -85,6 +92,12 @@ class ListInstancesView(ListAPIView):
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
+
+        current_user_group = list(self.request.user.groups.values('name'))
+
+        if str(Group.objects.get(name=SUPER_ADMIN)) == current_user_group[0]['name']:
+
+            return Instances.objects.filter(company=self.request.query_params['company_id'])
     
         return Instances.objects.filter(company=self.request.user.company)
 

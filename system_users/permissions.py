@@ -15,7 +15,9 @@ class IsCompanyOwner(BasePermission):
         '''
         try:
             company = CompanyDetails.objects.get(pk=request.query_params['id']).id
+
         except CompanyDetails.DoesNotExist:
+            
             return False
         
         return request.user.company.id == company

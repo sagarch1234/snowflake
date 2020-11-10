@@ -286,7 +286,7 @@ class RetriveUserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'mobile_number', 'company', 'user_group']
+        fields = ['id', 'first_name', 'last_name', 'email', 'mobile_number', 'company', 'user_group']
     
     def get_company(self, obj):
 

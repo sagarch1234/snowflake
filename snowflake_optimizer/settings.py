@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'snowflake_optimizer.wsgi.application'
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework_simplejwt.authentication.JWTAuthentication'],
+    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework_simplejwt.authentication.JWTAuthentication', 'rest_framework.authentication.SessionAuthentication'],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
@@ -102,18 +102,6 @@ REST_FRAMEWORK = {
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-# DATABASES = { 
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql', 
-#         'NAME': 'snowflake',
-#         'USER': 'dropoff',
-#         'PASSWORD': 'dropoff@123',
-#         'HOST': '34.71.45.17',
-#         'PORT': 3306,
-#         'ATOMIC_REQUESTS':True,
-#     }
-# }
 
 DATABASES = { 
     'default': {
@@ -167,6 +155,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+#default auth modal
 AUTH_USER_MODEL = 'system_users.User'
 
 #EMAIL SETTINGS 
@@ -177,27 +166,14 @@ EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
-
+# connect to redis.
 CELERY_BROKER_URL = 'redis://redis:6379/0'
 
-
-#image upload
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-# MEDIA_URL = '/media/'
-
-# DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-# STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+#Azure storage configurations.
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 
 AZURE_ACCOUNT_NAME = 'sostagingstore'
 AZURE_ACCOUNT_KEY = 'M9F+gOlsYmcIsje5O+J+ajlv0M2KAsua9vm2VAymyl4QlETFdtW2AeYISk1rzQ1110jv0eISIf/lXcj+nJP0tg==>'
 AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
 AZURE_LOCATION = 'sostagingcontainer'
 AZURE_CONTAINER = 'sostagingcontainer'
-
-# STATIC_LOCATION = 'static'
-# MEDIA_LOCATION = "media"
-# STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
-# MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/'
-
-
-

@@ -19,6 +19,7 @@ from system_users.permissions import IsInviteOwner, WhitelistOrganisationAdmin, 
 from system_users.constants import ORGANISATION_MEMBER, SUPER_ADMIN, ORGANISATION_ADMIN
 
 from django.db import transaction, IntegrityError
+from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.hashers import check_password
 from django_filters.rest_framework import DjangoFilterBackend
@@ -214,9 +215,20 @@ class RegisterUserView(APIView):
 class RetriveUserProfileView(RetrieveAPIView):
     
     '''
-    This view will retrive user profile information.
+    This view will retrive user profile information for the authenticated user and for the SUPER ADMIN type of user.
+    
+    Case : 1
+        1. If you want to retrive some othe user's profile then login using SUPER ADMIN's credentials and then provide  ```**'organisation_admin_id'**``` as
+           query paramter to the end point along with the valid access token.
+        
+        2. ```request body``` will be ignored in this case even if provided.
+        
+        3. ```query_parameters``` as ```**'organisation_admin_id'**``` is required. If any other parameter is provided then those parameter will be ignored.
 
-    Authentication is required for this view.
+    Case : 2
+        1. If you want to retrive the profile of the authenticated user then just send the request to the endpoint with valid the valid access token. 
+
+        2. In this case ```request body``` and ```query_parameter``` will be ignored even if provided.
 
     Sample response -
 
@@ -235,9 +247,15 @@ class RetriveUserProfileView(RetrieveAPIView):
     }
     '''
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated | (WhitelistSuperAdmin)]
 
     def get_object(self):
+
+        current_user_group = list(self.request.user.groups.values('name'))
+
+        if str(Group.objects.get(name=SUPER_ADMIN)) == current_user_group[0]['name']:
+
+            return User.objects.get(pk=self.request.query_params['organisation_admin_id'])
 
         return User.objects.get(pk=self.request.user.id)
 
@@ -607,16 +625,26 @@ class ListInvitedMembers(ListAPIView):
     '''
     This will list all the email address to which the invite has been sent.
     This will only list the email address to which the requested user has sent the invites.
-    It provide the search funcationality on 'email'.
+    It provide the search funcationality on `email`.
     It also has pagination.
-    This view returns a list ordered in descending of id.
+    This view returns a list ordered in descending of field `id`.
 
     {{host}}/api/users/list-invited-members/?is_onboarded=&search=&page=
 
     `is_onboarded` is a boolean value. If you want to list the onboarded users then pass `is_onboarded=True` or else `is_onboarded=False`
 
+    Access to authenticated users only. 
+
+    If user is of type `SUPER ADMIN` then provide `organisation_admin_id` as a query parameter.
+
+    ```request body``` will be ignored for every type of user.
+
+    ```query_params``` will be ignored if the authenticated user trying to access the view is not of type ```SUPER ADMIN```.
     '''
-    permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin & IsCompanyOwner]
+    
+    IsObjectOwner = WhitelistOrganisationAdmin & IsCompanyOwner
+
+    permission_classes = [IsAuthenticated & ( IsObjectOwner | WhitelistSuperAdmin )]
     
     serializer_class = InvitedMemberSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
@@ -626,20 +654,33 @@ class ListInvitedMembers(ListAPIView):
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
-        queryset = InvitedMembers.objects.filter(invited_by=self.request.user)
-        return queryset
+
+        current_user_group = list(self.request.user.groups.values('name'))
+
+        if str(Group.objects.get(name=SUPER_ADMIN)) == current_user_group[0]['name']:
+
+            return InvitedMembers.objects.filter(invited_by=self.request.query_params['organisation_admin_id'])
+
+        return InvitedMembers.objects.filter(invited_by=self.request.user)
 
 
 class ListCompanyUsersView(ListAPIView):
     '''
     This view will list all the users belonging to the same company.
+    
     It provide the search funcationality on 'first_name', 'last_name' and 'email'.
+    
     It also has pagination.
+
     This view returns a list ordered in descending of id.
 
-    {{host}}/api/users/list-companies/?search=&page=
+    If the authenticated user trying to access the view is of type ```SUPER ADMIN``` then provide the ```query_parameter``` as ```company_id```.
+
+    If the authenticated user trying to access the view is not of type ```SUPER ADMIN``` then provides the ```query_parameter``` as ```company_id``` will be ignored 
+    and the API and the list of company members will be returned belongig to the company of authenticated user trying to access the view.
+
     '''
-    permission_classes = [IsAuthenticated & WhitelistOrganisationAdmin]
+    permission_classes = [IsAuthenticated & ( WhitelistOrganisationAdmin | WhitelistSuperAdmin )]
     
     serializer_class = RegisterUpdateUserSerializer
     filter_backends = [OrderingFilter, SearchFilter]
@@ -648,8 +689,14 @@ class ListCompanyUsersView(ListAPIView):
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
-        queryset = User.objects.filter(company=self.request.user.company)
-        return queryset
+
+        current_user_group = list(self.request.user.groups.values('name'))
+
+        if str(Group.objects.get(name=SUPER_ADMIN)) == current_user_group[0]['name']:
+
+            return User.objects.filter(company=self.request.query_params['company_id'])
+
+        return User.objects.filter(company=self.request.user.company)
 
 
 class ResendEmailVerificationView(APIView):

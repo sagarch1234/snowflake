@@ -21,12 +21,17 @@ class ShowAdvertisementsView(ListAPIView):
     '''
     '''
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated & (WhitelistSuperAdmin | WhitelistOrganisationMember | WhitelistOrganisationAdmin)]
     
-    queryset = Advertisement.objects.filter(is_applied=True)
+    # queryset = Advertisement.objects.filter(is_applied=True)
     serializer_class = AdvertisementSerializer
     filter_backends = [OrderingFilter]
     ordering=['-id']
+
+    def get_queryset(self):
+
+        return Advertisement.objects.filter(is_applied=True)
+
 
 
 class CreateAdvertisementView(APIView):
