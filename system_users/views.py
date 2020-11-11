@@ -253,9 +253,9 @@ class RetriveUserProfileView(RetrieveAPIView):
 
         current_user_group = list(self.request.user.groups.values('name'))
 
-        if str(Group.objects.get(name=SUPER_ADMIN)) == current_user_group[0]['name']:
+        # if str(Group.objects.get(name=SUPER_ADMIN)) == current_user_group[0]['name']:
 
-            return User.objects.get(pk=self.request.query_params['organisation_admin_id'])
+        #     return User.objects.get(pk=self.request.query_params['organisation_admin_id'])
 
         return User.objects.get(pk=self.request.user.id)
 
