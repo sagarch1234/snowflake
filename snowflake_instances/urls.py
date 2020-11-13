@@ -1,11 +1,8 @@
 from django.urls import path, include
 
-from snowflake_connector.views import(
+from snowflake_instances.views import(
     AddInstanceView, ListInstancesView, UpdateInstanceview, ReconnectAllInstancesView, ReconnectInstanceView, RemoveInstanceView
 )
-
-
-
 
 
 urlpatterns = [

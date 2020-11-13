@@ -11,10 +11,12 @@ from rest_framework.generics import ListAPIView
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 
-from snowflake_connector.connection import connect_snowflake_instance
-from snowflake_connector.serializers import InstancesSerializer
-from snowflake_connector.models import Instances
-from snowflake_connector.permissions import IsInstanceAccessible
+# from snowflake_connector.connection import connect_snowflake_instance
+from snowflake.instance_connector.connection import SnowflakeConnector
+
+from snowflake_instances.serializers import InstancesSerializer
+from snowflake_instances.models import Instances
+from snowflake_instances.permissions import IsInstanceAccessible
 
 from snowflake_optimizer.settings import SECRET_KEY
 
@@ -40,8 +42,10 @@ class AddInstanceView(APIView):
             
             #check and connect to instance
 
-            connection = connect_snowflake_instance(request.data['instance_user'], request.data['instance_password'], request.data['instance_account']) 
-
+            # connection = connect_snowflake_instance(request.data['instance_user'], request.data['instance_password'], request.data['instance_account']) 
+            instance = SnowflakeConnector(request.data['instance_user'], request.data['instance_password'], request.data['instance_account'], 'ACCOUNTADMIN')
+            connection = instance.connect_snowflake_instance()
+            
             #if snowflake instance connected
 
             if connection['status'] == status.HTTP_200_OK:
@@ -221,6 +225,6 @@ class RemoveInstanceView(APIView):
         instance_object.delete()
         
         return Response({
-            "message":"Snowflake database instance deleted.",
+            "message":"Snowflake instance deleted.",
             "status":status.HTTP_200_OK
         })

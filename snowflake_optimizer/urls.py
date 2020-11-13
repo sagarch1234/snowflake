@@ -62,7 +62,7 @@ urlpatterns = [
     #redirect to advertisement app where user can add advertisement, update, delete and many more advertisement related opertaions can be performed.
     path('api/advertisement/', include('advertisement.urls')),
 
-    #redirect to snowflake-connector app where user can connect their snowflake instances with our system and can also perform operations like test connection, update connection etc.
-    path('api/snowflake-connector/', include('snowflake_connector.urls')),
+    #redirect to snowflake-instances app where user can connect snowflake instances with our system and can also perform operations like test connection, update connection etc.
+    path('api/snowflake-instances/', include('snowflake_instances.urls')),
 
 ]

@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'system_users',
     'advertisement',
     'drf_yasg',
-    'snowflake_connector',
+    'snowflake_instances',
     'storages'
 ]
 
