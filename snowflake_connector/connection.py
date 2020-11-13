@@ -23,6 +23,7 @@ def connect_snowflake_instance(user, password, account):
             "error_message" : error_message.raw_msg,
             "status" : status.HTTP_400_BAD_REQUEST
         }
+        
     return {
         "connection_object" : connection,
         "message" : "Connection successful.",
