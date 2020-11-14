@@ -10,7 +10,6 @@ class SnowflakeConnector:
         self.password = password
         self.account = account
         self.role = role
-        # self.snowflake_instance = snowflake_instance
     
     def connect_snowflake_instance(self):
 
@@ -39,6 +38,26 @@ class SnowflakeConnector:
 
         return {
             "connection_object" : connection,
+            "engine" : engine,
             "message" : "Connection successful.",
             "status" : status.HTTP_200_OK
         }
+
+
+class CloseSnowflakeConnection:
+
+    def __init__(self, connection_object):
+        self.connection_object = connection_object
+
+    def close_connected_instance(self):
+        self.connection_object.close()
+
+
+class DisposeEngine:
+
+    def __init__(self, engine):
+        self.engine = engine
+
+    def close_engine(self):
+
+        self.engine.dispose()

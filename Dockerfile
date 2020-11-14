@@ -36,5 +36,7 @@ RUN pip install -U "celery[redis]"
 
 RUN python manage.py makemigrations &&\
     python manage.py migrate
-    
+
+RUN python manage.py loaddata usergroup account_type
+
 CMD [ "python", "manage.py", "runserver", "0.0.0.0:80"]

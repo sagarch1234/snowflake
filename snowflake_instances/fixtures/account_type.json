@@ -1,0 +1,32 @@
+[
+    {
+        "model": "snowflake_instances.InstanceAccountType",
+        "pk": 1,
+        "fields": {
+            "account_type": "Standard Edition"
+        }
+    },
+    {
+        "model": "snowflake_instances.InstanceAccountType",
+        "pk": 2,
+        "fields": {
+            "account_type": "Enterprise Edition"
+        }
+    },
+    {
+        "model": "snowflake_instances.InstanceAccountType",
+        "pk": 3,
+        "fields": {
+            "account_type": "Business Critical Edition"
+        }
+    },
+    {
+        "model": "snowflake_instances.InstanceAccountType",
+        "pk": 4,
+        "fields": {
+            "account_type": "Virtual Private Snowflake Edition (VPS)"
+        }
+    }
+
+    
+]

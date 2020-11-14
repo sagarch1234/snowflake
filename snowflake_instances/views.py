@@ -11,11 +11,10 @@ from rest_framework.generics import ListAPIView
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 
-# from snowflake_connector.connection import connect_snowflake_instance
-from snowflake.instance_connector.connection import SnowflakeConnector
+from snowflake.instance_connector.connection import SnowflakeConnector, CloseSnowflakeConnection, DisposeEngine
 
 from snowflake_instances.serializers import InstancesSerializer
-from snowflake_instances.models import Instances
+from snowflake_instances.models import Instances, InstanceAccountType
 from snowflake_instances.permissions import IsInstanceAccessible
 
 from snowflake_optimizer.settings import SECRET_KEY
@@ -41,26 +40,32 @@ class AddInstanceView(APIView):
         if serialized_data.is_valid():
             
             #check and connect to instance
-
-            # connection = connect_snowflake_instance(request.data['instance_user'], request.data['instance_password'], request.data['instance_account']) 
             instance = SnowflakeConnector(request.data['instance_user'], request.data['instance_password'], request.data['instance_account'], 'ACCOUNTADMIN')
             connection = instance.connect_snowflake_instance()
             
             #if snowflake instance connected
-
             if connection['status'] == status.HTTP_200_OK:
                 
                 #encrypt instance password.
                 encoded_password = jwt.encode({"password":request.data['instance_password']}, SECRET_KEY, algorithm='HS256').decode('utf-8')
                 
                 serialized_data.validated_data['instance_password'] = encoded_password
+
+                #foreign key instances
                 serialized_data.validated_data['created_by'] = request.user
                 serialized_data.validated_data['company'] = request.user.company
 
                 #add instance details to the database.
-
                 instance_object = serialized_data.save()
 
+                #close instance connection
+                close_instance = CloseSnowflakeConnection(connection['connection_object'])
+                close_instance.close_connected_instance()
+
+                #dispose engine
+                dispose_engine = DisposeEngine(connection['engine'])
+                dispose_engine.close_engine()
+                
                 return Response({
                     "message":"Connection to the Snowflake database was successful.",
                     "status":status.HTTP_200_OK
@@ -120,11 +125,20 @@ class UpdateInstanceview(APIView):
 
         if serialized_data.is_valid():
             
-            connection = connect_snowflake_instance(serialized_data.validated_data['instance_user'], serialized_data.validated_data['instance_password'], serialized_data.validated_data['instance_account'])
-            
+            #try connecting to the snowflake instance using provided credentials.
+            instance = SnowflakeConnector(request.data['instance_user'], request.data['instance_password'], request.data['instance_account'], 'ACCOUNTADMIN')
+            connection = instance.connect_snowflake_instance()
+                        
             if connection['status'] == status.HTTP_200_OK:
 
-                serialized_data.validated_data['company'] = request.user.company
+                #close instance connection
+                close_instance = CloseSnowflakeConnection(connection['connection_object'])
+                close_instance.close_connected_instance()
+
+                #dispose engine
+                dispose_engine = DisposeEngine(connection['engine'])
+                dispose_engine.close_engine()
+
                 #encrypt instance password.
                 serialized_data.validated_data['instance_password'] = jwt.encode({"password":serialized_data.validated_data['instance_password']}, SECRET_KEY, algorithm='HS256').decode('utf-8')
                 
@@ -154,24 +168,34 @@ class ReconnectAllInstancesView(APIView):
         connection_refused = []
         connected_instances = []
         
-        instnaces_list = Instances.objects.filter(company=request.user.company)
+        instance_list = Instances.objects.filter(company=request.user.company)
 
-        for instnace in instnaces_list:
+        for instance in instance_list:
 
-            decoded_password = jwt.decode(instnace.instance_password, SECRET_KEY, algorithms=['HS256'])
+            decoded_password = jwt.decode(instance.instance_password, SECRET_KEY, algorithms=['HS256'])
 
-            connection = connect_snowflake_instance(instnace.instance_user, decoded_password['password'], instnace.instance_account)
-
+            connected_instance = SnowflakeConnector(instance.instance_user, decoded_password['password'], instance.instance_account, 'ACCOUNTADMIN')
+            
+            connection = connected_instance.connect_snowflake_instance()
+            
             if connection['status'] == status.HTTP_200_OK:
             
-                serialized_instance = InstancesSerializer(instnace)
+                serialized_instance = InstancesSerializer(instance)
                 
                 connected_instances.append(serialized_instance.data)
+
+                #close instance connection
+                close_instance = CloseSnowflakeConnection(connection['connection_object'])
+                close_instance.close_connected_instance()
+
+                #dispose engine
+                dispose_engine = DisposeEngine(connection['engine'])
+                dispose_engine.close_engine()
 
 
             elif connection['status'] == status.HTTP_400_BAD_REQUEST:
 
-                serialized_instance = InstancesSerializer(instnace)
+                serialized_instance = InstancesSerializer(instance)
 
                 instance = serialized_instance.data
 
@@ -196,11 +220,18 @@ class ReconnectInstanceView(APIView):
 
         decoded_password = jwt.decode(instance_object.instance_password, SECRET_KEY, algorithms=['HS256'])
 
-        print(instance_object.instance_user, decoded_password, instance_object.instance_account)
-
-        connection = connect_snowflake_instance(instance_object.instance_user, decoded_password['password'], instance_object.instance_account)
+        instance = SnowflakeConnector(instance_object.instance_user, decoded_password['password'], instance_object.instance_account, 'ACCOUNTADMIN')
+        connection = instance.connect_snowflake_instance()
 
         if connection['status'] == status.HTTP_200_OK:
+
+            #close instance connection
+            close_instance = CloseSnowflakeConnection(connection['connection_object'])
+            close_instance.close_connected_instance()
+
+            #dispose engine
+            dispose_engine = DisposeEngine(connection['engine'])
+            dispose_engine.close_engine()
             
             return Response({
                 "message" :"Connection successful.",

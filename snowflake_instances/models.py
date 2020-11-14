@@ -5,6 +5,10 @@ from django.db.models import signals
 from system_users.models import BaseModel, CompanyDetails, User
 
 
+class InstanceAccountType(models.Model):
+    account_type = models.CharField(max_length=255, null=False, blank=False)
+
+
 class Instances(BaseModel):
     '''
     '''
@@ -15,6 +19,7 @@ class Instances(BaseModel):
     instance_account = models.CharField(max_length=200, unique=True, null=False, blank=False)
     company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE, null=False, blank=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
+    instance_account_type = models.ForeignKey(InstanceAccountType, on_delete=models.CASCADE, null=False, blank=False)
 
     def __str__(self):
 

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -97,7 +98,6 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     }
 
 # Database
@@ -106,7 +106,7 @@ REST_FRAMEWORK = {
 DATABASES = { 
     'default': {
         'ENGINE': 'django.db.backends.postgresql', 
-        'NAME': 'snowflake',
+        'NAME': 'snowflake_staging',
         'USER': 'staging_admin',
         'PASSWORD': 'so@root_123',
         'HOST': 'so-staging-db.postgres.database.azure.com',
