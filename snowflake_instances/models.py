@@ -4,9 +4,17 @@ from django.db.models import signals
 
 from system_users.models import BaseModel, CompanyDetails, User
 
+from snowflake_instances.signals import new_instance_added_mail
+
 
 class InstanceAccountType(models.Model):
+    '''
+    '''
     account_type = models.CharField(max_length=255, null=False, blank=False)
+
+    def __str__(self):
+
+        return 'InstanceAccountType Object ({})'.format(self.id)
 
 
 class Instances(BaseModel):
@@ -24,3 +32,9 @@ class Instances(BaseModel):
     def __str__(self):
 
         return 'Instances Object ({})'.format(self.id)
+
+
+signals.post_save.connect(new_instance_added_mail, sender=Instances)
+
+
+

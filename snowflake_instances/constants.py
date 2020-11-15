@@ -1,0 +1,1 @@
+INSTANCES_CREATED = 'New instance has been configured.'
