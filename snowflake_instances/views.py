@@ -70,7 +70,7 @@ class AddInstanceView(APIView):
                 parameters_and_instance_data.delay(request.data['instance_user'], request.data['instance_password'], request.data['instance_account'])
                 
                 return Response({
-                    "message":"Connection to the Snowflake database was successful.",
+                    "message":"Connection to the Snowflake instance was successful.",
                     "status":status.HTTP_200_OK
                 })
 
@@ -80,7 +80,7 @@ class AddInstanceView(APIView):
                 return Response(connection)
                                     
         else:
-            
+
             #return error if serialization of data has failed.
             return Response(serialized_data.errors)
 

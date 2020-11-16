@@ -1,6 +1,9 @@
 from sqlalchemy import create_engine
 import status
 
+import logging
+
+logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(funcName)s :: %(lineno)d :: %(message)s', level = logging.INFO)
 
 
 class SnowflakeConnector():
@@ -13,6 +16,8 @@ class SnowflakeConnector():
     
     def connect_snowflake_instance(self):
 
+        logging.info("Create snowflake engine.")
+
         engine = create_engine(
             'snowflake://{user}:{password}@{account}/?{role}='.format(
                 user=self.user,
@@ -24,17 +29,22 @@ class SnowflakeConnector():
 
         try:
 
+            logging.info("Connect to snowflake instance.")
             connection = engine.connect()
-            # results = connection.execute('select current_version()').fetchall()
-            # print(results[0])
         
         except Exception as error_message:
 
-            return {
+            error = {
                 "error_no" : error_message.errno,
                 "error_message" : error_message.raw_msg,
                 "status" : status.HTTP_400_BAD_REQUEST
             }
+
+            logging.error(error)
+
+            return error
+
+        logging.info("Connected to snowflake instance.")
 
         return {
             "connection_object" : connection,
@@ -50,6 +60,8 @@ class CloseSnowflakeConnection:
         self.connection_object = connection_object
 
     def close_connected_instance(self):
+
+        logging.info("Closing snowflake connection.")
         self.connection_object.close()
 
 
@@ -60,4 +72,5 @@ class DisposeEngine:
 
     def close_engine(self):
 
+        logging.info("Disposing snowflake engine.")
         self.engine.dispose()

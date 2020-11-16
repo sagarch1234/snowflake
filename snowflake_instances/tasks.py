@@ -33,7 +33,7 @@ def parameters_and_instance_data(user, password, account):
     database_level = record_params.database_level()
 
     #close instance connection
-    close_instance = CloseSnowflakeConnection(connection_object)
+    close_instance = CloseSnowflakeConnection(connection['connection_object'])
     close_instance.close_connected_instance()             
 
     #dispose engine
