@@ -3,7 +3,7 @@ import status
 
 
 
-class SnowflakeConnector:
+class SnowflakeConnector():
 
     def __init__(self, user, password, account, role):
         self.user = user

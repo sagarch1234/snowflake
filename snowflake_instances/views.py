@@ -16,13 +16,12 @@ from snowflake.instance_connector.connection import SnowflakeConnector, CloseSno
 from snowflake_instances.serializers import InstancesSerializer
 from snowflake_instances.models import Instances, InstanceAccountType
 from snowflake_instances.permissions import IsInstanceAccessible
+from snowflake_instances.tasks import parameters_and_instance_data
 
 from snowflake_optimizer.settings import SECRET_KEY
 
 from system_users.permissions import WhitelistOrganisationAdmin, WhitelistOrganisationMember, WhitelistSuperAdmin
 from system_users.constants import SUPER_ADMIN
-
-import jwt
 
 from snowflake_optimizer.settings import SECRET_KEY
 
@@ -60,23 +59,29 @@ class AddInstanceView(APIView):
 
                 #close instance connection
                 close_instance = CloseSnowflakeConnection(connection['connection_object'])
-                close_instance.close_connected_instance()
+                close_instance.close_connected_instance()             
 
                 #dispose engine
                 dispose_engine = DisposeEngine(connection['engine'])
                 dispose_engine.close_engine()
+
+                #add a task to the celery.
+                #This task will fetch data from customer's instances.
+                parameters_and_instance_data.delay(request.data['instance_user'], request.data['instance_password'], request.data['instance_account'])
                 
                 return Response({
                     "message":"Connection to the Snowflake database was successful.",
                     "status":status.HTTP_200_OK
                 })
 
+            #return error if failed to connect to instance using provided credentials.
             elif connection['status'] == status.HTTP_400_BAD_REQUEST:
 
                 return Response(connection)
                                     
         else:
-
+            
+            #return error if serialization of data has failed.
             return Response(serialized_data.errors)
 
 
