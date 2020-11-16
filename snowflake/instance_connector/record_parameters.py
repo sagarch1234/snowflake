@@ -1,4 +1,5 @@
 import logging
+# from connection import SnowflakeConnector
 
 logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(funcName)s :: %(lineno)d :: %(message)s', level = logging.INFO)
 
@@ -27,7 +28,7 @@ class RecordParameters():
 
     def database_level(self):
 
-        logging.info("Getting parameters of each database from customer's instance.")
+        logging.info("Getting parameters of each database.")
 
         databases = self.get_databases()
 
@@ -36,6 +37,47 @@ class RecordParameters():
             result = self.connection.execute('show parameters in DATABASE' + ' ' + database['name']).fetchall()
             
             return result
-            
+
+    def get_schema(self, database_name):
+
+        logging.info("Get databases.")
+        
+        logging.info("Geting list of schemas form customer's instance.")
+        
+        sql = 'show schemas in database' + ' ' + database_name
+
+        results = self.connection.execute(sql).fetchall()
+
+        return results
+
     def schema_level(self):
-        pass
+        
+        logging.info("Get databases")
+
+        databases = self.get_databases()
+
+        for database in databases:
+
+            schemas = self.get_schema(database['name'])
+
+            logging.info("Getting parameters in schemas for each database.")
+
+            schema_params = []
+            
+            for schema in schemas:
+
+                sql = "show parameters in SCHEMA" + " " + database['name'] + "." + schema['name']
+ 
+                schema_params.append(self.connection.execute(sql).fetchall())
+
+        return schema_params
+
+
+#check and connect to instance
+# instance = SnowflakeConnector('jeet', 'Jeet@123', 'fp43891.us-central1.gcp', 'ACCOUNTADMIN')
+# connection = instance.connect_snowflake_instance()
+
+# record_parameter = RecordParameters(connection['connection_object'])
+
+# schema_level = record_parameter.schema_level()
+# print(schema_level)
