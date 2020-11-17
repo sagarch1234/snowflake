@@ -14,18 +14,23 @@ class SnowflakeConnector():
         self.account = account
         self.role = role
     
-    def connect_snowflake_instance(self):
-
+    def get_engine(self):
         logging.info("Create snowflake engine.")
 
         engine = create_engine(
-            'snowflake://{user}:{password}@{account}/?{role}='.format(
-                user=self.user,
-                password=self.password,
-                account=self.account,
-                role=self.role
-            )
-        )
+                    'snowflake://{user}:{password}@{account}/?{role}='.format(
+                        user=self.user,
+                        password=self.password,
+                        account=self.account,
+                        role=self.role
+                    )
+                )
+
+        return engine
+
+    def connect_snowflake_instance(self):
+
+        engine = self.get_engine()
 
         try:
 
@@ -54,7 +59,7 @@ class SnowflakeConnector():
         }
 
 
-class CloseSnowflakeConnection:
+class CloseSnowflakeConnection():
 
     def __init__(self, connection_object):
         self.connection_object = connection_object
@@ -65,7 +70,7 @@ class CloseSnowflakeConnection:
         self.connection_object.close()
 
 
-class DisposeEngine:
+class DisposeEngine():
 
     def __init__(self, engine):
         self.engine = engine

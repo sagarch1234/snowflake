@@ -1,5 +1,5 @@
 import logging
-# from connection import SnowflakeConnector
+from snowflake.instance_connector.connection import SnowflakeConnector
 
 logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(funcName)s :: %(lineno)d :: %(message)s', level = logging.INFO)
 
@@ -38,13 +38,21 @@ class RecordParameters():
             
             return result
 
-    def get_schema(self, database_name):
+    def get_schema(self, database_name=None):
 
         logging.info("Get databases.")
         
-        logging.info("Geting list of schemas form customer's instance.")
+        if database_name == None:
+
+            logging.info("Getting schemas of instances.")
+
+            sql = 'show schemas'
+
+        else:
+
+            logging.info("Getting schemas for database " +"'"+ database_name +"'.")
         
-        sql = 'show schemas in database' + ' ' + database_name
+            sql = 'show schemas in database' + ' ' + database_name
 
         results = self.connection.execute(sql).fetchall()
 

@@ -8,7 +8,7 @@ from snowflake_optimizer.celery import app
 from snowflake_instances.constants import INSTANCES_CREATED
 
 from snowflake.instance_connector.connection import SnowflakeConnector, CloseSnowflakeConnection, DisposeEngine
-from snowflake.instance_connector.record_parameters import RecordParameters
+from snowflake.instance_parameters.record_parameters import RecordParameters
 
 import os
 
@@ -26,20 +26,25 @@ def parameters_and_instance_data(user, password, account):
     #fetch accout level parameters.
     account_level = record_params.account_level()
 
+    #store account level parameters in our snowflake database.
+
     #fetch databases.
-    get_databases = record_params.get_databases()
+    databases = record_params.get_databases()
+
+    #store databases in our snowflake database.
 
     #fetch database level parameters.
-    database_level = record_params.database_level()
+    database_level_parameters = record_params.database_level()
 
-    #close instance connection
+    #store database level parameters in our snowflake database.
+
+    #close instance connection.
     close_instance = CloseSnowflakeConnection(connection['connection_object'])
     close_instance.close_connected_instance()             
 
-    #dispose engine
+    #dispose engine.
     dispose_engine = DisposeEngine(connection['engine'])
     dispose_engine.close_engine()
-
 
 
 @app.task
