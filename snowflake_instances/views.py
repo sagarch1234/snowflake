@@ -13,7 +13,7 @@ from rest_framework.pagination import PageNumberPagination
 
 from snowflake.instance_connector.connection import SnowflakeConnector, CloseSnowflakeConnection, DisposeEngine
 
-from snowflake_instances.serializers import InstancesSerializer
+from snowflake_instances.serializers import InstancesSerializer, AccountTypeSerializer
 from snowflake_instances.models import Instances, InstanceAccountType
 from snowflake_instances.permissions import IsInstanceAccessible
 from snowflake_instances.tasks import parameters_and_instance_data
@@ -24,6 +24,22 @@ from system_users.permissions import WhitelistOrganisationAdmin, WhitelistOrgani
 from system_users.constants import SUPER_ADMIN
 
 from snowflake_optimizer.settings import SECRET_KEY
+
+
+class ListAccountTypeView(ListAPIView):
+    '''
+    '''
+    permission_classes = [IsAuthenticated & (WhitelistOrganisationMember | WhitelistOrganisationAdmin)]
+
+    serializer_class = AccountTypeSerializer
+
+    filter_backends = [OrderingFilter]
+    
+    ordering = ['-id']
+        
+    def get_queryset(self):
+    
+        return InstanceAccountType.objects.all()
 
 
 class AddInstanceView(APIView):

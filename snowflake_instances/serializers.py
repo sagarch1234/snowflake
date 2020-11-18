@@ -1,10 +1,19 @@
 from rest_framework import serializers
 
-from snowflake_instances.models import Instances
+from snowflake_instances.models import Instances, InstanceAccountType
 
 from snowflake_optimizer.settings import SECRET_KEY
 
 import jwt
+
+
+class AccountTypeSerializer(serializers.ModelSerializer):
+    '''
+    '''
+    class Meta:
+    
+        model = InstanceAccountType
+        fields = '__all__'
 
 
 class InstancesSerializer(serializers.ModelSerializer):

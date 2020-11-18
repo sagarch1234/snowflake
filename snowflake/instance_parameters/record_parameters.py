@@ -1,5 +1,10 @@
+import sys
+sys.path.insert(1,  '/snowflake-backend/snowflake/instance_connector')
+
+from connection import SnowflakeConnector
+
 import logging
-from snowflake.instance_connector.connection import SnowflakeConnector
+import json
 
 logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(funcName)s :: %(lineno)d :: %(message)s', level = logging.INFO)
 
@@ -70,22 +75,23 @@ class RecordParameters():
 
             logging.info("Getting parameters in schemas for each database.")
 
-            schema_params = []
+            results = []
             
             for schema in schemas:
 
                 sql = "show parameters in SCHEMA" + " " + database['name'] + "." + schema['name']
  
-                schema_params.append(self.connection.execute(sql).fetchall())
+                results.append(self.connection.execute(sql).fetchall())
 
-        return schema_params
+        return results
 
 
-#check and connect to instance
-# instance = SnowflakeConnector('jeet', 'Jeet@123', 'fp43891.us-central1.gcp', 'ACCOUNTADMIN')
-# connection = instance.connect_snowflake_instance()
+# check and connect to instance
+instance = SnowflakeConnector('jeet', 'Jeet@123', 'fp43891.us-central1.gcp', 'ACCOUNTADMIN')
+connection = instance.connect_snowflake_instance()
 
-# record_parameter = RecordParameters(connection['connection_object'])
+record_parameter = RecordParameters(connection['connection_object'])
 
-# schema_level = record_parameter.schema_level()
-# print(schema_level)
+schema_level = record_parameter.schema_level()
+# result = json.load(schema_level)
+# print(result)

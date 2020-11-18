@@ -17,14 +17,7 @@ class SnowflakeConnector():
     def get_engine(self):
         logging.info("Create snowflake engine.")
 
-        engine = create_engine(
-                    'snowflake://{user}:{password}@{account}/?{role}='.format(
-                        user=self.user,
-                        password=self.password,
-                        account=self.account,
-                        role=self.role
-                    )
-                )
+        engine = create_engine('snowflake://{user}:{password}@{account}/?{role}'.format(user=self.user, password=self.password, account=self.account, role=self.role))
 
         return engine
 
