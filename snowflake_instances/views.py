@@ -83,7 +83,7 @@ class AddInstanceView(APIView):
 
                 #add a task to the celery.
                 #This task will fetch data from customer's instances.
-                parameters_and_instance_data.delay(request.data['instance_user'], request.data['instance_password'], request.data['instance_account'])
+                parameters_and_instance_data.delay(request.data['instance_user'], request.data['instance_password'], request.data['instance_account'], instance_object)
                 
                 return Response({
                     "message":"Connection to the Snowflake instance was successful.",

@@ -87,11 +87,11 @@ class RecordParameters():
 
 
 # check and connect to instance
-instance = SnowflakeConnector('jeet', 'Jeet@123', 'fp43891.us-central1.gcp', 'ACCOUNTADMIN')
-connection = instance.connect_snowflake_instance()
+# instance = SnowflakeConnector('jeet', 'Jeet@123', 'fp43891.us-central1.gcp', 'ACCOUNTADMIN')
+# connection = instance.connect_snowflake_instance()
 
-record_parameter = RecordParameters(connection['connection_object'])
+# record_parameter = RecordParameters(connection['connection_object'])
 
-schema_level = record_parameter.schema_level()
-# result = json.load(schema_level)
-# print(result)
+# account_level = record_parameter.account_level()
+
+# print(account_level[0])

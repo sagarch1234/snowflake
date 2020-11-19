@@ -36,13 +36,14 @@ class SnowflakeConnector():
         
         except Exception as error_message:
 
+            logging.error(error_message)
+
             error = {
-                "error_no" : error_message.errno,
-                "error_message" : error_message.raw_msg,
+                # "error_no" : error_message.errno,
+                # "error_message" : error_message.raw_msg,
+                "error_message" : "Failed to connect to snowflake instance.",
                 "status" : status.HTTP_400_BAD_REQUEST
             }
-
-            logging.error(error)
 
             return error
 
