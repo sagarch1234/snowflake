@@ -82,7 +82,7 @@ class DumpParameters():
 
         for each_schema in self.schema:
 
-            schema_obj.append(SchemaOnInstance(created_on=each_schema[0], name=each_schema[1], is_default=each_schema[2], is_current=each_schema[3], database_name=each_schema[4], owner=each_schema[5], comment=each_schema[6], option=schema_obj[7], retention_time=schema_obj[8], instance_id=schema_obj[9]))
+            schema_obj.append(SchemaOnInstance(created_on=each_schema[0], name=each_schema[1], is_default=each_schema[2], is_current=each_schema[3], database_name=each_schema[4], owner=each_schema[5], comment=each_schema[6], options=each_schema[7], retention_time=each_schema[8], instance_id=each_schema[9]))
 
         session.add_all(schema_obj)
 
