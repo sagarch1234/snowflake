@@ -32,6 +32,6 @@ ENV EMAIL_HOST_PASSWORD=Sn0wFl@k3
 
 RUN pip install -r /requirements.txt
 
-RUN pip install -U "celery[redis]"
+# RUN pip install -U "celery[redis]"
 
 CMD [ "celery", "-A", "snowflake_optimizer", "worker", "-l ", "INFO"]

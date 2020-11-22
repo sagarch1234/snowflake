@@ -9,62 +9,24 @@ from snowflake_instances.constants import INSTANCES_CREATED
 
 from snowflake.instance_connector.connection import SnowflakeConnector, CloseSnowflakeConnection, DisposeEngine
 from snowflake.instance_parameters.record_parameters import RecordParameters
+from snowflake.instance_parameters.associate import AssociateInstance 
+from snowflake.instance_parameters.initial_data_collection import  ParametersAndInstanceData
 
 import os
+import logging
+
+logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(funcName)s :: %(lineno)d :: %(message)s', level = logging.INFO)
 
 
 @app.task
-def parameters_and_instance_data(user, password, account, instance_object):
+def parameters_and_instance_data(user, password, account, instance_id):
 
-    #connect to instance
-    instance = SnowflakeConnector(user, password, account, 'ACCOUNTADMIN')
-    connection = instance.connect_snowflake_instance()
+    parameters_and_instance_data = ParametersAndInstanceData(user, password, account, instance_id)
 
-    #create an object for class RecordParameters.
-    record_params = RecordParameters(connection['connection_object'])
+    account_level = parameters_and_instance_data.account_level_etl()
 
-    #fetch accout level parameters.
-    account_level = record_params.account_level()
+    databases = parameters_and_instance_data.databases_etl()
 
-    #associate account_level with instance
-
-    #store account level parameters in our snowflake database.
-
-    #fetch databases.
-    databases = record_params.get_databases()
-
-    #store databases in our snowflake database.
-
-    #associate databases with instance
-
-    #fetch database level parameters.
-    database_level_parameters = record_params.database_level()
-
-    #associate database_level_parameters with instance
-
-    #store database level parameters in our snowflake database.
-
-    #fetch schema
-    schema = record_params.get_schema()
-
-    #associate schema with instance
-
-    #store schema in our snowflake database.
-
-    #fetch schema level parameters 
-    schema_level = record_params.schema_level()
-
-    #associate schema_level with instance
-
-    #store schema_level in our snowflake database.            
-
-    #dispose engine.
-    dispose_engine = DisposeEngine(connection['engine'])
-    dispose_engine.close_engine()
-
-    #close instance connection.
-    close_instance = CloseSnowflakeConnection(connection['connection_object'])
-    close_instance.close_connected_instance() 
 
 @app.task
 def send_instance_added_mail(organisation_name, email, created_by, instance_name):

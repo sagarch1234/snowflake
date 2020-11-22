@@ -4,7 +4,7 @@ sys.path.insert(1,  '/snowflake-backend/snowflake/instance_connector')
 
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import String, Integer, Column, Text, Boolean, ForeignKey, create_engine
+from sqlalchemy import String, Integer, Column, Text, Boolean, ForeignKey, create_engine, Time, Binary
 from snowflake.sqlalchemy import URL
 
 from connection import SnowflakeConnector
@@ -35,7 +35,7 @@ class AccountParameters(Base):
     level = Column(String(200))
     description = Column(Text)
     type = Column(String(100))
-    instance = Column(Integer) 
+    instance_id = Column(Integer) 
 
     def __repr__(self):
         return "<AccountParameters({})>".format(self.id)
@@ -51,16 +51,16 @@ class DatabasesOnInstance(Base):
     }
 
     id = Column(Integer, primary_key=True)
+    created_on = Column(Time)
     name = Column(String(100))
-    is_default = Column(Boolean)
-    is_current = Column(Boolean)
+    is_default = Column(Binary())
+    is_current = Column(Binary())
     origin = Column(String(200))
     owner = Column(String(100))
     comment = Column(Text)
     options = Column(String(100))
     retention_time = Column(Integer)
-    instance = Column(Integer)
-
+    instance_id = Column(Integer)
 
     def __repr__(self):
         return "<DatabasesOnInstance({})>".format(self.id)
@@ -76,16 +76,16 @@ class SchemaOnInstance(Base):
     }
 
     id = Column(Integer, primary_key=True)
+    created_on = Column(Time)
     name = Column(String(100))
-    is_default = Column(Boolean)
-    is_current = Column(Boolean)
+    is_default = Column(Binary())
+    is_current = Column(Binary())
     database_name = Column(String(200))
     owner = Column(String(100))
     comment = Column(Text)
     options = Column(String(100))
     retention_time = Column(Integer)
-    instance = Column(Integer)
-
+    instance_id = Column(Integer)
 
     def __repr__(self):
         return "<SchemaOnInstance({})>".format(self.id)
@@ -108,7 +108,7 @@ class ParametersInDatabase(Base):
     description = Column(Text)
     type = Column(String(100))
     instance_id = Column(Integer) 
-    database_id = Column(Integer)
+    database_id = Column(Integer, ForeignKey(DatabasesOnInstance.id))
 
     # Relationships
     databases_on_instance = relationship("DatabasesOnInstance")
@@ -133,9 +133,9 @@ class ParametersInSchemas(Base):
     level = Column(String(200))
     description = Column(Text)
     type = Column(String(100))
-    instance = Column(Integer) 
-    database_id = Column(Integer)
-    schema_id = Column(Integer)
+    instance_id = Column(Integer) 
+    database_id = Column(Integer, ForeignKey(DatabasesOnInstance.id))
+    schema_id = Column(Integer, ForeignKey(SchemaOnInstance.id))
 
     # Relationships
     databases_on_instance = relationship("DatabasesOnInstance")

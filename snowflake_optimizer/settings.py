@@ -112,6 +112,7 @@ DATABASES = {
         'HOST': 'so-staging-db.postgres.database.azure.com',
         'PORT': 5432,
         'ATOMIC_REQUESTS':True,
+        'CONN_MAX_AGE': None
     }
 }
 

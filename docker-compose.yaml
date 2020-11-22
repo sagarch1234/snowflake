@@ -30,10 +30,11 @@ services:
     
   celery:
     container_name: celery-container
-    build: 
-      context: .
-      dockerfile: Dockerfile.celery
-    image: sostagingacr.azurecr.io/celery
+    # build: 
+      # context: .
+      # dockerfile: Dockerfile.celery
+    image: "sostagingacr.azurecr.io/snowflake-optimizer"
+    # image: sostagingacr.azurecr.io/celery
     command: "celery  -A snowflake_optimizer worker -l INFO"
     volumes:
       - .:/snowflake-optimizer

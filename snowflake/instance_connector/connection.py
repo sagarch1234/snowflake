@@ -20,8 +20,7 @@ class SnowflakeConnector():
 
         logging.info("Create snowflake engine.")
 
-        engine = create_engine('snowflake://{user}:{password}@{account}/{database_name}/{schema_name}?{role}'.format(user=self.user, password=self.password, account=self.account, role=self.role, database_name=self.database_name, schema_name=self.schema_name))
-        
+        engine = create_engine('snowflake://{user}:{password}@{account}/{database_name}/{schema_name}?{role}'.format(user=self.user, password=self.password, account=self.account, role=self.role, database_name=self.database_name, schema_name=self.schema_name), echo=True)        
 
         return engine
 
@@ -41,7 +40,7 @@ class SnowflakeConnector():
             error = {
                 # "error_no" : error_message.errno,
                 # "error_message" : error_message.raw_msg,
-                "error_message" : "Failed to connect to snowflake instance.",
+                "error_message" : "Failed to connect to snowflake instance. Please very your credentials.",
                 "status" : status.HTTP_400_BAD_REQUEST
             }
 

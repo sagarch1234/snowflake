@@ -17,6 +17,7 @@ from snowflake_instances.serializers import InstancesSerializer, AccountTypeSeri
 from snowflake_instances.models import Instances, InstanceAccountType
 from snowflake_instances.permissions import IsInstanceAccessible
 from snowflake_instances.tasks import parameters_and_instance_data
+# from snowflake_instances.tasks import ParametersAndInstanceData
 
 from snowflake_optimizer.settings import SECRET_KEY
 
@@ -24,6 +25,9 @@ from system_users.permissions import WhitelistOrganisationAdmin, WhitelistOrgani
 from system_users.constants import SUPER_ADMIN
 
 from snowflake_optimizer.settings import SECRET_KEY
+
+from snowflake_optimizer.celery import app
+
 
 
 class ListAccountTypeView(ListAPIView):
@@ -82,9 +86,9 @@ class AddInstanceView(APIView):
                 dispose_engine.close_engine()
 
                 #add a task to the celery.
-                #This task will fetch data from customer's instances.
-                parameters_and_instance_data.delay(request.data['instance_user'], request.data['instance_password'], request.data['instance_account'], instance_object)
-                
+                #This task will fetch initial data from customer's instances.
+                parameters_and_instance_data.delay(request.data['instance_user'], request.data['instance_password'], request.data['instance_account'], instance_object.id)
+
                 return Response({
                     "message":"Connection to the Snowflake instance was successful.",
                     "status":status.HTTP_200_OK
