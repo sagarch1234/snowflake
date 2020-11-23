@@ -8,6 +8,7 @@ from record_parameters import RecordParameters
 from  modals import AccountParameters, DatabasesOnInstance, SchemaOnInstance
 
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import insert
 
 import logging
 
@@ -55,7 +56,9 @@ class DumpParameters():
 
         for database in self.databases:
 
-            database_obj.append(DatabasesOnInstance(created_on=database[0], name=database[1], is_default=database[2], is_current=database[3], origin=database[4], owner=database[5], comment=database[6], options=database[7], retention_time=database[8], instance_id=database[9]))
+            created_on = str(database[0])
+            database_model_instance = DatabasesOnInstance(created_on=created_on, name=database[1], is_default=database[2], is_current=database[3], origin=database[4], owner=database[5], comment=database[6], options=database[7], retention_time=database[8], instance_id=database[9])
+            database_obj.append(database_model_instance)
 
         session.add_all(database_obj)
 
@@ -82,13 +85,15 @@ class DumpParameters():
 
         for each_schema in self.schema:
 
-            schema_obj.append(SchemaOnInstance(created_on=each_schema[0], name=each_schema[1], is_default=each_schema[2], is_current=each_schema[3], database_name=each_schema[4], owner=each_schema[5], comment=each_schema[6], options=each_schema[7], retention_time=each_schema[8], instance_id=each_schema[9]))
+            created_on = str(each_schema[0])
+            schema_modal_instance = SchemaOnInstance(created_on=each_schema[0], name=each_schema[1], is_default=each_schema[2], is_current=each_schema[3], database_name=each_schema[4], owner=each_schema[5], comment=each_schema[6], options=each_schema[7], retention_time=each_schema[8], instance_id=each_schema[9])
+            schema_obj.append(schema_modal_instance)
 
         session.add_all(schema_obj)
 
         try:
 
-            x = session.commit()
+            session.commit()
         
         except Exception as identifier:
         

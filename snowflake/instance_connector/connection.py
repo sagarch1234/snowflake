@@ -8,19 +8,20 @@ logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(funcName)s :: %(li
 
 class SnowflakeConnector():
 
-    def __init__(self, user, password, account, role, database_name=None, schema_name=None):
+    def __init__(self, user, password, account, role, database_name=None, schema_name=None, warehouse=None):
         self.user = user
         self.password = password
         self.account = account
         self.role = role
         self.database_name = database_name
         self.schema_name = schema_name
+        self.warehouse = warehouse
     
     def get_engine(self):
 
         logging.info("Create snowflake engine.")
 
-        engine = create_engine('snowflake://{user}:{password}@{account}/{database_name}/{schema_name}?{role}'.format(user=self.user, password=self.password, account=self.account, role=self.role, database_name=self.database_name, schema_name=self.schema_name), echo=True)        
+        engine = create_engine('snowflake://{user}:{password}@{account}/{database_name}/{schema_name}?{warehouse}&{role}'.format(user=self.user, password=self.password, account=self.account, role=self.role, database_name=self.database_name, schema_name=self.schema_name, warehouse=self.warehouse), echo=True)        
 
         return engine
 

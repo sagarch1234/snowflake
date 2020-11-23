@@ -15,10 +15,10 @@ logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(funcName)s :: %(li
 
 class ParametersAndInstanceData():
 
-    def __init__(self, user, password, account, instance_id,):
+    def __init__(self, user, password, account, instance_id):
 
         #create an object for class SnowflakeConnector.
-        self.customer_connection_instance = SnowflakeConnector(user, password, account, 'ACCOUNTADMIN')
+        self.customer_connection_instance = SnowflakeConnector(user=user, password=password, account=account, role='ACCOUNTADMIN')
 
         #establish connection with the customer's snowflake instance.
         self.customer_connection = self.customer_connection_instance.connect_snowflake_instance()
@@ -28,9 +28,10 @@ class ParametersAndInstanceData():
         
         self.instance_id = instance_id
 
-        self.sfo_connection_instance = SnowflakeConnector(user='SFOPT_TEST_APP', password='(sE&Gv]82qv^3KJU', account='ya78377.east-us-2.azure', database_name='SFOPT_TEST', schema_name='SFOPT_TEST_SCHEMA', role='SFO_TEST_APP_ROLE')
+        self.sfo_connection_instance = SnowflakeConnector(user='SFOPT_TEST_APP', password='(sE&Gv]82qv^3KJU', account='ya78377.east-us-2.azure', database_name='SFOPT_TEST', schema_name='SFOPT_TEST_SCHEMA', role='SFO_TEST_APP_ROLE', warehouse='SFOPT_TEST_WH')
 
         self.sfo_engine = self.sfo_connection_instance.get_engine()
+
 
     def account_level_etl(self):
 
@@ -100,7 +101,7 @@ class ParametersAndInstanceData():
 
 
 x = ParametersAndInstanceData(user='mayur2423', password='Mayur@2423', account='xw34235.europe-west2.gcp', instance_id=1)
-# x.account_level_etl()
-# x.databases_etl()
+x.account_level_etl()
+x.databases_etl()
 x.schema_etl()
 # print(y)
