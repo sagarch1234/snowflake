@@ -1,7 +1,10 @@
 import sys
 sys.path.insert(1,  '/snowflake-backend/snowflake/instance_connector')
+sys.path.insert(1,  '/snowflake-backend/snowflake/instance_parameters')
+
 
 from connection import SnowflakeConnector
+# from fetch_sfo_data import FetchSfoData
 
 import logging
 import json
@@ -12,8 +15,9 @@ logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(funcName)s :: %(li
 class RecordParameters():
     '''
     '''
-    def __init__(self, connection):
+    def __init__(self, connection, instance_id=None):
         self.connection = connection
+        self.instance_id = instance_id
 
     def account_level(self):
 
@@ -37,11 +41,24 @@ class RecordParameters():
 
         databases = self.get_databases()
 
+        if databases is None:
+            return None
+
+        databases_level = []
+        
         for database in databases:
 
             result = self.connection.execute('show parameters in DATABASE' + ' ' + database['name']).fetchall()
-            
-            return result
+
+            for row in result:
+
+                row = list(row)
+
+                row.append(database['name'])
+
+                databases_level.append(row)
+
+        return databases_level
 
     def get_schema(self, database_name=None):
 
@@ -68,30 +85,27 @@ class RecordParameters():
         logging.info("Get databases")
 
         databases = self.get_databases()
+        
+        results = []
 
         for database in databases:
 
-            schemas = self.get_schema(database['name'])
-
             logging.info("Getting parameters in schemas for each database.")
 
-            results = []
+            schemas = self.get_schema(database['name'])
+
             
             for schema in schemas:
 
                 sql = "show parameters in SCHEMA" + " " + database['name'] + "." + schema['name']
- 
-                results.append(self.connection.execute(sql).fetchall())
+                
+                result = self.connection.execute(sql).fetchall()
+                
+                for row in result:
 
+                    row = list(row)
+                    row.append(database['name'])
+                    row.append(schema['name'])
+                    results.append(row)
+                
         return results
-
-
-# check and connect to instance
-# instance = SnowflakeConnector('jeet', 'Jeet@123', 'fp43891.us-central1.gcp', 'ACCOUNTADMIN')
-# connection = instance.connect_snowflake_instance()
-
-# record_parameter = RecordParameters(connection['connection_object'])
-
-# account_level = record_parameter.account_level()
-
-# print(account_level[0])

@@ -39,8 +39,6 @@ class SnowflakeConnector():
             logging.error(error_message)
 
             error = {
-                # "error_no" : error_message.errno,
-                # "error_message" : error_message.raw_msg,
                 "error_message" : "Failed to connect to snowflake instance. Please very your credentials.",
                 "status" : status.HTTP_400_BAD_REQUEST
             }

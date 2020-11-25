@@ -13,11 +13,16 @@ logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(funcName)s :: %(li
 
 class AssociateInstance():
 
-    def __init__(self, instance_id, account_parameters=None, databases=None, schema=None):
+    def __init__(self, instance_id, user_id, company_id, event, account_parameters=None, databases=None, schema=None, database_level=None, schema_level=None):
         self.instance_id = instance_id
         self.account_parameters = account_parameters
         self.databases = databases
         self.schema = schema
+        self.user_id = user_id
+        self.company_id = company_id
+        self.event = event
+        self.database_level = database_level
+        self.schema_level = schema_level
 
     def associate_instance_to_account_parameters(self):
 
@@ -36,6 +41,9 @@ class AssociateInstance():
 
             #associate each row of account_parameters with the instance_id
             row.append(self.instance_id)
+            row.append(self.user_id)
+            row.append(self.company_id)
+            row.append(self.event)
 
             #append each updated row in the new list.
             results.append(row)
@@ -60,6 +68,9 @@ class AssociateInstance():
 
             #associate each row of databases with the instance_id
             row.append(self.instance_id)
+            row.append(self.user_id)
+            row.append(self.company_id)
+            row.append(self.event)
 
             #append each updated row in the new list.
             results.append(row)
@@ -68,7 +79,30 @@ class AssociateInstance():
         return results
 
     def associate_instance_to_database_level(self):
-        pass
+
+        #handle none condition
+        if self.database_level is None:
+
+            logging.info("No database_level found.")
+            
+            return None
+        
+        results = []
+        
+        for row in self.database_level:
+
+            row = list(row)
+
+            #associate each row of databases with the instance_id, user_id, company_id, event
+            row.append(self.instance_id)
+            row.append(self.user_id)
+            row.append(self.company_id)
+            row.append(self.event)
+
+            #append each updated row in the new list.
+            results.append(row)
+
+        return results
     
     def associate_instance_to_schema(self):
 
@@ -95,7 +129,26 @@ class AssociateInstance():
         return results
     
     def associate_instance_to_schema_level(self):
-        pass
+        #handle None condition
+        if self.schema_level is None:
 
+            logging.info("No schema level parameters found.")
 
+            return None
+ 
+        results = []
 
+        for row in self.schema_level:
+
+            row = list(row)
+
+            row.append(self.instance_id)
+            row.append(self.user_id)
+            row.append(self.company_id)
+            row.append(self.event)
+
+            #append each updated row in the new list.
+            results.append(row)
+
+        return results
+        

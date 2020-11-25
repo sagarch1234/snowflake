@@ -12,10 +12,9 @@ import logging
 
 logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(funcName)s :: %(lineno)d :: %(message)s', level = logging.INFO)
 
-
 class ParametersAndInstanceData():
 
-    def __init__(self, user, password, account, instance_id):
+    def __init__(self, user, password, account, instance_id, user_id, company_id, event):
 
         #create an object for class SnowflakeConnector.
         self.customer_connection_instance = SnowflakeConnector(user=user, password=password, account=account, role='ACCOUNTADMIN')
@@ -32,6 +31,11 @@ class ParametersAndInstanceData():
 
         self.sfo_engine = self.sfo_connection_instance.get_engine()
 
+        self.user_id = user_id
+
+        self.company_id = company_id
+        
+        self.event = event
 
     def account_level_etl(self):
 
@@ -39,7 +43,7 @@ class ParametersAndInstanceData():
         account_level = self.record_params.account_level()
 
         #create associate class instance.
-        associate_instance = AssociateInstance(instance_id=self.instance_id, account_parameters=account_level)
+        associate_instance = AssociateInstance(instance_id=self.instance_id, user_id=self.user_id, company_id=self.company_id, event=self.event, account_parameters=account_level)
 
         #associate account_level with instance
         associated_instance = associate_instance.associate_instance_to_account_parameters()
@@ -58,7 +62,7 @@ class ParametersAndInstanceData():
         databases = self.record_params.get_databases()
 
         #create associate class instance.
-        associate_instance = AssociateInstance(instance_id=self.instance_id, databases=databases)
+        associate_instance = AssociateInstance(instance_id=self.instance_id, databases=databases, user_id=self.user_id, company_id=self.company_id, event=self.event)
 
         #associate account_level with instance
         associated_instance = associate_instance.associate_instance_to_databases()
@@ -75,7 +79,7 @@ class ParametersAndInstanceData():
         schemas = self.record_params.get_schema()
 
         #create associate class instance.
-        associate_instance = AssociateInstance(instance_id=self.instance_id, schema=schemas)
+        associate_instance = AssociateInstance(instance_id=self.instance_id, schema=schemas,  user_id=self.user_id, company_id=self.company_id, event=self.event)
 
         #associate account_level with instance
         associated_instance = associate_instance.associate_instance_to_schema()
@@ -86,22 +90,36 @@ class ParametersAndInstanceData():
         #dump data
         dump_parameters.dump_schema()
     
-    # def databases_level_etl(self):
+    def databases_level_etl(self):
 
-    #     #fetch database level parameters.
-    #     database_level_parameters = self.record_params.database_level()
+        #fetch database level parameters.
+        database_level_parameters = self.record_params.database_level()
 
-    # def schema_level_etl(self):
+        #create associate class instance.
+        associate_instance = AssociateInstance(instance_id=self.instance_id, database_level=database_level_parameters,  user_id=self.user_id, company_id=self.company_id, event=self.event)
+        
+        associated_data = associate_instance.associate_instance_to_database_level()
 
-    #     #fetch schema level parameters.
-    #     schema_level = self.record_params.schema_level()
+        dump_parameters = DumpParameters(database_level=associated_data, engine=self.sfo_engine)
+        dump_parameters.dump_database_level()
+
+    def schema_level_etl(self):
+
+        #fetch schema level parameters.
+        schema_level = self.record_params.schema_level()
+
+        #create associate class instance.
+        associate_instance = AssociateInstance(instance_id=self.instance_id, schema_level=schema_level,  user_id=self.user_id, company_id=self.company_id, event=self.event)
+        associated_data = associate_instance.associate_instance_to_schema_level()
+
+        dump_parameters = DumpParameters(schema_level=associated_data, engine=self.sfo_engine)
+        dump_parameters.dump_schema_level()
 
 
 
-
-
-x = ParametersAndInstanceData(user='mayur2423', password='Mayur@2423', account='xw34235.europe-west2.gcp', instance_id=1)
-x.account_level_etl()
-x.databases_etl()
-x.schema_etl()
-# print(y)
+# x = ParametersAndInstanceData(user='mayur2423', password='Mayur@2423', account='xw34235.europe-west2.gcp', instance_id=1, company_id=1, user_id=2, event='Add Instance')
+# x.account_level_etl()
+# x.databases_etl()
+# x.schema_etl()
+# x.databases_level_etl()
+# x.schema_level_etl()
