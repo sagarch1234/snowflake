@@ -28,6 +28,7 @@ class Instances(BaseModel):
     company = models.ForeignKey(CompanyDetails, on_delete=models.CASCADE, null=False, blank=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
     instance_account_type = models.ForeignKey(InstanceAccountType, on_delete=models.CASCADE, null=False, blank=False)
+    last_connected = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
 

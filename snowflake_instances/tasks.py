@@ -19,13 +19,19 @@ logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(funcName)s :: %(li
 
 
 @app.task
-def parameters_and_instance_data(user, password, account, instance_id):
+def parameters_and_instance_data(user, password, account, instance_id, user_id, company_id, event):
 
-    parameters_and_instance_data = ParametersAndInstanceData(user, password, account, instance_id)
+    parameters_and_instance_data = ParametersAndInstanceData(user, password, account, instance_id, user_id, company_id, event)
 
     account_level = parameters_and_instance_data.account_level_etl()
 
     databases = parameters_and_instance_data.databases_etl()
+
+    schema = parameters_and_instance_data.schema_etl()
+
+    schema_level = parameters_and_instance_data.schema_level_etl()
+
+    database_level = parameters_and_instance_data.databases_level_etl()
 
 
 @app.task

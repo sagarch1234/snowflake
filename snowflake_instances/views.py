@@ -1,4 +1,5 @@
 import jwt
+# import datetime
 
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import Group
@@ -74,6 +75,8 @@ class AddInstanceView(APIView):
                 serialized_data.validated_data['created_by'] = request.user
                 serialized_data.validated_data['company'] = request.user.company
 
+                # serialized_data.validated_data['last_connected'] = datetime.datetime.now()
+
                 #add instance details to the database.
                 instance_object = serialized_data.save()
 
@@ -87,7 +90,7 @@ class AddInstanceView(APIView):
 
                 #add a task to the celery.
                 #This task will fetch initial data from customer's instances.
-                parameters_and_instance_data.delay(request.data['instance_user'], request.data['instance_password'], request.data['instance_account'], instance_object.id)
+                parameters_and_instance_data.delay(user = request.data['instance_user'], password = request.data['instance_password'], account = request.data['instance_account'], instance_id = instance_object.id, user_id= request.user.id, company_id= request.user.company.id, event='Add Instance')
 
                 return Response({
                     "message":"Connection to the Snowflake instance was successful.",
@@ -167,6 +170,8 @@ class UpdateInstanceview(APIView):
                 #encrypt instance password.
                 serialized_data.validated_data['instance_password'] = jwt.encode({"password":serialized_data.validated_data['instance_password']}, SECRET_KEY, algorithm='HS256').decode('utf-8')
                 
+                # serialized_data.validated_data['last_connected'] = datetime.datetime.now() 
+                
                 updated_instance = serialized_data.save()
                 
                 return Response({
@@ -217,6 +222,11 @@ class ReconnectAllInstancesView(APIView):
                 dispose_engine = DisposeEngine(connection['engine'])
                 dispose_engine.close_engine()
 
+                #add a task to the celery.
+                #This task will fetch initial data from customer's instances.
+                parameters_and_instance_data.delay(user = request.data['instance_user'], password = request.data['instance_password'], account = request.data['instance_account'], instance_id = instance_object.id, user_id= request.user.id, company_id= request.user.company.id, event='Reconnect All')
+
+
 
             elif connection['status'] == status.HTTP_400_BAD_REQUEST:
 
@@ -246,6 +256,7 @@ class ReconnectInstanceView(APIView):
         decoded_password = jwt.decode(instance_object.instance_password, SECRET_KEY, algorithms=['HS256'])
 
         instance = SnowflakeConnector(instance_object.instance_user, decoded_password['password'], instance_object.instance_account, 'ACCOUNTADMIN')
+
         connection = instance.connect_snowflake_instance()
 
         if connection['status'] == status.HTTP_200_OK:
@@ -257,6 +268,11 @@ class ReconnectInstanceView(APIView):
             #dispose engine
             dispose_engine = DisposeEngine(connection['engine'])
             dispose_engine.close_engine()
+
+            #add a task to the celery.
+            #This task will fetch initial data from customer's instances.
+            parameters_and_instance_data.delay(user = request.data['instance_user'], password = request.data['instance_password'], account = request.data['instance_account'], instance_id = instance_object.id, user_id= request.user.id, company_id= request.user.company.id, event='Reconnect')
+
             
             return Response({
                 "message" :"Connection successful.",

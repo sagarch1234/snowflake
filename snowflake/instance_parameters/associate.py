@@ -121,6 +121,9 @@ class AssociateInstance():
 
             #associate each row of schema with the instance_id
             row.append(self.instance_id)
+            row.append(self.user_id)
+            row.append(self.company_id)
+            row.append(self.event)
 
             #append each updated row in the new list.
             results.append(row)

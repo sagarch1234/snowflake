@@ -5,6 +5,7 @@ from snowflake_instances.models import Instances, InstanceAccountType
 from snowflake_optimizer.settings import SECRET_KEY
 
 import jwt
+import datetime
 
 
 class AccountTypeSerializer(serializers.ModelSerializer):
@@ -28,7 +29,7 @@ class InstancesSerializer(serializers.ModelSerializer):
     
         model = Instances
     
-        fields = ['id', 'instance_name', 'instance_user', 'password', 'instance_password', 'instance_role', 'company', 'instance_account', 'created_by', 'instance_account_type', 'account_type']
+        fields = ['id', 'instance_name', 'instance_user', 'password', 'instance_password', 'instance_role', 'company', 'instance_account', 'created_by', 'instance_account_type', 'account_type', 'last_connected']
     
         extra_kwargs = {
             'created_by' : {
@@ -42,6 +43,9 @@ class InstancesSerializer(serializers.ModelSerializer):
             },
             'instance_account_type':{
                 'write_only' : True
+            },
+            'last_connected' : {
+                'read_only' : True
             }
         }
     
@@ -83,7 +87,14 @@ class InstancesSerializer(serializers.ModelSerializer):
         instance.instance_password = validated_data.get('instance_password', instance.instance_password)
         instance.instance_account = validated_data.get('instance_account', instance.instance_account)
         instance.instance_account_type = validated_data.get('instance_account_type', instance.instance_account_type)
+        instance.last_connected = datetime.datetime.now()
 
         instance.save()
 
         return instance
+    
+    def create(self, validated_data):
+
+        validated_data['last_connected'] = datetime.datetime.now()
+
+        return Instances.objects.create(**validated_data)

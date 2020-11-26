@@ -105,13 +105,11 @@ class DumpParameters():
                 
         schema_obj = []
 
-        print(self.schema)
-
         for each_schema in self.schema:
 
             created_on = str(each_schema[0])
 
-            schema_modal_instance = SchemaOnInstance(created_on=each_schema[0], name=each_schema[1], is_default=each_schema[2], is_current=each_schema[3], database_name=each_schema[4], owner=each_schema[5], comment=each_schema[6], options=each_schema[7], retention_time=each_schema[8], instance_id=each_schema[9], company_id=each_schema[10], user_id=each_schema[11], run_date_time=each_schema[12], event=each_schema[13])
+            schema_modal_instance = SchemaOnInstance(created_on=created_on, name=each_schema[1], is_default=each_schema[2], is_current=each_schema[3], database_name=each_schema[4], owner=each_schema[5], comment=each_schema[6], options=each_schema[7], retention_time=each_schema[8], instance_id=each_schema[9], company_id=each_schema[10], user_id=each_schema[11], event=each_schema[12])
 
             schema_obj.append(schema_modal_instance)
 

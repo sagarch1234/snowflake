@@ -15,10 +15,10 @@ from connection import DisposeEngine
 Base = declarative_base()
 
 #get SnowflakeConnector class object
-connector = SnowflakeConnector(user='SFOPT_TEST_APP', password='(sE&Gv]82qv^3KJU', account='ya78377.east-us-2.azure', database_name='SFOPT_TEST', schema_name='SFOPT_TEST_SCHEMA', role='SFOPT_TEST_APP_ROLE')
+# connector = SnowflakeConnector(user='SFOPT_TEST_APP', password='(sE&Gv]82qv^3KJU', account='ya78377.east-us-2.azure', database_name='SFOPT_TEST', schema_name='SFOPT_TEST_SCHEMA', role='SFOPT_TEST_APP_ROLE')
 
 #get engine
-engine = connector.get_engine()
+# engine = connector.get_engine()
 
 
 class AccountParameters(Base):
