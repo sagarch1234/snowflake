@@ -2,10 +2,11 @@ import sys
 import logging
 import json
 import os
-from connection import SnowflakeConnector
 
 sys.path.insert(1,  '/snowflake-backend/snowflake/instance_connector')
 sys.path.insert(1,  '/snowflake-backend/snowflake/instance_parameters')
+
+from connection import SnowflakeConnector
 
 
 logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(funcName)s :: %(lineno)d :: %(message)s', level = logging.INFO)
