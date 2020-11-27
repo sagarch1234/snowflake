@@ -1,4 +1,5 @@
 import sys
+import os
 
 sys.path.insert(1,  '/snowflake-backend/snowflake/instance_connector')
 sys.path.insert(1,  '/snowflake-backend/snowflake/instance_parameters')
