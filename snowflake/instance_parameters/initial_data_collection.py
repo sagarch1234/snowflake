@@ -1,4 +1,5 @@
 import sys
+import os
 
 sys.path.insert(1,  '/snowflake-backend/snowflake/instance_connector')
 sys.path.insert(1,  '/snowflake-backend/snowflake/instance_parameters')
@@ -27,7 +28,7 @@ class ParametersAndInstanceData():
         
         self.instance_id = instance_id
 
-        self.sfo_connection_instance = SnowflakeConnector(user='SFOPT_TEST_APP', password='(sE&Gv]82qv^3KJU', account='ya78377.east-us-2.azure', database_name='SFOPT_TEST', schema_name='SFOPT_TEST_SCHEMA', role='SFO_TEST_APP_ROLE', warehouse='SFOPT_TEST_WH')
+        self.sfo_connection_instance = SnowflakeConnector(user=os.environ.get('SNOWFLAKE_ACCOUNT_USER'), password=os.environ.get('SNOWFLAKE_ACCOUNT_PASSWORD'), account=os.environ.get('SNOWFLAKE_ACCOUNT'), database_name=os.environ.get('SNOWFLAKE_DATABASE_NAME'), schema_name=os.environ.get('SCHEMA_NAME'), role=os.environ.get('ACCOUNT_ROLE'), warehouse=os.environ.get('ACCOUNT_WAREHOUSE'))
 
         self.sfo_engine = self.sfo_connection_instance.get_engine()
 
@@ -115,11 +116,3 @@ class ParametersAndInstanceData():
         dump_parameters = DumpParameters(schema_level=associated_data, engine=self.sfo_engine)
         dump_parameters.dump_schema_level()
 
-
-
-# x = ParametersAndInstanceData(user='mayur2423', password='Mayur@2423', account='xw34235.europe-west2.gcp', instance_id=1, company_id=1, user_id=2, event='Add Instance')
-# x.account_level_etl()
-# x.databases_etl()
-# x.schema_etl()
-# x.databases_level_etl()
-# x.schema_level_etl()

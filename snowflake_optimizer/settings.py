@@ -22,7 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '*g1qx7cs&9g)-x6_!%9#65eafzfx$ush%+t!v&=!y3z)q#=x27'
+# SECRET_KEY = '*g1qx7cs&9g)-x6_!%9#65eafzfx$ush%+t!v&=!y3z)q#=x27'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -103,14 +104,27 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = { 
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql', 
+#         'NAME': 'snowflake_staging',
+#         'USER': 'staging_admin',
+#         'PASSWORD': 'so@root_123',
+#         'HOST': 'so-staging-db.postgres.database.azure.com',
+#         'PORT': 5432,
+#         'ATOMIC_REQUESTS':True,
+#         'CONN_MAX_AGE': None
+#     }
+# }
+
 DATABASES = { 
     'default': {
         'ENGINE': 'django.db.backends.postgresql', 
-        'NAME': 'snowflake_staging',
-        'USER': 'staging_admin',
-        'PASSWORD': 'so@root_123',
-        'HOST': 'so-staging-db.postgres.database.azure.com',
-        'PORT': 5432,
+        'NAME': os.environ.get('DATABASE_NAME'),
+        'USER': os.environ.get('DATABASE_USERNAME'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+        'HOST': os.environ.get('DATABASE_HOST'),
+        'PORT': os.environ.get('DATABASE_PORT'),
         'ATOMIC_REQUESTS':True,
         'CONN_MAX_AGE': None
     }
@@ -173,8 +187,8 @@ CELERY_BROKER_URL = 'redis://redis:6379/0'
 #Azure storage configurations.
 DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 
-AZURE_ACCOUNT_NAME = 'sostagingstore'
-AZURE_ACCOUNT_KEY = 'M9F+gOlsYmcIsje5O+J+ajlv0M2KAsua9vm2VAymyl4QlETFdtW2AeYISk1rzQ1110jv0eISIf/lXcj+nJP0tg==>'
+AZURE_ACCOUNT_NAME = os.environ.get('AZURE_ACCOUNT_NAME')
+AZURE_ACCOUNT_KEY = os.environ.get('AZURE_ACCOUNT_KEY')
 AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
-AZURE_LOCATION = 'sostagingcontainer'
-AZURE_CONTAINER = 'sostagingcontainer'
+AZURE_LOCATION = os.environ.get('AZURE_LOCATION')
+AZURE_CONTAINER = os.environ.get('AZURE_CONTAINER')
