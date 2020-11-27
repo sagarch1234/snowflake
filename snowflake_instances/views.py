@@ -1,5 +1,5 @@
 import jwt
-# import datetime
+import datetime
 
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import Group
@@ -74,8 +74,6 @@ class AddInstanceView(APIView):
                 #foreign key instances
                 serialized_data.validated_data['created_by'] = request.user
                 serialized_data.validated_data['company'] = request.user.company
-
-                # serialized_data.validated_data['last_connected'] = datetime.datetime.now()
 
                 #add instance details to the database.
                 instance_object = serialized_data.save()
@@ -169,9 +167,7 @@ class UpdateInstanceview(APIView):
 
                 #encrypt instance password.
                 serialized_data.validated_data['instance_password'] = jwt.encode({"password":serialized_data.validated_data['instance_password']}, SECRET_KEY, algorithm='HS256').decode('utf-8')
-                
-                # serialized_data.validated_data['last_connected'] = datetime.datetime.now() 
-                
+                                
                 updated_instance = serialized_data.save()
                 
                 return Response({
@@ -222,11 +218,12 @@ class ReconnectAllInstancesView(APIView):
                 dispose_engine = DisposeEngine(connection['engine'])
                 dispose_engine.close_engine()
 
+                instance.last_connected = datetime.datetime.now()
+                instance.save()
+
                 #add a task to the celery.
                 #This task will fetch initial data from customer's instances.
-                parameters_and_instance_data.delay(user = request.data['instance_user'], password = request.data['instance_password'], account = request.data['instance_account'], instance_id = instance_object.id, user_id= request.user.id, company_id= request.user.company.id, event='Reconnect All')
-
-
+                parameters_and_instance_data.delay(user = instance.instance_user, password = decoded_password['password'], account = instance.instance_account, instance_id = instance.id, user_id= request.user.id, company_id= request.user.company.id, event='Reconnect All')
 
             elif connection['status'] == status.HTTP_400_BAD_REQUEST:
 
@@ -269,9 +266,12 @@ class ReconnectInstanceView(APIView):
             dispose_engine = DisposeEngine(connection['engine'])
             dispose_engine.close_engine()
 
+            instance_object.last_connected = datetime.datetime.now()
+            instance_object.save()
+
             #add a task to the celery.
             #This task will fetch initial data from customer's instances.
-            parameters_and_instance_data.delay(user = request.data['instance_user'], password = request.data['instance_password'], account = request.data['instance_account'], instance_id = instance_object.id, user_id= request.user.id, company_id= request.user.company.id, event='Reconnect')
+            parameters_and_instance_data.delay(user = instance_object.instance_user, password = decoded_password['password'], account = instance_object.instance_account, instance_id = instance_object.id, user_id= request.user.id, company_id= request.user.company.id, event='Reconnect')
 
             
             return Response({
