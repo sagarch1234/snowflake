@@ -17,7 +17,7 @@ from snowflake.instance_connector.connection import SnowflakeConnector, CloseSno
 from snowflake_instances.serializers import InstancesSerializer, AccountTypeSerializer
 from snowflake_instances.models import Instances, InstanceAccountType
 from snowflake_instances.permissions import IsInstanceAccessible
-from snowflake_instances.tasks import parameters_and_instance_data
+from snowflake_instances.tasks import parameters_and_instance_data, metadata_collection_login_history
 # from snowflake_instances.tasks import ParametersAndInstanceData
 
 from snowflake_optimizer.settings import SECRET_KEY
@@ -89,6 +89,7 @@ class AddInstanceView(APIView):
                 #add a task to the celery.
                 #This task will fetch initial data from customer's instances.
                 parameters_and_instance_data.delay(user = request.data['instance_user'], password = request.data['instance_password'], account = request.data['instance_account'], instance_id = instance_object.id, user_id= request.user.id, company_id= request.user.company.id, event='Add Instance')
+                metadata_collection_login_history.delay(account = request.data['instance_account'], user = request.data['instance_user'], password = request.data['instance_password'], user_id = request.user.id, company_id = request.user.company.id, event = 'Add Instance', instance_id = instance_object.id)
 
                 return Response({
                     "message":"Connection to the Snowflake instance was successful.",
@@ -223,7 +224,8 @@ class ReconnectAllInstancesView(APIView):
 
                 #add a task to the celery.
                 #This task will fetch initial data from customer's instances.
-                parameters_and_instance_data.delay(user = instance.instance_user, password = decoded_password['password'], account = instance.instance_account, instance_id = instance.id, user_id= request.user.id, company_id= request.user.company.id, event='Reconnect All')
+                parameters_and_instance_data.delay(user = instance.instance_user, password = decoded_password['password'], account = instance.instance_account, instance_id = instance.id, user_id = request.user.id, company_id = request.user.company.id, event='Reconnect All')
+                metadata_collection_login_history.delay(account = instance.instance_account, user = instance.instance_user, password = decoded_password['password'], user_id = request.user.id, company_id = request.user.company.id, event = 'Reconnect All', instance_id = instance.id)
 
             elif connection['status'] == status.HTTP_400_BAD_REQUEST:
 
@@ -272,7 +274,7 @@ class ReconnectInstanceView(APIView):
             #add a task to the celery.
             #This task will fetch initial data from customer's instances.
             parameters_and_instance_data.delay(user = instance_object.instance_user, password = decoded_password['password'], account = instance_object.instance_account, instance_id = instance_object.id, user_id= request.user.id, company_id= request.user.company.id, event='Reconnect')
-
+            metadata_collection_login_history.delay(account = instance_object.instance_account, user = instance_object.instance_user, password = decoded_password['password'], user_id = request.user.id, company_id = request.user.company.id, event = 'Reconnect', instance_id = instance_object.id)
             
             return Response({
                 "message" :"Connection successful.",

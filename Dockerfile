@@ -50,6 +50,8 @@ ENV ACCOUNT_WAREHOUSE=SFOPT_TEST_WH
 RUN pip install -r /requirements.txt
 
 RUN pip install -U "celery[redis]"
+RUN pip install snowflake-connector-python[pandas]
+
 
 RUN python manage.py makemigrations &&\
     python manage.py migrate

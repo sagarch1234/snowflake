@@ -283,7 +283,6 @@ class RegisterUpdateUserSerializer(serializers.ModelSerializer):
 
             return value
 
-
     def validate_last_name(self, value):
         """
         Method to validate name field.
@@ -312,7 +311,6 @@ class RegisterUpdateUserSerializer(serializers.ModelSerializer):
 
             return value
 
-    
     def get_user_group(self, obj):
 
         return list(obj.groups.values('id', 'name'))

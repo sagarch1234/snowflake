@@ -12,11 +12,19 @@ from snowflake.instance_parameters.record_parameters import RecordParameters
 from snowflake.instance_parameters.associate import AssociateInstance 
 from snowflake.instance_parameters.initial_data_collection import  ParametersAndInstanceData
 
+from snowflake.collect_metadata import constants
+
 import os
 import logging
 
 logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(funcName)s :: %(lineno)d :: %(message)s', level = logging.INFO)
 
+@app.task
+def metadata_collection_login_history(account, user, password, user_id, company_id, event, instance_id):
+
+    meta_collection = CollectMetaData(account=account, user=user, password=password, user_id=user_id, company_id=company_id, event=event, instance_id=instance_id)
+
+    meta_collection.collect_process_dump(sql=constants.SQL_LOGIN_HISTORY, table_name=constants.TABLE_LOGIN_HISTORY,)
 
 @app.task
 def parameters_and_instance_data(user, password, account, instance_id, user_id, company_id, event):
@@ -32,7 +40,6 @@ def parameters_and_instance_data(user, password, account, instance_id, user_id, 
     schema_level = parameters_and_instance_data.schema_level_etl()
 
     database_level = parameters_and_instance_data.databases_level_etl()
-
 
 @app.task
 def send_instance_added_mail(organisation_name, email, created_by, instance_name):

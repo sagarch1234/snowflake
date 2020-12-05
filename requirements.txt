@@ -5,7 +5,7 @@ PyJWT==1.7.1
 django-cors-headers==3.4.0
 Markdown==3.2.2
 djangorestframework-simplejwt==4.4.0
-snowflake-connector-python==2.3.2
+# snowflake-connector-python==2.3.2
 celery==5.0.0
 redis==3.5.3
 django-rest-passwordreset==1.1.0
@@ -17,3 +17,5 @@ azure-storage-common==2.1.0
 azure-storage==0.36.0
 snowflake-sqlalchemy==1.2.4
 python-status==1.0.1
+# pyarrow==0.17.0
+# cryptography==3.2
