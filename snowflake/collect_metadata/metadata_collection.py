@@ -26,7 +26,7 @@ class CollectMetaData():
         self.user_id = user_id
 
         #connect to customer snowflake instance
-        self.customer_engine = create_engine(URL(account = account, user = user, password = password, role='ACCOUNTADMIN',))
+        self.customer_engine = create_engine(URL(account = account, user = user, password = password, role='ACCOUNTADMIN'))
         self.customer_connector = self.customer_engine.connect()
         
         #connect to SFO's snowflake instance
@@ -53,8 +53,3 @@ class CollectMetaData():
 
         #load_data
         load_data = self.load_data.dump_data(table_name=table_name, dataframe=associate_df)
-
-
-# meta_collection = CollectMetaData(account='lt90919.us-central1.gcp', user='shivkant', password='Shiva@123!!*',  user_id=2, company_id=1, event="Add Instance", instance_id=90)
-
-# meta_collection.collect_process_dump(sql='SELECT * FROM SNOWFLAKE.ACCOUNT_USAGE.LOGIN_HISTORY;', table_name='login_history')

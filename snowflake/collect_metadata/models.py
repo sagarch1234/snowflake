@@ -7,11 +7,12 @@ sys.path.insert(1,  '/snowflake-backend/snowflake/instance_connector')
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import String, Integer, Column, Text, Boolean, create_engine, Time, String, Sequence, DateTime, TIMESTAMP, Date, Float
-# from sqlalchemy.types import Variant
-from snowflake.sqlalchemy import URL
+from snowflake.sqlalchemy import URL, VARIANT
 
 from connection import SnowflakeConnector
 from connection import DisposeEngine
+import constants
+
 
 #using declarative base
 Base = declarative_base()
@@ -29,7 +30,7 @@ class AccountUsageLoginHistory(Base):
     This model will store the account parameters of the customers instances.
     '''
 
-    __tablename__ = 'account_usage_login_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_LOGIN_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -61,7 +62,7 @@ class AccountUsageLoginHistory(Base):
 
 class AccountUsageAutomaticClusteringHistory(Base):
     
-    __tablename__ = 'account_usage_automatic_clustering_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_AUTOMATIC_CLUSTERING_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -91,7 +92,7 @@ class AccountUsageAutomaticClusteringHistory(Base):
 
 class AccountUsageColumns(Base):
     
-    __tablename__ = 'account_usage_columns'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_COLUMNS
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -157,7 +158,7 @@ class AccountUsageColumns(Base):
 
 class AccountUsageCopyHistory(Base):
     
-    __tablename__ = 'account_usage_copy_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_COPY_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -199,7 +200,7 @@ class AccountUsageCopyHistory(Base):
 
 class AccountUsageDatabases(Base):
     
-    __tablename__ = 'account_usage_databases'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_DATABASES
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -225,9 +226,9 @@ class AccountUsageDatabases(Base):
         return "<ACCOUNTUSAGEDATABASES({})>".format(self.id)
 
 
-class AccountUsageDatabasesToRageUsageHistory(Base):
+class AccountUsageDatabaseStorageUsageHistory(Base):
     
-    __tablename__ = 'account_usage_database_storage_usage_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_DATABASE_STORAGE_USAGE_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -252,7 +253,7 @@ class AccountUsageDatabasesToRageUsageHistory(Base):
 
 class AccountUsageDataTransferHistory(Base):
     
-    __tablename__ = 'account_usage_data_transfer_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_DATA_TRANSFER_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -278,7 +279,7 @@ class AccountUsageDataTransferHistory(Base):
 
 class AccountUsageFileFormats(Base):
     
-    __tablename__ = 'account_usage_file_formats'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_FILE_FORMATS
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -322,13 +323,13 @@ class AccountUsageFileFormats(Base):
 
 class AccountUsageFunctions(Base):
     
-    __tablename__ = 'account_usage_functions'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_FUNCTIONS
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
     id = Column(Integer, Sequence('id_account_usage_functions'), primary_key=True, autoincrement=True)
     function_id = Column(Integer, nullable=True)
-    function_name = Column(TIMESTAMP, nullable=True)
+    function_name = Column(Text, nullable=True)
     function_schema_id = Column(Integer, nullable=True)
     function_schema = Column(Text, nullable=True)
     function_catalog_id = Column(Integer, nullable=True)
@@ -367,7 +368,7 @@ class AccountUsageFunctions(Base):
 
 class AccountUsageGrantsToRoles(Base):
     
-    __tablename__ = 'account_usage_grants_to_roles'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_GRANTS_TO_ROLES
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -397,7 +398,7 @@ class AccountUsageGrantsToRoles(Base):
 
 class AccountUsageGrantsToUsers(Base):
     
-    __tablename__ = 'account_usage_grants_to_users'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_GRANTS_TO_USERS
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -422,7 +423,7 @@ class AccountUsageGrantsToUsers(Base):
 
 class AccountUsageLoadHistory(Base):
     
-    __tablename__ = 'account_usage_load_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_LOAD_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -458,7 +459,7 @@ class AccountUsageLoadHistory(Base):
 
 class AccountUsageMaterializedViewRefreshHistory(Base):
     
-    __tablename__ = 'account_usage_materialized_view_refresh_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_MATERIALIZED_VIEW_REFRESH_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -486,7 +487,7 @@ class AccountUsageMaterializedViewRefreshHistory(Base):
 
 class AccountUsageMeteringDailyHistory(Base):
     
-    __tablename__ = 'account_usage_metering_daily_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_METERING_DAILY_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -512,7 +513,7 @@ class AccountUsageMeteringDailyHistory(Base):
 
 class AccountUsageMeteringHistory(Base):
     
-    __tablename__ = 'account_usage_metering_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_METERING_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -527,7 +528,7 @@ class AccountUsageMeteringHistory(Base):
     credits_used_cloud_services = Column(Integer, nullable=True)
     credits_used = Column(Integer, nullable=True)
     bytes  = Column(Float, nullable=True)
-    rows = Column(Integer, nullable=True)
+    rows = Column("ROWS", Integer, nullable=True)
     files  = Column(Float, nullable=True)
     event = Column(Text, nullable=True)
     instance_id = Column(Integer, nullable=True)
@@ -542,7 +543,7 @@ class AccountUsageMeteringHistory(Base):
 
 class AccountUsagePipes(Base):
     
-    __tablename__ = 'account_usage_pipes'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_PIPES
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -576,7 +577,7 @@ class AccountUsagePipes(Base):
 
 class AccountUsagePipeUsageHistory(Base):
     
-    __tablename__ = 'account_usage_pipe_usage_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_PIPE_USAGE_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -608,10 +609,9 @@ class AccountUsagePipeUsageHistory(Base):
         return "<ACCOUNTUSAGEPIPEUSAGEHISTORY({})>".format(self.id)
 
 
-
 class AccountUsageQueryHistory(Base):
     
-    __tablename__ = 'account_usage_query_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_QUERY_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -690,7 +690,7 @@ class AccountUsageQueryHistory(Base):
 
 class AccountUsageReferentialConstraints(Base):
     
-    __tablename__ = 'acccount_usage_referential_constraints'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_REFERENTIAL_CONSTRAINTS
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -726,7 +726,7 @@ class AccountUsageReferentialConstraints(Base):
 
 class AccountUsageReplicationUsageHistory(Base):
     
-    __tablename__ = 'acccount_usage_replication_usage_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_REPLICATION_USAGE_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -751,7 +751,7 @@ class AccountUsageReplicationUsageHistory(Base):
 
 class AccountUsageRoles(Base):
     
-    __tablename__ = 'acccount_usage_role'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_ROLES
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -774,7 +774,7 @@ class AccountUsageRoles(Base):
 
 class AccountUsageSchemata(Base):
     
-    __tablename__ = 'acccount_usage_schemata'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_SCHEMATA
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -809,7 +809,7 @@ class AccountUsageSchemata(Base):
 
 class AccountUsageSearchOptimizationHistory(Base):
     
-    __tablename__ = 'acccount_usage_search_optimization_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_SEARCH_OPTIMIZATION_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -837,7 +837,7 @@ class AccountUsageSearchOptimizationHistory(Base):
 
 class AccountUsageSequences(Base):
     
-    __tablename__ = 'acccount_usage_sequences'
+    __tablename__ =  constants.TABLE_ACCOUNT_USAGE_SEQUENCES
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -877,7 +877,7 @@ class AccountUsageSequences(Base):
 
 class AccountUsageStages(Base):
     
-    __tablename__ = 'acccount_usage_stages'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_STAGES
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -910,7 +910,7 @@ class AccountUsageStages(Base):
 
 class AccountUsageStageStorageUsageHistory(Base):
     
-    __tablename__ = 'acccount_usage_stage_storage_usage_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_STAGE_STORAGE_USAGE_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -931,7 +931,7 @@ class AccountUsageStageStorageUsageHistory(Base):
 
 class AccountUsageStorageUsage(Base):
     
-    __tablename__ = 'acccount_usage_storage_usage'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_STORAGE_USAGE
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -954,7 +954,7 @@ class AccountUsageStorageUsage(Base):
 
 class AccountUsageTables(Base):
     
-    __tablename__ = 'acccount_usage_tables'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_TABLES
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -1000,7 +1000,7 @@ class AccountUsageTables(Base):
 
 class AccountUsageTableConstraints(Base):
     
-    __tablename__ = 'acccount_usage_table_constraints'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_TABLE_CONSTRAINTS
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -1039,7 +1039,7 @@ class AccountUsageTableConstraints(Base):
 
 class AccountUsageStorageMetrics(Base):
     
-    __tablename__ = 'acccount_usage_storage_metrics'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_TABLE_STORAGE_METRICS
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -1077,53 +1077,52 @@ class AccountUsageStorageMetrics(Base):
         return "<ACCOUNTUSAGESTORAGEMETRICS({})>".format(self.id)
 
 
-# class AccountUsageUsers(Base):
+class AccountUsageUsers(Base):
     
-#     __tablename__ = 'acccount_usage_users'
-#     __table_args__ = {
-#         'schema' : 'SFOPT_TEST_SCHEMA'
-#     }
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_USERS
+    __table_args__ = {
+        'schema' : 'SFOPT_TEST_SCHEMA'
+    }
 
-#     id = Column(Integer, Sequence('id_acccount_usage_users'), primary_key=True, autoincrement=True)
-#     name = Column(Text, nullable=True)
-#     created_on = Column(TIMESTAMP, nullable=True)
-#     deleted_on = Column(TIMESTAMP, nullable=True)
-#     login_name = Column(Text, nullable=True)
-#     display_name = Column(Text, nullable=True)
-#     first_name = Column(Text, nullable=True)
-#     last_name = Column(Text, nullable=True)
-#     email = Column(Text, nullable=True)
-#     must_change_password = Column(Boolean, nullable=True)
-#     has_password = Column(Boolean, nullable=True)
-#     comment = Column(Text, nullable=True)
-#     disabled = Column(Variant, nullable=True)
-#     snowflake_lock = Column(Variant, nullable=True)
-#     default_warehouse = Column(Text, nullable=True)
-#     default_namespace = Column(Text, nullable=True)
-#     default_role = Column(Text, nullable=True)
-#     ext_authn_duo = Column(Variant, nullable=True)
-#     ext_authn_uid = Column(Text, nullable=True)
-#     bypass_mfa_until = Column(TIMESTAMP, nullable=True)
-#     last_success_login = Column(TIMESTAMP, nullable=True)
-#     expires_at = Column(TIMESTAMP, nullable=True)
-#     locked_until_time = Column(TIMESTAMP, nullable=True)
-#     has_rsa_public_key = Column(Boolean, nullable=True)
-#     password_last_set_time = Column(TIMESTAMP, nullable=True)
-#     event = Column(Text, nullable=True)
-#     instance_id = Column(Integer, nullable=True)
-#     company_id = Column(Integer, nullable=True)
-#     user_id = Column(Integer, nullable=True)
-#     date_run = Column(Date)
+    id = Column(Integer, Sequence('id_acccount_usage_users'), primary_key=True, autoincrement=True)
+    name = Column(Text, nullable=True)
+    created_on = Column(TIMESTAMP, nullable=True)
+    deleted_on = Column(TIMESTAMP, nullable=True)
+    login_name = Column(Text, nullable=True)
+    display_name = Column(Text, nullable=True)
+    first_name = Column(Text, nullable=True)
+    last_name = Column(Text, nullable=True)
+    email = Column(Text, nullable=True)
+    must_change_password = Column(Boolean, nullable=True)
+    has_password = Column(Boolean, nullable=True)
+    comment = Column(Text, nullable=True)
+    disabled = Column(VARIANT, nullable=True)
+    snowflake_lock = Column(VARIANT, nullable=True)
+    default_warehouse = Column(Text, nullable=True)
+    default_namespace = Column(Text, nullable=True)
+    default_role = Column(Text, nullable=True)
+    ext_authn_duo = Column(VARIANT, nullable=True)
+    ext_authn_uid = Column(Text, nullable=True)
+    bypass_mfa_until = Column(TIMESTAMP, nullable=True)
+    last_success_login = Column(TIMESTAMP, nullable=True)
+    expires_at = Column(TIMESTAMP, nullable=True)
+    locked_until_time = Column(TIMESTAMP, nullable=True)
+    has_rsa_public_key = Column(Boolean, nullable=True)
+    password_last_set_time = Column(TIMESTAMP, nullable=True)
+    event = Column(Text, nullable=True)
+    instance_id = Column(Integer, nullable=True)
+    company_id = Column(Integer, nullable=True)
+    user_id = Column(Integer, nullable=True)
+    date_run = Column(Date)
 
-#     def __repr__(self):
-#         #return the class object.
-#         return "<ACCOUNTUSAGEUSERS({})>".format(self.id)
-
+    def __repr__(self):
+        #return the class object.
+        return "<ACCOUNTUSAGEUSERS({})>".format(self.id)
 
 
 class AccountUsageViews(Base):
     
-    __tablename__ = 'acccount_usage_views'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_VIEWS
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -1158,7 +1157,7 @@ class AccountUsageViews(Base):
 
 class AccountUsageWarehouseLoadHistory(Base):
     
-    __tablename__ = 'acccount_usage_warehouse_load_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_WAREHOUSE_LOAD_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -1185,7 +1184,7 @@ class AccountUsageWarehouseLoadHistory(Base):
 
 class AccountUsageWarehouseMeteringHistory(Base):
     
-    __tablename__ = 'acccount_usage_warehouse_metering_history'
+    __tablename__ = constants.TABLE_ACCOUNT_USAGE_WAREHOUSE_METERING_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -1211,7 +1210,7 @@ class AccountUsageWarehouseMeteringHistory(Base):
 
 class OrganizationUsagePreviewDataTransferDailyHistory(Base):
     
-    __tablename__ = 'organization_usage_preview_data_transfer_daily_history'
+    __tablename__ = constants.TABLE_ORGANIZATION_USAGE_PREVIEW_DATA_TRANSFER_DAILY_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -1234,10 +1233,9 @@ class OrganizationUsagePreviewDataTransferDailyHistory(Base):
         return "<ORGANIZATIONUSAGEPREVIEWDATATRANSFERDAILYHISTORY({})>".format(self.id)
 
 
-
 class OrganizationUsagePreviewMeteringDailyHistory(Base):
     
-    __tablename__ = 'organization_usage_preview_metering_daily_history'
+    __tablename__ = constants.TABLE_ORGANIZATION_USAGE_PREVIEW_METERING_DAILY_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -1266,7 +1264,7 @@ class OrganizationUsagePreviewMeteringDailyHistory(Base):
 
 class OrganizationUsagePreviewStorageDailyHistory(Base):
     
-    __tablename__ = 'organization_usage_preview_storage_daily_history'
+    __tablename__ = constants.TABLE_ORGANIZATION_USAGE_PREVIEW_STORAGE_DAILY_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -1291,7 +1289,7 @@ class OrganizationUsagePreviewStorageDailyHistory(Base):
 
 class ReaderAccountUsageLoginHistory(Base):
     
-    __tablename__ = 'reader_account_usage_login_history'
+    __tablename__ = constants.TABLE_READER_ACCOUNT_USAGE_LOGIN_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -1323,100 +1321,100 @@ class ReaderAccountUsageLoginHistory(Base):
         return "<ReaderAccountUsageLoginHistory({})>".format(self.id)
 
 
-# class ReaderAccountUsageQueryHistory(Base):
+class ReaderAccountUsageQueryHistory(Base):
     
-#     __tablename__ = 'reader_account_usage_query_history'
-#     __table_args__ = {
-#         'schema' : 'SFOPT_TEST_SCHEMA'
-#     }
+    __tablename__ = constants.TABLE_READER_ACCOUNT_USAGE_QUERY_HISTORY
+    __table_args__ = {
+        'schema' : 'SFOPT_TEST_SCHEMA'
+    }
 
-#     id = Column(Integer, Sequence('id_reader_account_usage_query_history'), primary_key=True, autoincrement=True)
-#     reader_account_name = Column(Text, nullable=True)
-#     query_id = Column(Text, nullable=True)
-#     query_text = Column(Text, nullable=True)
-#     query_type = Column(Text, nullable=True)
-#     session_id = Column(Integer, nullable=True)
-#     user_name = Column(Text, nullable=True)
-#     role_name = Column(Text, nullable=True)
-#     schema_id = Column(Integer, nullable=True)
-#     schema_name = Column(Text, nullable=True)
-#     database_id = Column(Integer, nullable=True)
-#     database_name = Column(Text, nullable=True)
-#     warehouse_id = Column(Integer, nullable=True)
-#     warehouse_name = Column(Text, nullable=True)
-#     warehouse_size = Column(Text, nullable=True)
-#     warehouse_type = Column(Text, nullable=True)
-#     cluster_number = Column(Integer, nullable=True)
-#     query_tag = Column(Text, nullable=True)
-#     execution_status = Column(Text, nullable=True)
-#     error_code = Column(Text, nullable=True)
-#     error_message = Column(Text, nullable=True)
-#     start_time= Column(TIMESTAMP, nullable=True)
-#     end_time= Column(TIMESTAMP, nullable=True)
-#     total_elapsed_time = Column(Integer, nullable=True)
-#     bytes_scanned = Column(Integer, nullable=True)
-#     rows_produced = Column(Integer, nullable=True)
-#     compilation_time = Column(Integer, nullable=True)
-#     execution_time = Column(Integer, nullable=True)
-#     queued_provisioning_time = Column(Variant, nullable=True)
-#     queued_repair_time = Column(Variant, nullable=True)
-#     queued_overload_time = Column(Variant, nullable=True)
-#     transaction_blocked_time = Column(Variant, nullable=True)
-#     outbound_data_transfer_cloud = Column(Text, nullable=True)
-#     outbound_data_transfer_region = Column(Text, nullable=True)
-#     outbound_data_transfer_bytes = Column(Integer, nullable=True)
-#     inbound_data_transfer_cloud = Column(Text, nullable=True)
-#     inbound_data_transfer_region = Column(Text, nullable=True)
-#     inbound_data_transfer_bytes = Column(Integer, nullable=True)
-#     list_external_files_time = Column(Integer, nullable=True)
-#     credits_used_cloud_services = Column(Float, nullable=True)
-#     reader_account_deleted_on= Column(TIMESTAMP, nullable=True)
-#     event = Column(Text, nullable=True)
-#     instance_id = Column(Integer, nullable=True)
-#     company_id = Column(Integer, nullable=True)
-#     user_id = Column(Integer, nullable=True)
-#     date_run = Column(Date)
+    id = Column(Integer, Sequence('id_reader_account_usage_query_history'), primary_key=True, autoincrement=True)
+    reader_account_name = Column(Text, nullable=True)
+    query_id = Column(Text, nullable=True)
+    query_text = Column(Text, nullable=True)
+    query_type = Column(Text, nullable=True)
+    session_id = Column(Integer, nullable=True)
+    user_name = Column(Text, nullable=True)
+    role_name = Column(Text, nullable=True)
+    schema_id = Column(Integer, nullable=True)
+    schema_name = Column(Text, nullable=True)
+    database_id = Column(Integer, nullable=True)
+    database_name = Column(Text, nullable=True)
+    warehouse_id = Column(Integer, nullable=True)
+    warehouse_name = Column(Text, nullable=True)
+    warehouse_size = Column(Text, nullable=True)
+    warehouse_type = Column(Text, nullable=True)
+    cluster_number = Column(Integer, nullable=True)
+    query_tag = Column(Text, nullable=True)
+    execution_status = Column(Text, nullable=True)
+    error_code = Column(Text, nullable=True)
+    error_message = Column(Text, nullable=True)
+    start_time= Column(TIMESTAMP, nullable=True)
+    end_time= Column(TIMESTAMP, nullable=True)
+    total_elapsed_time = Column(Integer, nullable=True)
+    bytes_scanned = Column(Integer, nullable=True)
+    rows_produced = Column(Integer, nullable=True)
+    compilation_time = Column(Integer, nullable=True)
+    execution_time = Column(Integer, nullable=True)
+    queued_provisioning_time = Column(VARIANT, nullable=True)
+    queued_repair_time = Column(VARIANT, nullable=True)
+    queued_overload_time = Column(VARIANT, nullable=True)
+    transaction_blocked_time = Column(VARIANT, nullable=True)
+    outbound_data_transfer_cloud = Column(Text, nullable=True)
+    outbound_data_transfer_region = Column(Text, nullable=True)
+    outbound_data_transfer_bytes = Column(Integer, nullable=True)
+    inbound_data_transfer_cloud = Column(Text, nullable=True)
+    inbound_data_transfer_region = Column(Text, nullable=True)
+    inbound_data_transfer_bytes = Column(Integer, nullable=True)
+    list_external_files_time = Column(Integer, nullable=True)
+    credits_used_cloud_services = Column(Float, nullable=True)
+    reader_account_deleted_on= Column(TIMESTAMP, nullable=True)
+    event = Column(Text, nullable=True)
+    instance_id = Column(Integer, nullable=True)
+    company_id = Column(Integer, nullable=True)
+    user_id = Column(Integer, nullable=True)
+    date_run = Column(Date)
 
-#     def __repr__(self):
-#         #return the class object.
-#         return "<READERACCOUNTQUERYHISTORY({})>".format(self.id)
+    def __repr__(self):
+        #return the class object.
+        return "<READERACCOUNTQUERYHISTORY({})>".format(self.id)
 
 
-# class ReaderAccountUsageResourceMonitor(Base):
+class ReaderAccountUsageResourceMonitor(Base):
     
-#     __tablename__ = 'reader_account_usage_resource_monitor'
-#     __table_args__ = {
-#         'schema' : 'SFOPT_TEST_SCHEMA'
-#     }
+    __tablename__ = constants.TABLE_READER_ACCOUNT_USAGE_RESOURCE_MONITORS
+    __table_args__ = {
+        'schema' : 'SFOPT_TEST_SCHEMA'
+    }
 
-#     id = Column(Integer, Sequence('id_reader_account_usage_resource_monitor'), primary_key=True, autoincrement=True)
-#     reader_account_name  = Column(Text, nullable=True)
-#     name = Column(Text, nullable=True)
-#     created = Column(TIMESTAMP, nullable=True)
-#     credit_quota = Column(Variant, nullable=True)
-#     used_credits = Column(Variant, nullable=True)
-#     remaining_credits = Column(Float, nullable=True)
-#     owner = Column(Text, nullable=True)
-#     warehouses = Column(Text, nullable=True)
-#     notify = Column(Integer, nullable=True)
-#     suspend = Column(Integer, nullable=True)
-#     suspend_immediate = Column(Integer, nullable=True)
-#     level = Column(String(9), nullable=True)
-#     reader_account_deleted_on = Column(TIMESTAMP, nullable=True)
-#     event = Column(Text, nullable=True)
-#     instance_id = Column(Integer, nullable=True)
-#     company_id = Column(Integer, nullable=True)
-#     user_id = Column(Integer, nullable=True)
-#     date_run = Column(Date)
+    id = Column(Integer, Sequence('id_reader_account_usage_resource_monitor'), primary_key=True, autoincrement=True)
+    reader_account_name  = Column(Text, nullable=True)
+    name = Column(Text, nullable=True)
+    created = Column(TIMESTAMP, nullable=True)
+    credit_quota = Column(VARIANT, nullable=True)
+    used_credits = Column(VARIANT, nullable=True)
+    remaining_credits = Column(Float, nullable=True)
+    owner = Column(Text, nullable=True)
+    warehouses = Column(Text, nullable=True)
+    notify = Column(Integer, nullable=True)
+    suspend = Column(Integer, nullable=True)
+    suspend_immediate = Column(Integer, nullable=True)
+    level = Column(String(9), nullable=True)
+    reader_account_deleted_on = Column(TIMESTAMP, nullable=True)
+    event = Column(Text, nullable=True)
+    instance_id = Column(Integer, nullable=True)
+    company_id = Column(Integer, nullable=True)
+    user_id = Column(Integer, nullable=True)
+    date_run = Column(Date)
 
-#     def __repr__(self):
-#         #return the class object.
-#         return "<READERACCOUNTUSAGERESOURCEMONITOR({})>".format(self.id)
+    def __repr__(self):
+        #return the class object.
+        return "<READERACCOUNTUSAGERESOURCEMONITOR({})>".format(self.id)
 
 
 class ReaderAccountUsageStorageUsage(Base):
     
-    __tablename__ = 'reader_account_usage_storage_usage'
+    __tablename__ = constants.TABLE_READER_ACCOUNT_USAGE_STORAGE_USAGE
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
@@ -1441,7 +1439,7 @@ class ReaderAccountUsageStorageUsage(Base):
 
 class ReaderAccountUsageWarehouseMeteringHistory(Base):
     
-    __tablename__ = 'reader_account_usage_warehouse_metering_history'
+    __tablename__ = constants.TABLE_READER_ACCOUNT_USAGE_WAREHOUSE_METERING_HISTORY
     __table_args__ = {
         'schema' : 'SFOPT_TEST_SCHEMA'
     }
