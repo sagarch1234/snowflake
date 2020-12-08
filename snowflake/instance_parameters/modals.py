@@ -30,7 +30,7 @@ class AccountParameters(Base):
 
     __tablename__ = 'account_parameters'
     __table_args__ = {
-        'schema' : 'os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
     }
 
     id = Column(Integer, Sequence('id_account_parameters'), primary_key=True, autoincrement=True)
@@ -58,7 +58,7 @@ class DatabasesOnInstance(Base):
     '''
     __tablename__ = 'instance_databases'
     __table_args__ = {
-        'schema' : 'os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
     }
 
     id = Column(Integer, Sequence('id_databases_on_instance'), primary_key=True, autoincrement=True)
@@ -90,7 +90,7 @@ class SchemaOnInstance(Base):
     
     __tablename__ = 'instance_databases_schema'
     __table_args__ = {
-        'schema' : 'os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
     }
 
     id = Column(Integer, Sequence('id_schema_on_instance'), primary_key=True, autoincrement=True)
@@ -122,7 +122,7 @@ class ParametersInDatabase(Base):
     
     __tablename__ = 'parameters_in_database'
     __table_args__ = {
-        'schema' : 'os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
     }
 
     id = Column(Integer, Sequence('id_parameters_in_database'), primary_key=True, autoincrement=True)
@@ -155,7 +155,7 @@ class ParametersInSchemas(Base):
     __tablename__ = 'parameters_in_schemas'
     __table_args__ = {
         # 'extend_existing' : True,
-        'schema' : 'os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
     }
 
     id = Column(Integer, Sequence('id_parameters_in_schemas'), primary_key=True, autoincrement=True)
