@@ -8,6 +8,7 @@ class AssociateData():
         self.user_id = user_id
         self.event = event
         self.company_id = company_id
+        self.dataframe['date_run'] = date.today()
     
     def associate_data(self, dataframe):
 
@@ -15,6 +16,6 @@ class AssociateData():
         dataframe['user_id'] = self.user_id
         dataframe['event'] = self.event
         dataframe['company_id'] = self.company_id
-        dataframe['date_run'] = date.today()
+        dataframe['date_run'] = self.dataframe['date_run']
 
         return dataframe

@@ -18,7 +18,7 @@ import constants
 Base = declarative_base()
 
 #get SnowflakeConnector class object
-# connector = SnowflakeConnector(user=os.environ.get('SNOWFLAKE_ACCOUNT_USER'), password=os.environ.get('SNOWFLAKE_ACCOUNT_PASSWORD'), account=os.environ.get('SNOWFLAKE_ACCOUNT'), database_name=os.environ.get('SNOWFLAKE_DATABASE_NAME'), schema_name=os.environ.get('SCHEMA_NAME'), role=os.environ.get('ACCOUNT_ROLE'), warehouse=os.environ.get('ACCOUNT_WAREHOUSE'))
+# connector = SnowflakeConnector(user=os.environ.get('SNOWFLAKE_ACCOUNT_USER'), password=os.environ.get('SNOWFLAKE_ACCOUNT_PASSWORD'), account=os.environ.get('SNOWFLAKE_ACCOUNT'), database_name=os.environ.get('SNOWFLAKE_DATABASE_NAME'), schema_name=os.environ.get('SCHEMA_NAME_AUDITS'), role=os.environ.get('ACCOUNT_ROLE'), warehouse=os.environ.get('ACCOUNT_WAREHOUSE'))
 
 #get engine
 # engine = connector.get_engine()
@@ -32,7 +32,7 @@ class AccountUsageLoginHistory(Base):
 
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_LOGIN_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_account_usage_login_history'), primary_key=True, autoincrement=True)
@@ -64,7 +64,7 @@ class AccountUsageAutomaticClusteringHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_AUTOMATIC_CLUSTERING_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_account_usage_automatic_clustering_history'), primary_key=True, autoincrement=True)
@@ -94,7 +94,7 @@ class AccountUsageColumns(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_COLUMNS
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_account_usage_columns'), primary_key=True, autoincrement=True)
@@ -160,7 +160,7 @@ class AccountUsageCopyHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_COPY_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_account_usage_copy_history'), primary_key=True, autoincrement=True)
@@ -202,7 +202,7 @@ class AccountUsageDatabases(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_DATABASES
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_account_usage_databases'), primary_key=True, autoincrement=True)
@@ -230,7 +230,7 @@ class AccountUsageDatabaseStorageUsageHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_DATABASE_STORAGE_USAGE_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_account_usage_database_storage_usage_history'), primary_key=True, autoincrement=True)
@@ -255,7 +255,7 @@ class AccountUsageDataTransferHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_DATA_TRANSFER_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
     id = Column(Integer, Sequence('id_account_usage_data_transfer_history'), primary_key=True, autoincrement=True)
     start_time = Column(TIMESTAMP, nullable=True)
@@ -281,7 +281,7 @@ class AccountUsageFileFormats(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_FILE_FORMATS
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
     id = Column(Integer, Sequence('id_account_usage_file_formats'), primary_key=True, autoincrement=True)
     file_format_id = Column(Integer, nullable=True)
@@ -325,7 +325,7 @@ class AccountUsageFunctions(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_FUNCTIONS
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
     id = Column(Integer, Sequence('id_account_usage_functions'), primary_key=True, autoincrement=True)
     function_id = Column(Integer, nullable=True)
@@ -370,7 +370,7 @@ class AccountUsageGrantsToRoles(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_GRANTS_TO_ROLES
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
     id = Column(Integer, Sequence('id_account_usage_grants_to_roles'), primary_key=True, autoincrement=True)
     created_on = Column(TIMESTAMP, nullable=True)
@@ -400,7 +400,7 @@ class AccountUsageGrantsToUsers(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_GRANTS_TO_USERS
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_account_usage_grants_to_users'), primary_key=True, autoincrement=True)
@@ -425,7 +425,7 @@ class AccountUsageLoadHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_LOAD_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_account_usage_load_history'), primary_key=True, autoincrement=True)
@@ -461,7 +461,7 @@ class AccountUsageMaterializedViewRefreshHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_MATERIALIZED_VIEW_REFRESH_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_account_usage_materialized_view_refresh_history'), primary_key=True, autoincrement=True)
@@ -474,7 +474,7 @@ class AccountUsageMaterializedViewRefreshHistory(Base):
     schema_name = Column(Text, nullable=True)
     database_id = Column(Integer, nullable=True)
     database_name = Column(Text, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -489,7 +489,7 @@ class AccountUsageMeteringDailyHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_METERING_DAILY_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_account_usage_metering_daily_history'), primary_key=True, autoincrement=True)
@@ -500,7 +500,7 @@ class AccountUsageMeteringDailyHistory(Base):
     credits_used = Column(Integer, nullable=True)
     credits_adjustment_cloud_services = Column(Integer, nullable=True)
     credits_billed = Column(Integer, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -515,7 +515,7 @@ class AccountUsageMeteringHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_METERING_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_account_usage_metering_history'), primary_key=True, autoincrement=True)
@@ -530,7 +530,7 @@ class AccountUsageMeteringHistory(Base):
     bytes  = Column(Float, nullable=True)
     rows = Column("ROWS", Integer, nullable=True)
     files  = Column(Float, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -545,7 +545,7 @@ class AccountUsagePipes(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_PIPES
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_account_usage_pipes'), primary_key=True, autoincrement=True)
@@ -564,7 +564,7 @@ class AccountUsagePipes(Base):
     comment = Column(Text, nullable=True)
     pattern = Column(Text, nullable=True)
     deleted = Column(TIMESTAMP, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -579,7 +579,7 @@ class AccountUsagePipeUsageHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_PIPE_USAGE_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_account_usage_pipe_usage_history'), primary_key=True, autoincrement=True)
@@ -598,7 +598,7 @@ class AccountUsagePipeUsageHistory(Base):
     comment = Column(Text, nullable=True)
     pattern = Column(Text, nullable=True)
     deleted = Column(TIMESTAMP, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -613,7 +613,7 @@ class AccountUsageQueryHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_QUERY_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_account_usage_query_history'), primary_key=True, autoincrement=True)
@@ -677,7 +677,7 @@ class AccountUsageQueryHistory(Base):
     external_function_total_received_bytes = Column(Integer, nullable=True)
     query_load_percent = Column(Integer, nullable=True)
     is_client_generated_statement = Column(Boolean, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -692,7 +692,7 @@ class AccountUsageReferentialConstraints(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_REFERENTIAL_CONSTRAINTS
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_acccount_usage_referential_constraints'), primary_key=True, autoincrement=True)
@@ -713,7 +713,7 @@ class AccountUsageReferentialConstraints(Base):
     created = Column(TIMESTAMP, nullable=True)
     last_altered = Column(TIMESTAMP, nullable=True)
     deleted = Column(TIMESTAMP, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -728,7 +728,7 @@ class AccountUsageReplicationUsageHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_REPLICATION_USAGE_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_acccount_usage_replication_usage_history'), primary_key=True, autoincrement=True)
@@ -738,7 +738,7 @@ class AccountUsageReplicationUsageHistory(Base):
     database_id = Column(Integer, nullable=True)
     credits_used = Column(Integer, nullable=True)
     bytes_transferred = Column(Integer, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -753,7 +753,7 @@ class AccountUsageRoles(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_ROLES
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_acccount_usage_role'), primary_key=True, autoincrement=True)
@@ -761,7 +761,7 @@ class AccountUsageRoles(Base):
     deleted_on = Column(TIMESTAMP, nullable=True)
     name = Column(Text, nullable=True)
     comment = Column(Text, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -776,7 +776,7 @@ class AccountUsageSchemata(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_SCHEMATA
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_acccount_usage_schemata'), primary_key=True, autoincrement=True)
@@ -796,7 +796,7 @@ class AccountUsageSchemata(Base):
     created = Column(TIMESTAMP, nullable=True)
     last_altered = Column(TIMESTAMP, nullable=True)
     deleted = Column(TIMESTAMP, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -811,7 +811,7 @@ class AccountUsageSearchOptimizationHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_SEARCH_OPTIMIZATION_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_acccount_usage_search_optimization_history'), primary_key=True, autoincrement=True)
@@ -824,7 +824,7 @@ class AccountUsageSearchOptimizationHistory(Base):
     schema_name = Column(Text, nullable=True)
     database_id = Column(Integer, nullable=True)
     database_name = Column(Text, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -839,7 +839,7 @@ class AccountUsageSequences(Base):
     
     __tablename__ =  constants.TABLE_ACCOUNT_USAGE_SEQUENCES
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_acccount_usage_sequences'), primary_key=True, autoincrement=True)
@@ -864,7 +864,7 @@ class AccountUsageSequences(Base):
     last_altered = Column(TIMESTAMP, nullable=True)
     deleted = Column(TIMESTAMP, nullable=True)
     comment = Column(Text, nullable=True)             
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -879,7 +879,7 @@ class AccountUsageStages(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_STAGES
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_acccount_usage_stages'), primary_key=True, autoincrement=True)
@@ -897,7 +897,7 @@ class AccountUsageStages(Base):
     created = Column(Text, nullable=True) 
     last_altered = Column(Text, nullable=True) 
     deleted = Column(Text, nullable=True) 
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -912,13 +912,13 @@ class AccountUsageStageStorageUsageHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_STAGE_STORAGE_USAGE_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_acccount_usage_stage_storage_usage_history'), primary_key=True, autoincrement=True)
     usage_date = Column(Date, nullable=True)
     average_stage_bytes = Column(Integer, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -933,7 +933,7 @@ class AccountUsageStorageUsage(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_STORAGE_USAGE
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_acccount_usage_storage_usage'), primary_key=True, autoincrement=True)
@@ -941,7 +941,7 @@ class AccountUsageStorageUsage(Base):
     storage_bytes = Column(Integer, nullable=True)
     stage_bytes = Column(Integer, nullable=True)
     failsafe_bytes = Column(Integer, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -956,7 +956,7 @@ class AccountUsageTables(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_TABLES
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_acccount_usage_tables'), primary_key=True, autoincrement=True)
@@ -986,7 +986,7 @@ class AccountUsageTables(Base):
     deleted = Column(TIMESTAMP, nullable=True)
     auto_clustering_on = Column(String(3), nullable=True)
     comment = Column(Text, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -1002,7 +1002,7 @@ class AccountUsageTableConstraints(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_TABLE_CONSTRAINTS
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_acccount_usage_table_constraints'), primary_key=True, autoincrement=True)
@@ -1026,7 +1026,7 @@ class AccountUsageTableConstraints(Base):
     created = Column(TIMESTAMP, nullable=True)
     last_altered = Column(TIMESTAMP, nullable=True)
     deleted = Column(TIMESTAMP, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -1041,7 +1041,7 @@ class AccountUsageStorageMetrics(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_TABLE_STORAGE_METRICS
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     storage_metric_id = Column(Integer, Sequence('id_acccount_usage_storage_metric'), primary_key=True, autoincrement=True)
@@ -1066,7 +1066,7 @@ class AccountUsageStorageMetrics(Base):
     catalog_created = Column(TIMESTAMP, nullable=True)
     catalog_dropped = Column(TIMESTAMP, nullable=True)
     comment = Column(Text, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -1081,7 +1081,7 @@ class AccountUsageUsers(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_USERS
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_acccount_usage_users'), primary_key=True, autoincrement=True)
@@ -1109,7 +1109,7 @@ class AccountUsageUsers(Base):
     locked_until_time = Column(TIMESTAMP, nullable=True)
     has_rsa_public_key = Column(Boolean, nullable=True)
     password_last_set_time = Column(TIMESTAMP, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -1124,7 +1124,7 @@ class AccountUsageViews(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_VIEWS
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_acccount_usage_views'), primary_key=True, autoincrement=True)
@@ -1144,7 +1144,7 @@ class AccountUsageViews(Base):
     last_altered = Column(TIMESTAMP, nullable=True)
     deleted = Column(TIMESTAMP, nullable=True)
     comment = Column(Text, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -1159,7 +1159,7 @@ class AccountUsageWarehouseLoadHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_WAREHOUSE_LOAD_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_acccount_usage_warehouse_load_history'), primary_key=True, autoincrement=True)
@@ -1171,7 +1171,7 @@ class AccountUsageWarehouseLoadHistory(Base):
     avg_queued_load = Column(Integer, nullable=True)
     avg_queued_provisioning = Column(Integer, nullable=True)
     avg_blocked = Column(Integer, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -1186,7 +1186,7 @@ class AccountUsageWarehouseMeteringHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_WAREHOUSE_METERING_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_acccount_usage_warehouse_metering_history'), primary_key=True, autoincrement=True)
@@ -1197,7 +1197,7 @@ class AccountUsageWarehouseMeteringHistory(Base):
     credits_used = Column(Integer, nullable=True)
     credits_used_compute = Column(Integer, nullable=True)
     credits_used_cloud_services = Column(Integer, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -1212,7 +1212,7 @@ class OrganizationUsagePreviewDataTransferDailyHistory(Base):
     
     __tablename__ = constants.TABLE_ORGANIZATION_USAGE_PREVIEW_DATA_TRANSFER_DAILY_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_organization_usage_preview_data_transfer_daily_history'), primary_key=True, autoincrement=True)
@@ -1222,7 +1222,7 @@ class OrganizationUsagePreviewDataTransferDailyHistory(Base):
     usage_date = Column(Date, nullable=True)
     tb_transfered = Column(Float, nullable=True)
     region = Column(Text, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -1237,7 +1237,7 @@ class OrganizationUsagePreviewMeteringDailyHistory(Base):
     
     __tablename__ = constants.TABLE_ORGANIZATION_USAGE_PREVIEW_METERING_DAILY_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_organization_usage_preview_metering_daily_history'), primary_key=True, autoincrement=True)
@@ -1251,7 +1251,7 @@ class OrganizationUsagePreviewMeteringDailyHistory(Base):
     credits_adjustment_cloud_services = Column(Integer, nullable=True)
     credits_billed = Column(Integer, nullable=True)
     region = Column(Text, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -1266,7 +1266,7 @@ class OrganizationUsagePreviewStorageDailyHistory(Base):
     
     __tablename__ = constants.TABLE_ORGANIZATION_USAGE_PREVIEW_STORAGE_DAILY_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_organization_usage_preview_storage_daily_history'), primary_key=True, autoincrement=True)
@@ -1276,7 +1276,7 @@ class OrganizationUsagePreviewStorageDailyHistory(Base):
     usage_date = Column(Date, nullable=True)
     average_bytes = Column(Integer, nullable=True)
     region = Column(Text, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -1291,7 +1291,7 @@ class ReaderAccountUsageLoginHistory(Base):
     
     __tablename__ = constants.TABLE_READER_ACCOUNT_USAGE_LOGIN_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_reader_account_usage_login_history'), primary_key=True, autoincrement=True)
@@ -1310,7 +1310,7 @@ class ReaderAccountUsageLoginHistory(Base):
     error_message = Column(Text, nullable=True)
     related_event_id = Column(Integer, nullable=True)
     reader_account_deleted_on = Column(TIMESTAMP, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -1325,7 +1325,7 @@ class ReaderAccountUsageQueryHistory(Base):
     
     __tablename__ = constants.TABLE_READER_ACCOUNT_USAGE_QUERY_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_reader_account_usage_query_history'), primary_key=True, autoincrement=True)
@@ -1369,7 +1369,7 @@ class ReaderAccountUsageQueryHistory(Base):
     list_external_files_time = Column(Integer, nullable=True)
     credits_used_cloud_services = Column(Float, nullable=True)
     reader_account_deleted_on= Column(TIMESTAMP, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -1384,7 +1384,7 @@ class ReaderAccountUsageResourceMonitor(Base):
     
     __tablename__ = constants.TABLE_READER_ACCOUNT_USAGE_RESOURCE_MONITORS
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_reader_account_usage_resource_monitor'), primary_key=True, autoincrement=True)
@@ -1401,7 +1401,7 @@ class ReaderAccountUsageResourceMonitor(Base):
     suspend_immediate = Column(Integer, nullable=True)
     level = Column(String(9), nullable=True)
     reader_account_deleted_on = Column(TIMESTAMP, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -1416,7 +1416,7 @@ class ReaderAccountUsageStorageUsage(Base):
     
     __tablename__ = constants.TABLE_READER_ACCOUNT_USAGE_STORAGE_USAGE
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_reader_account_usage_storage_usage'), primary_key=True, autoincrement=True)
@@ -1426,7 +1426,7 @@ class ReaderAccountUsageStorageUsage(Base):
     stage_bytes = Column(Integer, nullable=True)
     failsafe_bytes = Column(Integer, nullable=True)
     reader_account_deleted_on = Column(TIMESTAMP, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
@@ -1441,7 +1441,7 @@ class ReaderAccountUsageWarehouseMeteringHistory(Base):
     
     __tablename__ = constants.TABLE_READER_ACCOUNT_USAGE_WAREHOUSE_METERING_HISTORY
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_reader_account_usage_warehouse_metering_history'), primary_key=True, autoincrement=True)
@@ -1454,7 +1454,7 @@ class ReaderAccountUsageWarehouseMeteringHistory(Base):
     credits_used_compute = Column(Integer, nullable=True)
     credits_used_cloud_services = Column(Integer, nullable=True)
     reader_account_deleted_on = Column(TIMESTAMP, nullable=True)
-    event = Column(Text, nullable=True)
+    event = Column(String(20), nullable=True)
     instance_id = Column(Integer, nullable=True)
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)

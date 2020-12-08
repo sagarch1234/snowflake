@@ -16,7 +16,7 @@ from connection import DisposeEngine
 Base = declarative_base()
 
 #get SnowflakeConnector class object
-# connector = SnowflakeConnector(user=os.environ.get('SNOWFLAKE_ACCOUNT_USER'), password=os.environ.get('SNOWFLAKE_ACCOUNT_PASSWORD'), account=os.environ.get('SNOWFLAKE_ACCOUNT'), database_name=os.environ.get('SNOWFLAKE_DATABASE_NAME'), schema_name=os.environ.get('SCHEMA_NAME'), role=os.environ.get('ACCOUNT_ROLE'), warehouse=os.environ.get('ACCOUNT_WAREHOUSE'))
+# connector = SnowflakeConnector(user=os.environ.get('SNOWFLAKE_ACCOUNT_USER'), password=os.environ.get('SNOWFLAKE_ACCOUNT_PASSWORD'), account=os.environ.get('SNOWFLAKE_ACCOUNT'), database_name=os.environ.get('SNOWFLAKE_DATABASE_NAME'), schema_name=os.environ.get('SCHEMA_NAME_PARAMS'), role=os.environ.get('ACCOUNT_ROLE'), warehouse=os.environ.get('ACCOUNT_WAREHOUSE'))
 
 #get engine
 # engine = connector.get_engine()
@@ -30,7 +30,7 @@ class AccountParameters(Base):
 
     __tablename__ = 'account_parameters'
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : 'os.environ.get('SCHEMA_NAME_PARAMS')
     }
 
     id = Column(Integer, Sequence('id_account_parameters'), primary_key=True, autoincrement=True)
@@ -44,7 +44,7 @@ class AccountParameters(Base):
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
     run_date_time = Column(DateTime, default=datetime.datetime.utcnow)
-    event = Column(String(200), nullable=True) 
+    event = Column(String(20), nullable=True) 
 
     def __repr__(self):
         #return the class object.
@@ -58,7 +58,7 @@ class DatabasesOnInstance(Base):
     '''
     __tablename__ = 'instance_databases'
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : 'os.environ.get('SCHEMA_NAME_PARAMS')
     }
 
     id = Column(Integer, Sequence('id_databases_on_instance'), primary_key=True, autoincrement=True)
@@ -75,7 +75,7 @@ class DatabasesOnInstance(Base):
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
     run_date_time = Column(DateTime, default=datetime.datetime.utcnow)
-    event = Column(String(200), nullable=True) 
+    event = Column(String(20), nullable=True) 
 
 
     def __repr__(self):
@@ -90,7 +90,7 @@ class SchemaOnInstance(Base):
     
     __tablename__ = 'instance_databases_schema'
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : 'os.environ.get('SCHEMA_NAME_PARAMS')
     }
 
     id = Column(Integer, Sequence('id_schema_on_instance'), primary_key=True, autoincrement=True)
@@ -107,7 +107,7 @@ class SchemaOnInstance(Base):
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
     run_date_time = Column(DateTime, default=datetime.datetime.utcnow)
-    event = Column(String(200), nullable=True)
+    event = Column(String(20), nullable=True)
     
 
     def __repr__(self):
@@ -122,7 +122,7 @@ class ParametersInDatabase(Base):
     
     __tablename__ = 'parameters_in_database'
     __table_args__ = {
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : 'os.environ.get('SCHEMA_NAME_PARAMS')
     }
 
     id = Column(Integer, Sequence('id_parameters_in_database'), primary_key=True, autoincrement=True)
@@ -137,7 +137,7 @@ class ParametersInDatabase(Base):
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
     run_date_time = Column(DateTime, default=datetime.datetime.utcnow)
-    event = Column(String(200), nullable=True)
+    event = Column(String(20), nullable=True)
 
     # Relationships
     # databases_on_instance = relationship("DatabasesOnInstance")
@@ -155,7 +155,7 @@ class ParametersInSchemas(Base):
     __tablename__ = 'parameters_in_schemas'
     __table_args__ = {
         # 'extend_existing' : True,
-        'schema' : 'SFOPT_TEST_SCHEMA'
+        'schema' : 'os.environ.get('SCHEMA_NAME_PARAMS')
     }
 
     id = Column(Integer, Sequence('id_parameters_in_schemas'), primary_key=True, autoincrement=True)
@@ -171,7 +171,7 @@ class ParametersInSchemas(Base):
     company_id = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
     run_date_time = Column(DateTime, default=datetime.datetime.utcnow)
-    event = Column(String(200), nullable=True)
+    event = Column(String(20), nullable=True)
 
     # Relationships
     # databases_on_instance = relationship("DatabasesOnInstance")

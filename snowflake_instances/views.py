@@ -88,7 +88,7 @@ class AddInstanceView(APIView):
                 #add a task to the celery.
                 #This task will fetch initial data from customer's instances.
                 parameters_and_instance_data.delay(user = request.data['instance_user'], password = request.data['instance_password'], account = request.data['instance_account'], instance_id = instance_object.id, user_id= request.user.id, company_id= request.user.company.id, event='Add Instance')
-                metadata_collection.delay(account = request.data['instance_account'], user = request.data['instance_user'], password = request.data['instance_password'], user_id = request.user.id, company_id = request.user.company.id, event = 'Add Instance', instance_id = instance_object.id)
+                # metadata_collection.delay(account = request.data['instance_account'], user = request.data['instance_user'], password = request.data['instance_password'], user_id = request.user.id, company_id = request.user.company.id, event = 'Add Instance', instance_id = instance_object.id)
 
                 return Response({
                     "message":"Connection to the Snowflake instance was successful.",
