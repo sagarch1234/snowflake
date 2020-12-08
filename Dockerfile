@@ -43,13 +43,16 @@ ENV SNOWFLAKE_ACCOUNT_USER=SFOPT_TEST_APP
 ENV SNOWFLAKE_ACCOUNT_PASSWORD=(sE&Gv]82qv^3KJU
 ENV SNOWFLAKE_ACCOUNT=ya78377.east-us-2.azure
 ENV SNOWFLAKE_DATABASE_NAME=SFOPT_TEST
-ENV SCHEMA_NAME=SFOPT_TEST_SCHEMA
+ENV SCHEMA_NAME_PARAMS=PARAMS
+ENV SCHEMA_NAME_AUDITS=AUDITS
 ENV ACCOUNT_ROLE=SFO_TEST_APP_ROLE
 ENV ACCOUNT_WAREHOUSE=SFOPT_TEST_WH
 
 RUN pip install -r /requirements.txt
 
 RUN pip install -U "celery[redis]"
+RUN pip install snowflake-connector-python[pandas]
+
 
 RUN python manage.py makemigrations &&\
     python manage.py migrate

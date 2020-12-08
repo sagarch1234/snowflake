@@ -98,11 +98,14 @@ class RegisterInvitedMember(APIView):
 
             serialized_data.validated_data['is_mobile_number_verified'] = False
             serialized_data.validated_data['is_email_varified'] = True
+
             # this will active user account and allow user to login.
             serialized_data.validated_data['is_active'] = True
+            
             #this will make user join the same company through which the invitation was sent to the user.
             serialized_data.validated_data['company'] = decoded_jwt['company_name']
             serialized_data.validated_data['email'] = decoded_jwt['email']
+            
             #this will make user join as an Organisation Member.
             serialized_data.validated_data['user_group'] = ORGANISATION_MEMBER
 
