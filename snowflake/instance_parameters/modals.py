@@ -6,7 +6,7 @@ sys.path.insert(1,  '/snowflake-backend/snowflake/instance_connector')
 
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import String, Integer, Column, Text, Boolean, create_engine, Time, String, Sequence, DateTime
+from sqlalchemy import String, Integer, Column, Text, Boolean, create_engine, Time, String, Sequence, DateTime, TIMESTAMP
 from snowflake.sqlalchemy import URL
 
 from connection import SnowflakeConnector
@@ -51,7 +51,7 @@ class AccountParameters(Base):
         return "<AccountParameters({})>".format(self.id)
     
 
-class DatabasesOnInstance(Base):
+class InstanceDatabases(Base):
 
     '''
     This model will store the databases of the customers instances.
@@ -62,7 +62,7 @@ class DatabasesOnInstance(Base):
     }
 
     id = Column(Integer, Sequence('id_databases_on_instance'), primary_key=True, autoincrement=True)
-    created_on = Column(String(200), nullable=True)
+    created_on = Column(TIMESTAMP, nullable=True)
     name = Column(String(100), nullable=True)
     is_default = Column(String(50), nullable=True)
     is_current = Column(String(50), nullable=True)
@@ -82,7 +82,7 @@ class DatabasesOnInstance(Base):
         return "<DatabasesOnInstance({})>".format(self.id)
 
 
-class SchemaOnInstance(Base):
+class InstanceDatabasesSchema(Base):
 
     '''
     This model will store the schema of the customers instances.
@@ -94,7 +94,7 @@ class SchemaOnInstance(Base):
     }
 
     id = Column(Integer, Sequence('id_schema_on_instance'), primary_key=True, autoincrement=True)
-    created_on = Column(String(200), nullable=True)
+    created_on = Column(TIMESTAMP, nullable=True)
     name = Column(String(100), nullable=True)
     is_default = Column(String(50), nullable=True)
     is_current = Column(String(50), nullable=True)
