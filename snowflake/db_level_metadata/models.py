@@ -18,16 +18,16 @@ import constants
 Base = declarative_base()
 
 #get SnowflakeConnector class object
-connector = SnowflakeConnector(user=os.environ.get('SNOWFLAKE_ACCOUNT_USER'), password=os.environ.get('SNOWFLAKE_ACCOUNT_PASSWORD'), account=os.environ.get('SNOWFLAKE_ACCOUNT'), database_name=os.environ.get('SNOWFLAKE_DATABASE_NAME'), schema_name=os.environ.get('SCHEMA_NAME_AUDITS'), role=os.environ.get('ACCOUNT_ROLE'), warehouse=os.environ.get('ACCOUNT_WAREHOUSE'))
+# connector = SnowflakeConnector(user=os.environ.get('SNOWFLAKE_ACCOUNT_USER'), password=os.environ.get('SNOWFLAKE_ACCOUNT_PASSWORD'), account=os.environ.get('SNOWFLAKE_ACCOUNT'), database_name=os.environ.get('SNOWFLAKE_DATABASE_NAME'), schema_name=os.environ.get('SCHEMA_NAME_AUDITS'), role=os.environ.get('ACCOUNT_ROLE'), warehouse=os.environ.get('ACCOUNT_WAREHOUSE'))
 
 #get engine
-engine = connector.get_engine()
+# engine = connector.get_engine()
 
 class InfoSchemaApplicableRoles(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_APPLICABLE_ROLES
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_parameters_in_database'), primary_key=True, autoincrement=True)
@@ -51,7 +51,7 @@ class InfoSchemaColumns(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_COLUMNS
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_columns'), primary_key=True, autoincrement=True)
@@ -112,7 +112,7 @@ class InfoSchemaDatabases(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_DATABASES
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_databases'), primary_key=True, autoincrement=True)
@@ -138,7 +138,7 @@ class InfoSchemaEnabledRoles(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_ENABLED_ROLES
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_enabled_roles'), primary_key=True, autoincrement=True)
@@ -159,7 +159,7 @@ class InfoSchemaExternalTables(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_EXTERNAL_TABLES
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_external_tables'), primary_key=True, autoincrement=True)
@@ -188,7 +188,7 @@ class InfoSchemaFileFormats(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_FILE_FORMATS
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_file_formats'), primary_key=True, autoincrement=True)
@@ -229,7 +229,7 @@ class InfoSchemaFunctions(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_FUNCTIONS
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_functions'), primary_key=True, autoincrement=True)
@@ -272,7 +272,7 @@ class InfoSchemaCatlogName(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_CATALOG_NAME
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_catlog_name'), primary_key=True, autoincrement=True)
@@ -292,7 +292,7 @@ class InfoSchemaLoadHistory(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_LOAD_HISTORY
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_load_history'), primary_key=True, autoincrement=True)
@@ -324,7 +324,7 @@ class InfoSchemaObjectPrivileges(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_OBJECT_PRIVILEGES
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_object_privileges'), primary_key=True, autoincrement=True)
@@ -353,7 +353,7 @@ class InfoSchemaPipes(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_PIPES
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_pipes'), primary_key=True, autoincrement=True)
@@ -382,7 +382,7 @@ class InfoSchemaProcedures(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_PROCEDURES
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_procedures'), primary_key=True, autoincrement=True)
@@ -416,7 +416,7 @@ class InfoSchemaReferentialConstraints(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_REFERENTIAL_CONSTRAINTS
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_referential_constraints'), primary_key=True, autoincrement=True)
@@ -447,7 +447,7 @@ class InfoSchemaReplicationDatabases(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_REPLICATION_DATABASES
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_replication_databases'), primary_key=True, autoincrement=True)
@@ -476,7 +476,7 @@ class InfoSchemaSchemata(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_SCHEMATA
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_schemata'), primary_key=True, autoincrement=True)
@@ -507,7 +507,7 @@ class InfoSchemaSequences(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_SEQUENCES
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_sequences'), primary_key=True, autoincrement=True)
@@ -543,7 +543,7 @@ class InfoSchemaStages(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_STAGES
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_stages'), primary_key=True, autoincrement=True)
@@ -572,7 +572,7 @@ class InfoSchemaTables(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_TABLES
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_tables'), primary_key=True, autoincrement=True)
@@ -613,7 +613,7 @@ class InfoSchemaTablesConstraints(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_TABLE_CONSTRAINTS
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_tables_constraints'), primary_key=True, autoincrement=True)
@@ -645,7 +645,7 @@ class InfoSchemaTablesPrivileges(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_TABLE_PRIVILEGES
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_tables_privileges'), primary_key=True, autoincrement=True)
@@ -674,7 +674,7 @@ class InfoSchemaTablesStorageMetrics(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_TABLE_STORAGE_METRICS
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id_table_metrics = Column(Integer, Sequence('id_info_schema_tables_metrics'), primary_key=True, autoincrement=True)
@@ -711,7 +711,7 @@ class InfoSchemaUsagePrivileges(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_USAGE_PRIVILEGES
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_usage_privileges'), primary_key=True, autoincrement=True)
@@ -739,7 +739,7 @@ class InfoSchemaViews(Base):
 
     __tablename__ = constants.TABLE_INFORMATION_SCHEMA_VIEWS
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
     id = Column(Integer, Sequence('id_info_schema_views'), primary_key=True, autoincrement=True)
@@ -766,7 +766,7 @@ class InfoSchemaViews(Base):
         return "<Info Schema Views({})>".format(self.id)
 
 #create tables.
-Base.metadata.create_all(engine)
+# Base.metadata.create_all(engine)
 
 #dispose engine
-dispose_engine = DisposeEngine(engine= engine)
+# dispose_engine = DisposeEngine(engine= engine)

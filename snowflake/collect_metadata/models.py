@@ -18,10 +18,10 @@ import constants
 Base = declarative_base()
 
 #get SnowflakeConnector class object
-# connector = SnowflakeConnector(user=os.environ.get('SNOWFLAKE_ACCOUNT_USER'), password=os.environ.get('SNOWFLAKE_ACCOUNT_PASSWORD'), account=os.environ.get('SNOWFLAKE_ACCOUNT'), database_name=os.environ.get('SNOWFLAKE_DATABASE_NAME'), schema_name=os.environ.get('SCHEMA_NAME_AUDITS'), role=os.environ.get('ACCOUNT_ROLE'), warehouse=os.environ.get('ACCOUNT_WAREHOUSE'))
+connector = SnowflakeConnector(user=os.environ.get('SNOWFLAKE_ACCOUNT_USER'), password=os.environ.get('SNOWFLAKE_ACCOUNT_PASSWORD'), account=os.environ.get('SNOWFLAKE_ACCOUNT'), database_name=os.environ.get('SNOWFLAKE_DATABASE_NAME'), schema_name=os.environ.get('SCHEMA_NAME_AUDITS'), role=os.environ.get('ACCOUNT_ROLE'), warehouse=os.environ.get('ACCOUNT_WAREHOUSE'))
 
 #get engine
-# engine = connector.get_engine()
+engine = connector.get_engine()
 
 
 class AccountUsageLoginHistory(Base):
@@ -32,10 +32,11 @@ class AccountUsageLoginHistory(Base):
 
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_LOGIN_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_login_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_login_history'), primary_key=True)
     event_id = Column(Integer, nullable=True)
     event_timestamp = Column(TIMESTAMP, nullable=True)
     event_type = Column(String(100), nullable=True)
@@ -57,17 +58,18 @@ class AccountUsageLoginHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<LoginHistory({})>".format(self.id)
+        return "<LoginHistory()>".format(self.id)
 
 
 class AccountUsageAutomaticClusteringHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_AUTOMATIC_CLUSTERING_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_automatic_clustering_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_automatic_clustering_history'), primary_key=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
     credit_used = Column(Integer, nullable=True)
@@ -87,17 +89,18 @@ class AccountUsageAutomaticClusteringHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<AUTOMATICCLUSTERINGHISTORY({})>".format(self.id)
+        return "<AUTOMATICCLUSTERINGHISTORY()>".format(self.id)
 
 
 class AccountUsageColumns(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_COLUMNS
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_columns'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_columns'), primary_key=True)
     column_id = Column(Integer, nullable=True)
     column_name = Column(Text, nullable=True)
     table_id = Column(Integer, nullable=True)
@@ -153,17 +156,18 @@ class AccountUsageColumns(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGECOLUMNS({})>".format(self.id)
+        return "<ACCOUNTUSAGECOLUMNS()>".format(self.id)
 
 
 class AccountUsageCopyHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_COPY_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_copy_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_copy_history'), primary_key=True)
     file_name = Column(Text, nullable=True)
     stage_location = Column(Text, nullable=True)
     last_load_time = Column(TIMESTAMP, nullable=True)
@@ -195,17 +199,18 @@ class AccountUsageCopyHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGECOPYHISTORY({})>".format(self.id)
+        return "<ACCOUNTUSAGECOPYHISTORY()>".format(self.id)
 
 
 class AccountUsageDatabases(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_DATABASES
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_databases'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_databases'), primary_key=True)
     database_id = Column(Integer, nullable=True) 
     database_name = Column(Text, nullable=True)
     database_owner = Column(Text, nullable=True)
@@ -223,17 +228,18 @@ class AccountUsageDatabases(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEDATABASES({})>".format(self.id)
+        return "<ACCOUNTUSAGEDATABASES()>".format(self.id)
 
 
 class AccountUsageDatabaseStorageUsageHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_DATABASE_STORAGE_USAGE_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_database_storage_usage_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_database_storage_usage_history'), primary_key=True)
     usage_date = Column(Date, nullable=True)
     database_id = Column(Integer, nullable=True)
     database_name = Column(Text, nullable=True)
@@ -248,16 +254,17 @@ class AccountUsageDatabaseStorageUsageHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<DATABASESTORAGEUSAGEHISTORY({})>".format(self.id)
+        return "<DATABASESTORAGEUSAGEHISTORY()>".format(self.id)
 
 
 class AccountUsageDataTransferHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_DATA_TRANSFER_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
-    id = Column(Integer, Sequence('id_account_usage_data_transfer_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_data_transfer_history'), primary_key=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
     source_cloud = Column(String(200), nullable=True)
@@ -274,16 +281,17 @@ class AccountUsageDataTransferHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<DATATRANSFERHISTORY({})>".format(self.id)
+        return "<DATATRANSFERHISTORY()>".format(self.id)
 
 
 class AccountUsageFileFormats(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_FILE_FORMATS
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
-    id = Column(Integer, Sequence('id_account_usage_file_formats'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_file_formats'), primary_key=True)
     file_format_id = Column(Integer, nullable=True)
     file_format_name = Column(Text, nullable=True)
     file_format_schema_id = Column(Integer, nullable=True)
@@ -318,16 +326,17 @@ class AccountUsageFileFormats(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<FILEFORMATS({})>".format(self.id)
+        return "<FILEFORMATS()>".format(self.id)
 
 
 class AccountUsageFunctions(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_FUNCTIONS
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
-    id = Column(Integer, Sequence('id_account_usage_functions'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_functions'), primary_key=True)
     function_id = Column(Integer, nullable=True)
     function_name = Column(Text, nullable=True)
     function_schema_id = Column(Integer, nullable=True)
@@ -363,16 +372,17 @@ class AccountUsageFunctions(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEFUNCTIONS({})>".format(self.id)
+        return "<ACCOUNTUSAGEFUNCTIONS()>".format(self.id)
 
 
 class AccountUsageGrantsToRoles(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_GRANTS_TO_ROLES
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
-    id = Column(Integer, Sequence('id_account_usage_grants_to_roles'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_grants_to_roles'), primary_key=True)
     created_on = Column(TIMESTAMP, nullable=True)
     modified_on = Column(TIMESTAMP, nullable=True)
     privilege = Column(Text, nullable=True)
@@ -393,17 +403,18 @@ class AccountUsageGrantsToRoles(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEGRANTSTOROLES({})>".format(self.id)
+        return "<ACCOUNTUSAGEGRANTSTOROLES()>".format(self.id)
 
 
 class AccountUsageGrantsToUsers(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_GRANTS_TO_USERS
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_grants_to_users'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_grants_to_users'), primary_key=True)
     created_on = Column(TIMESTAMP, nullable=True)
     deleted_on = Column(TIMESTAMP, nullable=True)
     role = Column(Text, nullable=True)
@@ -418,17 +429,18 @@ class AccountUsageGrantsToUsers(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEGRANTSTOUSERS({})>".format(self.id)
+        return "<ACCOUNTUSAGEGRANTSTOUSERS()>".format(self.id)
 
 
 class AccountUsageLoadHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_LOAD_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_load_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_load_history'), primary_key=True)
     table_id = Column(Integer, nullable=True)
     table_name = Column(Text, nullable=True)
     schema_id = Column(Integer, nullable=True)
@@ -454,17 +466,18 @@ class AccountUsageLoadHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGELOADHISTORY({})>".format(self.id)
+        return "<ACCOUNTUSAGELOADHISTORY()>".format(self.id)
 
 
 class AccountUsageMaterializedViewRefreshHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_MATERIALIZED_VIEW_REFRESH_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_materialized_view_refresh_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_materialized_view_refresh_history'), primary_key=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
     credits_used = Column(Integer, nullable=True)
@@ -482,17 +495,18 @@ class AccountUsageMaterializedViewRefreshHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEMATERIALIZEDVIEWREFRESHHISTORY({})>".format(self.id)
+        return "<ACCOUNTUSAGEMATERIALIZEDVIEWREFRESHHISTORY()>".format(self.id)
 
 
 class AccountUsageMeteringDailyHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_METERING_DAILY_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_metering_daily_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_metering_daily_history'), primary_key=True)
     service_type = Column(String(25), nullable=True)
     usage_date = Column(Date, nullable=True)
     credits_used_compute = Column(Integer, nullable=True)
@@ -508,17 +522,18 @@ class AccountUsageMeteringDailyHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEMETERINGDAILYHISTORY({})>".format(self.id)
+        return "<ACCOUNTUSAGEMETERINGDAILYHISTORY()>".format(self.id)
 
 
 class AccountUsageMeteringHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_METERING_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_metering_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_metering_history'), primary_key=True)
     service_type = Column(String(25), nullable=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
@@ -538,17 +553,18 @@ class AccountUsageMeteringHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEMETERINGHISTORY({})>".format(self.id)
+        return "<ACCOUNTUSAGEMETERINGHISTORY()>".format(self.id)
 
 
 class AccountUsagePipes(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_PIPES
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_pipes'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_pipes'), primary_key=True)
     pipe_id = Column(Integer, nullable=True)
     pipe_name = Column(Text, nullable=True)
     pipe_schema_id = Column(Integer, nullable=True)
@@ -572,17 +588,18 @@ class AccountUsagePipes(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEPIPES({})>".format(self.id)
+        return "<ACCOUNTUSAGEPIPES()>".format(self.id)
 
 
 class AccountUsagePipeUsageHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_PIPE_USAGE_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_pipe_usage_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_pipe_usage_history'), primary_key=True)
     pipe_id = Column(Integer, nullable=True)
     pipe_name = Column(Text, nullable=True)
     pipe_schema_id = Column(Integer, nullable=True)
@@ -606,17 +623,18 @@ class AccountUsagePipeUsageHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEPIPEUSAGEHISTORY({})>".format(self.id)
+        return "<ACCOUNTUSAGEPIPEUSAGEHISTORY()>".format(self.id)
 
 
 class AccountUsageQueryHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_QUERY_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_query_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_usage_query_history'), primary_key=True)
     query_id = Column(Text, nullable=True)
     query_text = Column(Text, nullable=True)
     database_id = Column(Integer, nullable=True)
@@ -685,17 +703,18 @@ class AccountUsageQueryHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEQUERYHISTORY({})>".format(self.id)
+        return "<ACCOUNTUSAGEQUERYHISTORY()>".format(self.id)
 
 
 class AccountUsageReferentialConstraints(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_REFERENTIAL_CONSTRAINTS
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_referential_constraints'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_acccount_usage_referential_constraints'), primary_key=True)
     constraint_catalog_id = Column(Integer, nullable=True)
     constraint_catalog = Column(Text, nullable=True)
     constraint_schema_id = Column(Integer, nullable=True)
@@ -721,17 +740,18 @@ class AccountUsageReferentialConstraints(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEREFERENTIALCONSTRAINTS({})>".format(self.id)
+        return "<ACCOUNTUSAGEREFERENTIALCONSTRAINTS()>".format(self.id)
 
 
 class AccountUsageReplicationUsageHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_REPLICATION_USAGE_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_replication_usage_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_acccount_usage_replication_usage_history'), primary_key=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
     database_name = Column(Text, nullable=True)
@@ -746,17 +766,18 @@ class AccountUsageReplicationUsageHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEREPLICATIONUSAGEHISTORY({})>".format(self.id)
+        return "<ACCOUNTUSAGEREPLICATIONUSAGEHISTORY()>".format(self.id)
 
 
 class AccountUsageRoles(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_ROLES
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_role'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_acccount_usage_role'), primary_key=True)
     created_on = Column(TIMESTAMP, nullable=True)
     deleted_on = Column(TIMESTAMP, nullable=True)
     name = Column(Text, nullable=True)
@@ -769,17 +790,18 @@ class AccountUsageRoles(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEROLES({})>".format(self.id)
+        return "<ACCOUNTUSAGEROLES()>".format(self.id)
 
 
 class AccountUsageSchemata(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_SCHEMATA
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_schemata'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_acccount_usage_schemata'), primary_key=True)
     schema_id = Column(Integer, nullable=True)
     schema_name = Column(Text, nullable=True)
     catalog_id = Column(Integer, nullable=True)
@@ -804,17 +826,18 @@ class AccountUsageSchemata(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGESCHEMATA({})>".format(self.id)
+        return "<ACCOUNTUSAGESCHEMATA()>".format(self.id)
 
 
 class AccountUsageSearchOptimizationHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_SEARCH_OPTIMIZATION_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_search_optimization_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_acccount_usage_search_optimization_history'), primary_key=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
     credits_used = Column(Integer, nullable=True)
@@ -832,17 +855,18 @@ class AccountUsageSearchOptimizationHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<AccountUsageSearchOptimizationHistory({})>".format(self.id)
+        return "<AccountUsageSearchOptimizationHistory()>".format(self.id)
 
 
 class AccountUsageSequences(Base):
     
     __tablename__ =  constants.TABLE_ACCOUNT_USAGE_SEQUENCES
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_sequences'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_acccount_usage_sequences'), primary_key=True)
     sequence_id = Column(Integer, nullable=True)
     sequence_name = Column(Text, nullable=True)
     sequence_schema_id = Column(Integer, nullable=True)
@@ -872,17 +896,18 @@ class AccountUsageSequences(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGESEQUENCES({})>".format(self.id)
+        return "<ACCOUNTUSAGESEQUENCES()>".format(self.id)
 
 
 class AccountUsageStages(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_STAGES
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_stages'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_acccount_usage_stages'), primary_key=True)
     stage_id = Column(Integer, nullable=True)
     stage_name = Column(Text, nullable=True)
     stage_schema_id = Column(Integer, nullable=True)
@@ -905,17 +930,18 @@ class AccountUsageStages(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGESTAGES({})>".format(self.id)
+        return "<ACCOUNTUSAGESTAGES()>".format(self.id)
 
 
 class AccountUsageStageStorageUsageHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_STAGE_STORAGE_USAGE_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_stage_storage_usage_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_acccount_usage_stage_storage_usage_history'), primary_key=True)
     usage_date = Column(Date, nullable=True)
     average_stage_bytes = Column(Integer, nullable=True)
     event = Column(String(20), nullable=True)
@@ -926,17 +952,18 @@ class AccountUsageStageStorageUsageHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGESTAGESTORAGEUSAGEHISTORY({})>".format(self.id)
+        return "<ACCOUNTUSAGESTAGESTORAGEUSAGEHISTORY()>".format(self.id)
 
 
 class AccountUsageStorageUsage(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_STORAGE_USAGE
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_storage_usage'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_acccount_usage_storage_usage'), primary_key=True)
     usage_date = Column(Date)
     storage_bytes = Column(Integer, nullable=True)
     stage_bytes = Column(Integer, nullable=True)
@@ -949,17 +976,18 @@ class AccountUsageStorageUsage(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGESTORAGEUSAGE({})>".format(self.id)
+        return "<ACCOUNTUSAGESTORAGEUSAGE()>".format(self.id)
 
 
 class AccountUsageTables(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_TABLES
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_tables'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_acccount_usage_tables'), primary_key=True)
     table_id = Column(Integer, nullable=True)
     table_name = Column(Text, nullable=True)
     table_schema_id = Column(Integer, nullable=True)
@@ -994,7 +1022,7 @@ class AccountUsageTables(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGETABLES({})>".format(self.id)
+        return "<ACCOUNTUSAGETABLES()>".format(self.id)
 
 
 
@@ -1002,10 +1030,11 @@ class AccountUsageTableConstraints(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_TABLE_CONSTRAINTS
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_table_constraints'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_acccount_usage_table_constraints'), primary_key=True)
     constraint_id = Column(Integer, nullable=True)
     constraint_name = Column(Text, nullable=True)
     constraint_schema_id = Column(Integer, nullable=True)
@@ -1034,17 +1063,18 @@ class AccountUsageTableConstraints(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<AccountUsageTableConstraints({})>".format(self.id)
+        return "<AccountUsageTableConstraints()>".format(self.id)
 
 
 class AccountUsageStorageMetrics(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_TABLE_STORAGE_METRICS
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    storage_metric_id = Column(Integer, Sequence('id_acccount_usage_storage_metric'), primary_key=True, autoincrement=True)
+    storage_metric_id = Column(Integer, Sequence('id_acccount_usage_storage_metric'), primary_key=True)
     id = Column(Integer, nullable=True)
     table_name = Column(Text, nullable=True)
     table_schema_id = Column(Integer, nullable=True)
@@ -1074,17 +1104,18 @@ class AccountUsageStorageMetrics(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGESTORAGEMETRICS({})>".format(self.id)
+        return "<ACCOUNTUSAGESTORAGEMETRICS()>".format(self.id)
 
 
 class AccountUsageUsers(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_USERS
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_users'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_acccount_usage_users'), primary_key=True)
     name = Column(Text, nullable=True)
     created_on = Column(TIMESTAMP, nullable=True)
     deleted_on = Column(TIMESTAMP, nullable=True)
@@ -1117,17 +1148,18 @@ class AccountUsageUsers(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEUSERS({})>".format(self.id)
+        return "<ACCOUNTUSAGEUSERS()>".format(self.id)
 
 
 class AccountUsageViews(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_VIEWS
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_views'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_acccount_usage_views'), primary_key=True)
     table_id = Column(Integer, nullable=True)
     table_name = Column(Text, nullable=True)
     table_schema_id = Column(Integer, nullable=True)
@@ -1152,17 +1184,18 @@ class AccountUsageViews(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEVIEWS({})>".format(self.id)
+        return "<ACCOUNTUSAGEVIEWS()>".format(self.id)
 
 
 class AccountUsageWarehouseLoadHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_WAREHOUSE_LOAD_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_warehouse_load_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_acccount_usage_warehouse_load_history'), primary_key=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
     warehouse_id = Column(Integer, nullable=True)
@@ -1179,17 +1212,18 @@ class AccountUsageWarehouseLoadHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ACCOUNTUSAGEWAREHOUSELOADHISTORY({})>".format(self.id)
+        return "<ACCOUNTUSAGEWAREHOUSELOADHISTORY()>".format(self.id)
 
 
 class AccountUsageWarehouseMeteringHistory(Base):
     
     __tablename__ = constants.TABLE_ACCOUNT_USAGE_WAREHOUSE_METERING_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_warehouse_metering_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_acccount_usage_warehouse_metering_history'), primary_key=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
     warehouse_id = Column(Integer, nullable=True)
@@ -1205,17 +1239,18 @@ class AccountUsageWarehouseMeteringHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<AccountUsageWarehouseMeteringHistory({})>".format(self.id)
+        return "<AccountUsageWarehouseMeteringHistory()>".format(self.id)
 
 
 class OrganizationUsagePreviewDataTransferDailyHistory(Base):
     
     __tablename__ = constants.TABLE_ORGANIZATION_USAGE_PREVIEW_DATA_TRANSFER_DAILY_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_organization_usage_preview_data_transfer_daily_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_organization_usage_preview_data_transfer_daily_history'), primary_key=True)
     service_type = Column(String(13), nullable=True)
     organization_name = Column(Text, nullable=True)
     account_name = Column(Text, nullable=True)
@@ -1230,17 +1265,18 @@ class OrganizationUsagePreviewDataTransferDailyHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ORGANIZATIONUSAGEPREVIEWDATATRANSFERDAILYHISTORY({})>".format(self.id)
+        return "<ORGANIZATIONUSAGEPREVIEWDATATRANSFERDAILYHISTORY()>".format(self.id)
 
 
 class OrganizationUsagePreviewMeteringDailyHistory(Base):
     
     __tablename__ = constants.TABLE_ORGANIZATION_USAGE_PREVIEW_METERING_DAILY_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_organization_usage_preview_metering_daily_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_organization_usage_preview_metering_daily_history'), primary_key=True)
     service_type = Column(String(25), nullable=True)
     organization_name = Column(Text, nullable=True)
     account_name = Column(Text, nullable=True)
@@ -1259,17 +1295,18 @@ class OrganizationUsagePreviewMeteringDailyHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ORGANIZATIONUSAGEPREVIEWMETERINGDAILYHISTORY({})>".format(self.id)
+        return "<ORGANIZATIONUSAGEPREVIEWMETERINGDAILYHISTORY()>".format(self.id)
 
 
 class OrganizationUsagePreviewStorageDailyHistory(Base):
     
     __tablename__ = constants.TABLE_ORGANIZATION_USAGE_PREVIEW_STORAGE_DAILY_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_organization_usage_preview_storage_daily_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_organization_usage_preview_storage_daily_history'), primary_key=True)
     service_type = Column(String(25), nullable=True)
     organization_name = Column(Text, nullable=True)
     account_name = Column(Text, nullable=True)
@@ -1284,17 +1321,18 @@ class OrganizationUsagePreviewStorageDailyHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ORGANIZATIONUSAGEPREVIEWSTORAGEDAILYHISTORY({})>".format(self.id)
+        return "<ORGANIZATIONUSAGEPREVIEWSTORAGEDAILYHISTORY()>".format(self.id)
 
 
 class ReaderAccountUsageLoginHistory(Base):
     
     __tablename__ = constants.TABLE_READER_ACCOUNT_USAGE_LOGIN_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_reader_account_usage_login_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_reader_account_usage_login_history'), primary_key=True)
     reader_account_name = Column(Text, nullable=True)
     event_id = Column(Integer, nullable=True)
     event_timestamp = Column(TIMESTAMP, nullable=True)
@@ -1318,17 +1356,18 @@ class ReaderAccountUsageLoginHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<ReaderAccountUsageLoginHistory({})>".format(self.id)
+        return "<ReaderAccountUsageLoginHistory()>".format(self.id)
 
 
 class ReaderAccountUsageQueryHistory(Base):
     
     __tablename__ = constants.TABLE_READER_ACCOUNT_USAGE_QUERY_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_reader_account_usage_query_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_reader_account_usage_query_history'), primary_key=True)
     reader_account_name = Column(Text, nullable=True)
     query_id = Column(Text, nullable=True)
     query_text = Column(Text, nullable=True)
@@ -1377,17 +1416,18 @@ class ReaderAccountUsageQueryHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<READERACCOUNTQUERYHISTORY({})>".format(self.id)
+        return "<READERACCOUNTQUERYHISTORY()>".format(self.id)
 
 
 class ReaderAccountUsageResourceMonitor(Base):
     
     __tablename__ = constants.TABLE_READER_ACCOUNT_USAGE_RESOURCE_MONITORS
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_reader_account_usage_resource_monitor'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_reader_account_usage_resource_monitor'), primary_key=True)
     reader_account_name  = Column(Text, nullable=True)
     name = Column(Text, nullable=True)
     created = Column(TIMESTAMP, nullable=True)
@@ -1409,17 +1449,18 @@ class ReaderAccountUsageResourceMonitor(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<READERACCOUNTUSAGERESOURCEMONITOR({})>".format(self.id)
+        return "<READERACCOUNTUSAGERESOURCEMONITOR()>".format(self.id)
 
 
 class ReaderAccountUsageStorageUsage(Base):
     
     __tablename__ = constants.TABLE_READER_ACCOUNT_USAGE_STORAGE_USAGE
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_reader_account_usage_storage_usage'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_reader_account_usage_storage_usage'), primary_key=True)
     reader_account_name = Column(Text, nullable=True)
     usage_date = Column(Date, nullable=True)
     storage_bytes = Column(Integer, nullable=True)
@@ -1434,17 +1475,18 @@ class ReaderAccountUsageStorageUsage(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<READERACCOUNTUSAGESTORAGEUSAGE({})>".format(self.id)
+        return "<READERACCOUNTUSAGESTORAGEUSAGE()>".format(self.id)
 
 
 class ReaderAccountUsageWarehouseMeteringHistory(Base):
     
     __tablename__ = constants.TABLE_READER_ACCOUNT_USAGE_WAREHOUSE_METERING_HISTORY
     __table_args__ = {
+        'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_reader_account_usage_warehouse_metering_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_reader_account_usage_warehouse_metering_history'), primary_key=True)
     reader_account_name = Column(Text, nullable=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
@@ -1462,11 +1504,11 @@ class ReaderAccountUsageWarehouseMeteringHistory(Base):
 
     def __repr__(self):
         #return the class object.
-        return "<READERACCOUNTUSAGEWAREHOUSEMETERINGHISTORY({})>".format(self.id)
+        return "<READERACCOUNTUSAGEWAREHOUSEMETERINGHISTORY()>".format(self.id)
 
 
 #create tables.
-# Base.metadata.create_all(engine)
+Base.metadata.create_all(engine)
 
 #dispose engine
-# dispose_engine = DisposeEngine(engine= engine)
+dispose_engine = DisposeEngine(engine= engine)

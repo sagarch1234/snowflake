@@ -9,6 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import String, Integer, Column, Text, Boolean, create_engine, Time, String, Sequence, DateTime, TIMESTAMP
 from snowflake.sqlalchemy import URL
 
+import constants
 from connection import SnowflakeConnector
 from connection import DisposeEngine
 
@@ -28,9 +29,10 @@ class AccountParameters(Base):
     This model will store the account parameters of the customers instances.
     '''
 
-    __tablename__ = 'account_parameters'
+    __tablename__ = constants.TABLE_ACCOUNT_PARAMETERS
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_PARAMS'),
+        'extend_existing' : True
     }
 
     id = Column(Integer, Sequence('id_account_parameters'), primary_key=True, autoincrement=True)
@@ -56,9 +58,10 @@ class InstanceDatabases(Base):
     '''
     This model will store the databases of the customers instances.
     '''
-    __tablename__ = 'instance_databases'
+    __tablename__ = constants.TABLE_DATABASE_PARAMETERS
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_PARAMS'),
+        'extend_existing' : True
     }
 
     id = Column(Integer, Sequence('id_databases_on_instance'), primary_key=True, autoincrement=True)
@@ -88,9 +91,10 @@ class InstanceDatabasesSchema(Base):
     This model will store the schema of the customers instances.
     '''
     
-    __tablename__ = 'instance_databases_schema'
+    __tablename__ = constants.TABLE_SCHEMA_PARAMETERS
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_PARAMS'),
+        'extend_existing' : True
     }
 
     id = Column(Integer, Sequence('id_schema_on_instance'), primary_key=True, autoincrement=True)
@@ -120,9 +124,10 @@ class ParametersInDatabase(Base):
     This model will store the parameters of each databases fetched from the customers instances.
     '''
     
-    __tablename__ = 'parameters_in_database'
+    __tablename__ = constants.TABLE_DB_LEVEL_PARAMETERS
     __table_args__ = {
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_PARAMS'),
+        'extend_existing' : True
     }
 
     id = Column(Integer, Sequence('id_parameters_in_database'), primary_key=True, autoincrement=True)
@@ -152,10 +157,11 @@ class ParametersInSchemas(Base):
     '''
     This model will store the parameters of each schema fetched from the customers instances.
     '''
-    __tablename__ = 'parameters_in_schemas'
+    __tablename__ = constants.TABLE_SCHEMA_LEVEL_PARAMETERS
     __table_args__ = {
         # 'extend_existing' : True,
-        'schema' : os.environ.get('SCHEMA_NAME_PARAMS')
+        'schema' : os.environ.get('SCHEMA_NAME_PARAMS'),
+        'extend_existing' : True
     }
 
     id = Column(Integer, Sequence('id_parameters_in_schemas'), primary_key=True, autoincrement=True)

@@ -11,6 +11,8 @@ class LoadData():
 
         # Write the data from the DataFrame to the table named in table_name agument.
         dataframe.columns = [column.upper() for column in dataframe.columns]
+        
+        # insert df into snowflake database tables.
         dataframe.to_sql(table_name, self.engine, index=False, method=pd_writer, if_exists="append")
 
         return True

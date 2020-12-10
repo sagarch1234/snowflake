@@ -34,6 +34,7 @@ class CollectMetaData():
         #connect to SFO's snowflake instance
         self.sfo_connector = SnowflakeConnector(user=os.environ.get('SNOWFLAKE_ACCOUNT_USER'), password=os.environ.get('SNOWFLAKE_ACCOUNT_PASSWORD'), account=os.environ.get('SNOWFLAKE_ACCOUNT'), database_name=os.environ.get('SNOWFLAKE_DATABASE_NAME'), schema_name=os.environ.get('SCHEMA_NAME'), role=os.environ.get('ACCOUNT_ROLE'), warehouse=os.environ.get('ACCOUNT_WAREHOUSE'))
         self.sfo_engine = self.sfo_connector.get_engine()
+        self.sfo_con = self.sfo_connector.connect_snowflake_instance()
 
         #get data object
         self.get_data = GetCustomerData(self.customer_engine)
@@ -48,18 +49,23 @@ class CollectMetaData():
         self.databases = df = pd.read_sql_query("show databases;", self.customer_engine)
 
 
-        def collect_process_dump(self, sql, table_name):
+    def collect_process_dump(self, sql, table_name):
+        final_df = pd.DataFrame()
 
-            final_df = pd.dataFrame()
+        for database in self.databases['name']:
 
-            for database in self.databases['name']:
+            #get_data
+            customer_df = self.get_data.get_data(sql, database)
 
-                #get_data
-                customer_df = self.get_data.get_data(sql, database)
-                final_df.append(customer_df)
+            final_df = final_df.append(customer_df)
 
-            #associate_data
-            associated_df = self.associate.associate_data(dataframe=final_df)
+        #associate_data
+        associated_df = self.associate.associate_data(dataframe=final_df)
+        print(associated_df)
 
-            #load_data
-            load_data = self.load_data.dump_data(table_name=table_name, dataframe=final_df)
+        #load_data
+        load_data = self.load_data.dump_data(table_name=table_name, dataframe=associated_df)
+
+
+# obj = CollectMetaData(account='lt90919.us-central1.gcp', user='shivkant', password='Shiva@123!!*', user_id=2, company_id=4, event="AUDITS", instance_id=4)
+# obj1 = obj.collect_process_dump(sql=f'SELECT * FROM SNOWFLAKE.INFORMATION_SCHEMA.APPLICABLE_ROLES;', table_name='info_schema_applicable_roles')

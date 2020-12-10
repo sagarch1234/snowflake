@@ -17,7 +17,7 @@ from snowflake.instance_connector.connection import SnowflakeConnector, CloseSno
 from snowflake_instances.serializers import InstancesSerializer, AccountTypeSerializer
 from snowflake_instances.models import Instances, InstanceAccountType
 from snowflake_instances.permissions import IsInstanceAccessible
-from snowflake_instances.tasks import parameters_and_instance_data, metadata_collection
+# from snowflake_instances.tasks import parameters_and_instance_data, metadata_collection
 
 from snowflake_optimizer.settings import SECRET_KEY
 
@@ -87,7 +87,7 @@ class AddInstanceView(APIView):
 
                 #add a task to the celery.
                 #This task will fetch initial data from customer's instances.
-                parameters_and_instance_data.delay(user = request.data['instance_user'], password = request.data['instance_password'], account = request.data['instance_account'], instance_id = instance_object.id, user_id= request.user.id, company_id= request.user.company.id, event='Add Instance')
+                # parameters_and_instance_data.delay(user = request.data['instance_user'], password = request.data['instance_password'], account = request.data['instance_account'], instance_id = instance_object.id, user_id= request.user.id, company_id= request.user.company.id, event='Add Instance')
                 # metadata_collection.delay(account = request.data['instance_account'], user = request.data['instance_user'], password = request.data['instance_password'], user_id = request.user.id, company_id = request.user.company.id, event = 'Add Instance', instance_id = instance_object.id)
 
                 return Response({
