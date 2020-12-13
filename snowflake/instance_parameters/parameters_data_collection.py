@@ -3,7 +3,7 @@ import os
 sys.path.insert(1,  '/snowflake-backend/snowflake/instance_connector')
 
 from connection import SnowflakeConnector
-
+from queries_and_tables import queries_tables_list
 from get_data import GetCustomerData
 from load_data import LoadData
 from associate_data import AssociateData
@@ -43,58 +43,82 @@ class CollectParametersData():
     
     def collect_process_dump(self, sql, table_name):
 
+        if table_name == constants.TABLE_ACCOUNT_PARAMETERS:
+
+            account_parameters_df = self.get_data.get_data(sql=sql, database_name = None, database_schema = None)
+
+            associated_data_df = self.associate.associate_data(account_parameters_df)
         
-        final_data_df = pd.DataFrame()
-        #final dataframes for db level query
-        final_db_level_df = pd.DataFrame()
+        elif table_name == constants.TABLE_DATABASES:
 
-        #final dataframe for schema level query
-        final_db_schema_level_df = pd.DataFrame()
+            instance_databases_df = self.get_data.get_data(sql=sql, database_name = None, database_schema = None)
+            associated_data_df = self.associate.associate_data(instance_databases_df)
+        
+        elif table_name == constants.TABLE_SCHEMAS:
 
-        if table_name == constants.TABLE_DATABASE_PARAMETERS:
-            
-            #final dataframe for databases
-            final_data_df = pd.read_sql_query(sql, self.customer_engine)
-            
-        elif table_name == constants.TABLE_SCHEMA_PARAMETERS:
-            
-            #final dataframe for schemas
-            final_data_df = pd.read_sql_query(sql, self.customer_engine)
-            
-        elif table_name == constants.TABLE_ACCOUNT_PARAMETERS:
-
-            #final dataframe for account parameters
-            final_data_df = pd.read_sql_query(sql, self.customer_engine)
+            instance_schemas_df = self.get_data.get_data(sql=sql, database_name = None, database_schema = None)
+            associated_data_df = self.associate.associate_data(instance_schemas_df)
         
         elif table_name == constants.TABLE_DB_LEVEL_PARAMETERS:
-            for database in databases_df['name']:
-                final_data_df = self.get_data.get_data(sql,database_name=database )
-                #final_db_level_df.append(db_level_df)
-                final_data_df['database_name'] = databases_df['name']
 
-        elif table_name == constants.TABLE_SCHEMA_LEVEL_PARAMETERS:
-
-            for database in databases_df['name']:
+            instance_databases_df = self.get_data.get_data(sql=constants.SQL_DATABASES, database_name = None, database_schema = None)
             
-                for schema in schemas_df['name']:
+            final_db_level_paramaters_df = pd.DataFrame()
             
-                    final_data_df = self.get_data.get_data(sql, database_name=database, database_schema=schema)
+            for database in instance_databases_df['name']:
+
+                sql = sql.format(database)
+
+                db_level_parameters_df = self.get_data.get_data(sql=sql, database_name = database, database_schema = None)
+
+                db_level_parameters_df['database_name'] = database
+                
+                final_db_level_paramaters_df.append(db_level_parameters_df)
+
+            associated_data_df = self.associate.associate_data(final_db_level_paramaters_df)
+
+        elif table_name == constants.TABLE_SCHEMA_PARAMETERS:
+
+            final_schema_parameters_df = pd.DataFrame()
+
+            instance_schemas_df = self.get_data.get_data(sql=constants.SQL_SCHEMAS, database_name = None, database_schema = None)
             
-                    #final_db_schema_level_df.append(schema_level_df)
-                    final_data_df['database_name'] = databases_df['name']
-                    final_data_df['schema_name'] = schemas_df['name']
+            instance_databases_df = self.get_data.get_data(sql=constants.SQL_DATABASES, database_name = None, database_schema = None)
+
+            for database in instance_databases_df['name']:
+                
+                print(database,">>>>>>>>>>>>>>>>>>>>")
+                
+                sql_query = constants.SQL_SCHEMAS_IN_DATABASES.format(database)
+                
+                instance_schemas_df = self.get_data.get_data(sql=sql_query, database_name = database, database_schema = None)
+
+                print("instance_schemas_df", instance_schemas_df)
+                
+                for schema in instance_schemas_df['name']:
+
+                    sql = sql.format(database, schema)
+                
+                    schema_parameters_df = self.get_data.get_data(sql=sql, database_name = database, database_schema = schema)
+                    
+                    schema_parameters_df['schema_name'] = schema
+                    schema_parameters_df['database_name'] = database
+                    
+                    final_schema_parameters_df = final_schema_parameters_df.append(schema_parameters_df)
+                    
+            associated_data_df = self.associate.associate_data(final_schema_parameters_df)
+
+        self.load_data.dump_data(table_name=table_name, dataframe=associated_data_df)
 
 
-
-        #Associate data
-        associated_databases_df = self.associate.associate_data(final_data_df)
-
-
-        #load data
-        load_database_df = self.load_data.dump_data(table_name, final_data_df)
 
 
 
 
 # temp = CollectParametersData(account='lt90919.us-central1.gcp', user='shivkant', password='Shiva@123!!*', user_id=2, company_id=4, event="Add Instance", instance_id=4)
-# temp.collect_process_dump(sql = 'SHOW PARAMETERS IN ACCOUNT;' , table_name = 'account_parameters')
+
+# temp.collect_process_dump(sql =constants.SQL_ACCOUNT_PARAMETERS , table_name = constants.TABLE_ACCOUNT_PARAMETERS)
+
+# for query_table in queries_tables_list:
+    
+#     temp.collect_process_dump(sql =query_table[0] , table_name = query_table[1])

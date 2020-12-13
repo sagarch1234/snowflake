@@ -85,7 +85,7 @@ class InstanceDatabases(Base):
         return "<DatabasesOnInstance({})>".format(self.id)
 
 
-class InstanceDatabasesSchema(Base):
+class InstanceDatabasesSchemas(Base):
 
     '''
     This model will store the schema of the customers instances.

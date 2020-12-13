@@ -3,7 +3,8 @@ import os
 sys.path.insert(1,  '/snowflake-backend/snowflake/instance_connector')
 
 import snowflake.connector
-# import constants
+import constants
+from queries_and_tables import queries_tables_list
 
 from connection import SnowflakeConnector
 
@@ -32,7 +33,7 @@ class CollectMetaData():
         self.customer_connector = self.customer_engine.connect()
         
         #connect to SFO's snowflake instance
-        self.sfo_connector = SnowflakeConnector(user=os.environ.get('SNOWFLAKE_ACCOUNT_USER'), password=os.environ.get('SNOWFLAKE_ACCOUNT_PASSWORD'), account=os.environ.get('SNOWFLAKE_ACCOUNT'), database_name=os.environ.get('SNOWFLAKE_DATABASE_NAME'), schema_name=os.environ.get('SCHEMA_NAME'), role=os.environ.get('ACCOUNT_ROLE'), warehouse=os.environ.get('ACCOUNT_WAREHOUSE'))
+        self.sfo_connector = SnowflakeConnector(user=os.environ.get('SNOWFLAKE_ACCOUNT_USER'), password=os.environ.get('SNOWFLAKE_ACCOUNT_PASSWORD'), account=os.environ.get('SNOWFLAKE_ACCOUNT'), database_name=os.environ.get('SNOWFLAKE_DATABASE_NAME'), schema_name=os.environ.get('SCHEMA_NAME_AUDITS'), role=os.environ.get('ACCOUNT_ROLE'), warehouse=os.environ.get('ACCOUNT_WAREHOUSE'))
         self.sfo_engine = self.sfo_connector.get_engine()
         self.sfo_con = self.sfo_connector.connect_snowflake_instance()
 
@@ -69,3 +70,8 @@ class CollectMetaData():
 
 # obj = CollectMetaData(account='lt90919.us-central1.gcp', user='shivkant', password='Shiva@123!!*', user_id=2, company_id=4, event="AUDITS", instance_id=4)
 # obj1 = obj.collect_process_dump(sql=f'SELECT * FROM SNOWFLAKE.INFORMATION_SCHEMA.APPLICABLE_ROLES;', table_name='info_schema_applicable_roles')
+
+# for queries_tables in queries_tables_list:
+    # print(">>>>>>>>>>",queries_tables)
+    # obj1 = obj.collect_process_dump(sql=queries_tables[0], table_name=queries_tables[1])
+

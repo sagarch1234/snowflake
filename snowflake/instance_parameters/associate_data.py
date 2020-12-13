@@ -11,7 +11,7 @@ class AssociateData():
         self.date_run = date.today()
     
     def associate_data(self, dataframe):
-
+        
         dataframe['instance_id'] = self.instance_id
         dataframe['user_id'] = self.user_id
         dataframe['event'] = self.event

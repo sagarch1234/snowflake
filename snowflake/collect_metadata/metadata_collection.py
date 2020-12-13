@@ -3,7 +3,7 @@ import os
 sys.path.insert(1,  '/snowflake-backend/snowflake/instance_connector')
 
 import snowflake.connector
-
+from queries_and_tables import queries_tables_list
 from connection import SnowflakeConnector
 
 from get_data import GetCustomerData
@@ -55,4 +55,9 @@ class CollectMetaData():
 
 
 # x = CollectMetaData(account='lt90919.us-central1.gcp', user='shivkant', password='Shiva@123!!*', user_id=2, company_id=4, event="AUDITS", instance_id=4)
-# y = x.collect_process_dump(sql='SELECT * FROM SNOWFLAKE.ACCOUNT_USAGE.GRANTS_TO_USERS;', table_name='account_usage_grants_to_users')
+
+# for queries_tables in queries_tables_list:
+
+    # print("?????????????????????????????????/",queries_tables)
+
+    # x.collect_process_dump(sql=queries_tables[0], table_name=queries_tables[1])

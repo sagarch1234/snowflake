@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(constants.1, constants. '/snowflake-backend/snowflake/collect_metadata')
+sys.path.insert(1, '/snowflake-backend/snowflake/collect_metadata')
 import constants
 
 

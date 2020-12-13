@@ -18,10 +18,10 @@ import constants
 Base = declarative_base()
 
 #get SnowflakeConnector class object
-connector = SnowflakeConnector(user=os.environ.get('SNOWFLAKE_ACCOUNT_USER'), password=os.environ.get('SNOWFLAKE_ACCOUNT_PASSWORD'), account=os.environ.get('SNOWFLAKE_ACCOUNT'), database_name=os.environ.get('SNOWFLAKE_DATABASE_NAME'), schema_name=os.environ.get('SCHEMA_NAME_AUDITS'), role=os.environ.get('ACCOUNT_ROLE'), warehouse=os.environ.get('ACCOUNT_WAREHOUSE'))
+# connector = SnowflakeConnector(user=os.environ.get('SNOWFLAKE_ACCOUNT_USER'), password=os.environ.get('SNOWFLAKE_ACCOUNT_PASSWORD'), account=os.environ.get('SNOWFLAKE_ACCOUNT'), database_name=os.environ.get('SNOWFLAKE_DATABASE_NAME'), schema_name=os.environ.get('SCHEMA_NAME_AUDITS'), role=os.environ.get('ACCOUNT_ROLE'), warehouse=os.environ.get('ACCOUNT_WAREHOUSE'))
 
 #get engine
-engine = connector.get_engine()
+# engine = connector.get_engine()
 
 
 class AccountUsageLoginHistory(Base):
@@ -1508,7 +1508,7 @@ class ReaderAccountUsageWarehouseMeteringHistory(Base):
 
 
 #create tables.
-Base.metadata.create_all(engine)
+# Base.metadata.create_all(engine)
 
 #dispose engine
-dispose_engine = DisposeEngine(engine= engine)
+# dispose_engine = DisposeEngine(engine= engine)
