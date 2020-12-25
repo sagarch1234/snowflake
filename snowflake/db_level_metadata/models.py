@@ -30,7 +30,7 @@ class InfoSchemaApplicableRoles(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_parameters_in_database'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_parameters_in_database'), autoincrement=True)
     grantee = Column(Text, nullable=True)
     role_name = Column(Text, nullable=True)
     role_owner = Column(Text, nullable=True)
@@ -54,7 +54,7 @@ class InfoSchemaColumns(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_columns'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_columns'), autoincrement=True)
     table_catalog = Column(Text, nullable=True)
     table_schema = Column(Text, nullable=True)
     table_name = Column(Text, nullable=True)
@@ -115,7 +115,7 @@ class InfoSchemaDatabases(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_databases'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_databases'), autoincrement=True)
     database_name = Column(Text, nullable=True)
     database_owner = Column(Text, nullable=True)
     is_transient = Column(String(3), nullable=True)
@@ -141,7 +141,7 @@ class InfoSchemaEnabledRoles(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_enabled_roles'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_enabled_roles'), autoincrement=True)
     role_name = Column(Text, nullable=True)
     role_owner = Column(Text, nullable=True)
     database_name = Column(String(100), nullable=True)
@@ -162,7 +162,7 @@ class InfoSchemaExternalTables(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_external_tables'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_external_tables'), autoincrement=True)
     table_catalog = Column(Text, nullable=True)
     table_schema = Column(Text, nullable=True)
     table_name = Column(Text, nullable=True)
@@ -191,7 +191,7 @@ class InfoSchemaFileFormats(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_file_formats'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_file_formats'), autoincrement=True)
     file_format_catalog = Column(Text, nullable=True)
     file_format_schema = Column(Text, nullable=True)
     file_format_name = Column(Text, nullable=True)
@@ -232,7 +232,7 @@ class InfoSchemaFunctions(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_functions'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_functions'), autoincrement=True)
     function_catalog = Column(Text, nullable=True)
     function_schema = Column(Text, nullable=True)
     function_name = Column(Text, nullable=True)
@@ -275,7 +275,7 @@ class InfoSchemaCatlogName(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_catlog_name'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_catlog_name'), autoincrement=True)
     catalog_name = Column(Text, nullable=True)
     database_name = Column(String(100), nullable=True)
     company_id = Column(Integer, nullable=True)
@@ -295,7 +295,7 @@ class InfoSchemaLoadHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_load_history'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_load_history'), autoincrement=True)
     schema_name = Column(Text, nullable=True)
     file_name = Column(Text, nullable=True)
     table_name = Column(Text, nullable=True)
@@ -327,7 +327,7 @@ class InfoSchemaObjectPrivileges(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_object_privileges'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_object_privileges'), autoincrement=True)
     grantor = Column(Text, nullable=True)
     grantee = Column(Text, nullable=True)
     object_catalog = Column(Text, nullable=True)
@@ -356,7 +356,7 @@ class InfoSchemaPipes(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_pipes'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_pipes'), autoincrement=True)
     pipe_catalog = Column(Text, nullable=True)
     pipe_schema = Column(Text, nullable=True)
     pipe_name = Column(Text, nullable=True)
@@ -385,7 +385,7 @@ class InfoSchemaProcedures(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_procedures'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_procedures'), autoincrement=True)
     procedure_catalog = Column(Text, nullable=True)
     procedure_schema = Column(Text, nullable=True)
     procedure_name = Column(Text, nullable=True)
@@ -419,7 +419,7 @@ class InfoSchemaReferentialConstraints(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_referential_constraints'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_referential_constraints'), autoincrement=True)
     constraint_catalog = Column(Text, nullable=True)
     constraint_schema = Column(Text, nullable=True)
     constraint_name = Column(Text, nullable=True)
@@ -450,7 +450,7 @@ class InfoSchemaReplicationDatabases(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_replication_databases'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_replication_databases'), autoincrement=True)
     region_group = Column(Text, nullable=True)
     snowflake_region = Column(Text, nullable=True)
     account_name = Column(Text, nullable=True)
@@ -479,7 +479,7 @@ class InfoSchemaSchemata(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_schemata'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_schemata'), autoincrement=True)
     catalog_name = Column(Text, nullable=True)
     schema_name = Column(Text, nullable=True)
     schema_owner = Column(Text, nullable=True)
@@ -510,7 +510,7 @@ class InfoSchemaSequences(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_sequences'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_sequences'), autoincrement=True)
     sequence_catalog = Column(Text, nullable=True)
     sequence_schema = Column(Text, nullable=True)
     sequence_name = Column(Text, nullable=True)
@@ -546,7 +546,7 @@ class InfoSchemaStages(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_stages'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_stages'), autoincrement=True)
     stage_catalog = Column(Text, nullable=True)
     stage_schema = Column(Text, nullable=True)
     stage_name = Column(Text, nullable=True)
@@ -575,7 +575,7 @@ class InfoSchemaTables(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_tables'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_tables'), autoincrement=True)
     table_catalog = Column(Text, nullable=True)
     table_schema = Column(Text, nullable=True)
     table_name = Column(Text, nullable=True)
@@ -616,7 +616,7 @@ class InfoSchemaTablesConstraints(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_tables_constraints'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_tables_constraints'), autoincrement=True)
     constraint_catalog = Column(Text, nullable=True)
     constraint_schema = Column(Text, nullable=True)
     constraint_name = Column(Text, nullable=True)
@@ -648,7 +648,7 @@ class InfoSchemaTablesPrivileges(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_tables_privileges'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_tables_privileges'), autoincrement=True)
     grantor = Column(Text, nullable=True)
     grantee = Column(Text, nullable=True)
     table_catalog = Column(Text, nullable=True)
@@ -677,7 +677,7 @@ class InfoSchemaTablesStorageMetrics(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id_table_metrics = Column(Integer, Sequence('id_info_schema_tables_metrics'), primary_key=True, autoincrement=True)
+    id_table_metrics = Column(Integer, Sequence('id_info_schema_tables_metrics'), autoincrement=True)
     table_catalog = Column(Text, nullable=True)
     table_schema = Column(Text, nullable=True)
     table_name = Column(Text, nullable=True)
@@ -714,7 +714,7 @@ class InfoSchemaUsagePrivileges(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_usage_privileges'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_usage_privileges'), autoincrement=True)
     grantor = Column(Text, nullable=True)
     grantee = Column(Text, nullable=True)
     object_catalog = Column(Text, nullable=True)
@@ -742,7 +742,7 @@ class InfoSchemaViews(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_info_schema_views'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_info_schema_views'), autoincrement=True)
     table_catalog = Column(Text, nullable=True)
     table_schema = Column(Text, nullable=True)
     table_name = Column(Text, nullable=True)

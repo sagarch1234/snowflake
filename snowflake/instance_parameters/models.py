@@ -35,7 +35,7 @@ class AccountParameters(Base):
         'extend_existing' : True
     }
 
-    id = Column(Integer, Sequence('id_account_parameters'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_account_parameters'), autoincrement=True)
     key = Column(String(200), nullable=True)
     value = Column(String(200), nullable=True)
     default = Column(String(200), nullable=True)
@@ -64,7 +64,7 @@ class InstanceDatabases(Base):
         'extend_existing' : True
     }
 
-    id = Column(Integer, Sequence('id_databases_on_instance'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_databases_on_instance'), autoincrement=True)
     created_on = Column(TIMESTAMP, nullable=True)
     name = Column(String(100), nullable=True)
     is_default = Column(String(50), nullable=True)
@@ -97,7 +97,7 @@ class InstanceDatabasesSchemas(Base):
         'extend_existing' : True
     }
 
-    id = Column(Integer, Sequence('id_schema_on_instance'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_schema_on_instance'), autoincrement=True)
     created_on = Column(TIMESTAMP, nullable=True)
     name = Column(String(100), nullable=True)
     is_default = Column(String(50), nullable=True)
@@ -130,7 +130,7 @@ class ParametersInDatabase(Base):
         'extend_existing' : True
     }
 
-    id = Column(Integer, Sequence('id_parameters_in_database'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_parameters_in_database'), autoincrement=True)
     key = Column(String(200), nullable=True)
     value = Column(String(200), nullable=True)
     default = Column(String(200), nullable=True)
@@ -164,7 +164,7 @@ class ParametersInSchemas(Base):
         'extend_existing' : True
     }
 
-    id = Column(Integer, Sequence('id_parameters_in_schemas'), primary_key=True, autoincrement=True)
+    id = Column(Integer, Sequence('id_parameters_in_schemas'), autoincrement=True)
     key = Column(String(200), nullable=True)
     value = Column(String(200), nullable=True)
     default = Column(String(200), nullable=True)

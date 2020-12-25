@@ -36,7 +36,8 @@ class AccountUsageLoginHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_login_history'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_LOGIN_HISTORY = Column(Integer, Sequence('id_account_usage_login_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_login_history'), primary_key=True, nullable=True)
     event_id = Column(Integer, nullable=True)
     event_timestamp = Column(TIMESTAMP, nullable=True)
     event_type = Column(String(100), nullable=True)
@@ -69,6 +70,7 @@ class AccountUsageAutomaticClusteringHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
+    # constants.INDEX_ACCOUNT_USAGE_AUTOMATIC_CLUSTERING_HISTORY = Column(Integer, Sequence('id_account_usage_automatic_clustering_history'), primary_key=True, nullable=True)
     id = Column(Integer, Sequence('id_account_usage_automatic_clustering_history'), primary_key=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
@@ -100,7 +102,8 @@ class AccountUsageColumns(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_columns'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_COLUMNS = Column(Integer, Sequence('id_account_usage_columns'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_columns'), primary_key=True, nullable=True)
     column_id = Column(Integer, nullable=True)
     column_name = Column(Text, nullable=True)
     table_id = Column(Integer, nullable=True)
@@ -167,7 +170,8 @@ class AccountUsageCopyHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_copy_history'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_COPY_HISTORY = Column(Integer, Sequence('id_account_usage_copy_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_copy_history'), primary_key=True, nullable=True)
     file_name = Column(Text, nullable=True)
     stage_location = Column(Text, nullable=True)
     last_load_time = Column(TIMESTAMP, nullable=True)
@@ -210,7 +214,8 @@ class AccountUsageDatabases(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_databases'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_DATABASES = Column(Integer, Sequence('id_account_usage_databases'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_databases'), primary_key=True, nullable=True)
     database_id = Column(Integer, nullable=True) 
     database_name = Column(Text, nullable=True)
     database_owner = Column(Text, nullable=True)
@@ -239,7 +244,8 @@ class AccountUsageDatabaseStorageUsageHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_database_storage_usage_history'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_DATABASE_STORAGE_USAGE_HISTORY = Column(Integer, Sequence('id_account_usage_database_storage_usage_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_database_storage_usage_history'), primary_key=True, nullable=True)
     usage_date = Column(Date, nullable=True)
     database_id = Column(Integer, nullable=True)
     database_name = Column(Text, nullable=True)
@@ -264,7 +270,8 @@ class AccountUsageDataTransferHistory(Base):
         'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
-    id = Column(Integer, Sequence('id_account_usage_data_transfer_history'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_DATA_TRANSFER_HISTORY = Column(Integer, Sequence('id_account_usage_data_transfer_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_data_transfer_history'), primary_key=True, nullable=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
     source_cloud = Column(String(200), nullable=True)
@@ -291,7 +298,8 @@ class AccountUsageFileFormats(Base):
         'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
-    id = Column(Integer, Sequence('id_account_usage_file_formats'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_FILE_FORMATS = Column(Integer, Sequence('id_account_usage_file_formats'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_file_formats'), primary_key=True, nullable=True)
     file_format_id = Column(Integer, nullable=True)
     file_format_name = Column(Text, nullable=True)
     file_format_schema_id = Column(Integer, nullable=True)
@@ -336,7 +344,8 @@ class AccountUsageFunctions(Base):
         'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
-    id = Column(Integer, Sequence('id_account_usage_functions'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_FUNCTIONS = Column(Integer, Sequence('id_account_usage_functions'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_functions'), primary_key=True, nullable=True)
     function_id = Column(Integer, nullable=True)
     function_name = Column(Text, nullable=True)
     function_schema_id = Column(Integer, nullable=True)
@@ -382,7 +391,8 @@ class AccountUsageGrantsToRoles(Base):
         'extend_existing':True,
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
-    id = Column(Integer, Sequence('id_account_usage_grants_to_roles'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_GRANTS_TO_ROLES = Column(Integer, Sequence('id_account_usage_grants_to_roles'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_grants_to_roles'), primary_key=True, nullable=True)
     created_on = Column(TIMESTAMP, nullable=True)
     modified_on = Column(TIMESTAMP, nullable=True)
     privilege = Column(Text, nullable=True)
@@ -414,7 +424,8 @@ class AccountUsageGrantsToUsers(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_grants_to_users'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_GRANTS_TO_USERS = Column(Integer, Sequence('id_account_usage_grants_to_users'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_grants_to_users'), primary_key=True, nullable=True)
     created_on = Column(TIMESTAMP, nullable=True)
     deleted_on = Column(TIMESTAMP, nullable=True)
     role = Column(Text, nullable=True)
@@ -440,7 +451,8 @@ class AccountUsageLoadHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_load_history'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_LOAD_HISTORY = Column(Integer, Sequence('id_account_usage_load_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_load_history'), primary_key=True, nullable=True)
     table_id = Column(Integer, nullable=True)
     table_name = Column(Text, nullable=True)
     schema_id = Column(Integer, nullable=True)
@@ -477,7 +489,8 @@ class AccountUsageMaterializedViewRefreshHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_materialized_view_refresh_history'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_MATERIALIZED_VIEW_REFRESH_HISTORY = Column(Integer, Sequence('id_account_usage_materialized_view_refresh_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_materialized_view_refresh_history'), primary_key=True, nullable=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
     credits_used = Column(Integer, nullable=True)
@@ -506,7 +519,8 @@ class AccountUsageMeteringDailyHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_metering_daily_history'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_METERING_DAILY_HISTORY = Column(Integer, Sequence('id_account_usage_metering_daily_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_metering_daily_history'), primary_key=True, nullable=True)
     service_type = Column(String(25), nullable=True)
     usage_date = Column(Date, nullable=True)
     credits_used_compute = Column(Integer, nullable=True)
@@ -533,7 +547,8 @@ class AccountUsageMeteringHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_metering_history'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_METERING_HISTORY = Column(Integer, Sequence('id_account_usage_metering_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_metering_history'), primary_key=True, nullable=True)
     service_type = Column(String(25), nullable=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
@@ -564,7 +579,8 @@ class AccountUsagePipes(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_pipes'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_PIPES = Column(Integer, Sequence('id_account_usage_pipes'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_pipes'), primary_key=True, nullable=True)
     pipe_id = Column(Integer, nullable=True)
     pipe_name = Column(Text, nullable=True)
     pipe_schema_id = Column(Integer, nullable=True)
@@ -599,7 +615,8 @@ class AccountUsagePipeUsageHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_pipe_usage_history'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_PIPE_USAGE_HISTORY = Column(Integer, Sequence('id_account_usage_pipe_usage_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_pipe_usage_history'), primary_key=True, nullable=True)
     pipe_id = Column(Integer, nullable=True)
     pipe_name = Column(Text, nullable=True)
     pipe_schema_id = Column(Integer, nullable=True)
@@ -634,7 +651,8 @@ class AccountUsageQueryHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_account_usage_query_history'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_QUERY_HISTORY = Column(Integer, Sequence('id_account_usage_query_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_account_usage_query_history'), primary_key=True, nullable=True)
     query_id = Column(Text, nullable=True)
     query_text = Column(Text, nullable=True)
     database_id = Column(Integer, nullable=True)
@@ -714,7 +732,8 @@ class AccountUsageReferentialConstraints(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_referential_constraints'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_REFERENTIAL_CONSTRAINTS = Column(Integer, Sequence('id_acccount_usage_referential_constraints'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_acccount_usage_referential_constraints'), primary_key=True, nullable=True)
     constraint_catalog_id = Column(Integer, nullable=True)
     constraint_catalog = Column(Text, nullable=True)
     constraint_schema_id = Column(Integer, nullable=True)
@@ -751,7 +770,8 @@ class AccountUsageReplicationUsageHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_replication_usage_history'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_REPLICATION_USAGE_HISTORY = Column(Integer, Sequence('id_acccount_usage_replication_usage_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_acccount_usage_replication_usage_history'), primary_key=True, nullable=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
     database_name = Column(Text, nullable=True)
@@ -777,7 +797,8 @@ class AccountUsageRoles(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_role'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_ROLES = Column(Integer, Sequence('id_acccount_usage_role'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_acccount_usage_role'), primary_key=True, nullable=True)
     created_on = Column(TIMESTAMP, nullable=True)
     deleted_on = Column(TIMESTAMP, nullable=True)
     name = Column(Text, nullable=True)
@@ -801,7 +822,8 @@ class AccountUsageSchemata(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_schemata'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_SCHEMATA = Column(Integer, Sequence('id_acccount_usage_schemata'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_acccount_usage_schemata'), primary_key=True, nullable=True)
     schema_id = Column(Integer, nullable=True)
     schema_name = Column(Text, nullable=True)
     catalog_id = Column(Integer, nullable=True)
@@ -837,7 +859,8 @@ class AccountUsageSearchOptimizationHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_search_optimization_history'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_SEARCH_OPTIMIZATION_HISTORY = Column(Integer, Sequence('id_acccount_usage_search_optimization_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_acccount_usage_search_optimization_history'), primary_key=True, nullable=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
     credits_used = Column(Integer, nullable=True)
@@ -866,7 +889,8 @@ class AccountUsageSequences(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_sequences'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_SEQUENCES = Column(Integer, Sequence('id_acccount_usage_sequences'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_acccount_usage_sequences'), primary_key=True, nullable=True)
     sequence_id = Column(Integer, nullable=True)
     sequence_name = Column(Text, nullable=True)
     sequence_schema_id = Column(Integer, nullable=True)
@@ -907,7 +931,8 @@ class AccountUsageStages(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_stages'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_STAGES = Column(Integer, Sequence('id_acccount_usage_stages'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_acccount_usage_stages'), primary_key=True, nullable=True)
     stage_id = Column(Integer, nullable=True)
     stage_name = Column(Text, nullable=True)
     stage_schema_id = Column(Integer, nullable=True)
@@ -941,7 +966,8 @@ class AccountUsageStageStorageUsageHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_stage_storage_usage_history'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_STAGE_STORAGE_USAGE_HISTORY = Column(Integer, Sequence('id_acccount_usage_stage_storage_usage_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_acccount_usage_stage_storage_usage_history'), primary_key=True, nullable=True)
     usage_date = Column(Date, nullable=True)
     average_stage_bytes = Column(Integer, nullable=True)
     event = Column(String(20), nullable=True)
@@ -963,7 +989,8 @@ class AccountUsageStorageUsage(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_storage_usage'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_STORAGE_USAGE = Column(Integer, Sequence('id_acccount_usage_storage_usage'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_acccount_usage_storage_usage'), primary_key=True, nullable=True)
     usage_date = Column(Date)
     storage_bytes = Column(Integer, nullable=True)
     stage_bytes = Column(Integer, nullable=True)
@@ -987,7 +1014,8 @@ class AccountUsageTables(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_tables'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_TABLES = Column(Integer, Sequence('id_acccount_usage_tables'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_acccount_usage_tables'), primary_key=True, nullable=True)
     table_id = Column(Integer, nullable=True)
     table_name = Column(Text, nullable=True)
     table_schema_id = Column(Integer, nullable=True)
@@ -1034,7 +1062,8 @@ class AccountUsageTableConstraints(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_table_constraints'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_TABLE_CONSTRAINTS = Column(Integer, Sequence('id_acccount_usage_table_constraints'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_acccount_usage_table_constraints'), primary_key=True, nullable=True)
     constraint_id = Column(Integer, nullable=True)
     constraint_name = Column(Text, nullable=True)
     constraint_schema_id = Column(Integer, nullable=True)
@@ -1074,7 +1103,8 @@ class AccountUsageStorageMetrics(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    storage_metric_id = Column(Integer, Sequence('id_acccount_usage_storage_metric'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_TABLE_STORAGE_METRICS = Column(Integer, Sequence('id_acccount_usage_storage_metric'), primary_key=True, nullable=True)
+    storage_metric_id = Column(Integer, Sequence('id_acccount_usage_storage_metric'), primary_key=True, nullable=True)
     id = Column(Integer, nullable=True)
     table_name = Column(Text, nullable=True)
     table_schema_id = Column(Integer, nullable=True)
@@ -1115,7 +1145,8 @@ class AccountUsageUsers(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_users'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_USERS = Column(Integer, Sequence('id_acccount_usage_users'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_acccount_usage_users'), primary_key=True, nullable=True)
     name = Column(Text, nullable=True)
     created_on = Column(TIMESTAMP, nullable=True)
     deleted_on = Column(TIMESTAMP, nullable=True)
@@ -1159,7 +1190,8 @@ class AccountUsageViews(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_views'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_VIEWS = Column(Integer, Sequence('id_acccount_usage_views'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_acccount_usage_views'), primary_key=True, nullable=True)
     table_id = Column(Integer, nullable=True)
     table_name = Column(Text, nullable=True)
     table_schema_id = Column(Integer, nullable=True)
@@ -1195,7 +1227,8 @@ class AccountUsageWarehouseLoadHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_warehouse_load_history'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_WAREHOUSE_LOAD_HISTORY = Column(Integer, Sequence('id_acccount_usage_warehouse_load_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_acccount_usage_warehouse_load_history'), primary_key=True, nullable=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
     warehouse_id = Column(Integer, nullable=True)
@@ -1223,7 +1256,8 @@ class AccountUsageWarehouseMeteringHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_acccount_usage_warehouse_metering_history'), primary_key=True)
+    # constants.INDEX_ACCOUNT_USAGE_WAREHOUSE_METERING_HISTORY = Column(Integer, Sequence('id_acccount_usage_warehouse_metering_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_acccount_usage_warehouse_metering_history'), primary_key=True, nullable=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
     warehouse_id = Column(Integer, nullable=True)
@@ -1250,7 +1284,8 @@ class OrganizationUsagePreviewDataTransferDailyHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_organization_usage_preview_data_transfer_daily_history'), primary_key=True)
+    # constants.INDEX_ORGANIZATION_USAGE_PREVIEW_DATA_TRANSFER_DAILY_HISTORY = Column(Integer, Sequence('id_organization_usage_preview_data_transfer_daily_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_organization_usage_preview_data_transfer_daily_history'), primary_key=True, nullable=True)
     service_type = Column(String(13), nullable=True)
     organization_name = Column(Text, nullable=True)
     account_name = Column(Text, nullable=True)
@@ -1276,7 +1311,8 @@ class OrganizationUsagePreviewMeteringDailyHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_organization_usage_preview_metering_daily_history'), primary_key=True)
+    # constants.INDEX_ORGANIZATION_USAGE_PREVIEW_METERING_DAILY_HISTORY = Column(Integer, Sequence('id_organization_usage_preview_metering_daily_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_organization_usage_preview_metering_daily_history'), primary_key=True, nullable=True)
     service_type = Column(String(25), nullable=True)
     organization_name = Column(Text, nullable=True)
     account_name = Column(Text, nullable=True)
@@ -1306,7 +1342,8 @@ class OrganizationUsagePreviewStorageDailyHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_organization_usage_preview_storage_daily_history'), primary_key=True)
+    # constants.INDEX_ORGANIZATION_USAGE_PREVIEW_STORAGE_DAILY_HISTORY = Column(Integer, Sequence('id_organization_usage_preview_storage_daily_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_organization_usage_preview_storage_daily_history'), primary_key=True, nullable=True)
     service_type = Column(String(25), nullable=True)
     organization_name = Column(Text, nullable=True)
     account_name = Column(Text, nullable=True)
@@ -1332,7 +1369,8 @@ class ReaderAccountUsageLoginHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_reader_account_usage_login_history'), primary_key=True)
+    # constants.INDEX_READER_ACCOUNT_USAGE_LOGIN_HISTORY = Column(Integer, Sequence('id_reader_account_usage_login_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_reader_account_usage_login_history'), primary_key=True, nullable=True)
     reader_account_name = Column(Text, nullable=True)
     event_id = Column(Integer, nullable=True)
     event_timestamp = Column(TIMESTAMP, nullable=True)
@@ -1367,7 +1405,8 @@ class ReaderAccountUsageQueryHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_reader_account_usage_query_history'), primary_key=True)
+    # constants.INDEX_READER_ACCOUNT_USAGE_QUERY_HISTORY = Column(Integer, Sequence('id_reader_account_usage_query_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_reader_account_usage_query_history'), primary_key=True, nullable=True)
     reader_account_name = Column(Text, nullable=True)
     query_id = Column(Text, nullable=True)
     query_text = Column(Text, nullable=True)
@@ -1427,7 +1466,8 @@ class ReaderAccountUsageResourceMonitor(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_reader_account_usage_resource_monitor'), primary_key=True)
+    # constants.INDEX_READER_ACCOUNT_USAGE_RESOURCE_MONITORS = Column(Integer, Sequence('id_reader_account_usage_resource_monitor'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_reader_account_usage_resource_monitor'), primary_key=True, nullable=True)
     reader_account_name  = Column(Text, nullable=True)
     name = Column(Text, nullable=True)
     created = Column(TIMESTAMP, nullable=True)
@@ -1460,7 +1500,8 @@ class ReaderAccountUsageStorageUsage(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_reader_account_usage_storage_usage'), primary_key=True)
+    # constants.INDEX_READER_ACCOUNT_USAGE_STORAGE_USAGE = Column(Integer, Sequence('id_reader_account_usage_storage_usage'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_reader_account_usage_storage_usage'), primary_key=True, nullable=True)
     reader_account_name = Column(Text, nullable=True)
     usage_date = Column(Date, nullable=True)
     storage_bytes = Column(Integer, nullable=True)
@@ -1486,7 +1527,8 @@ class ReaderAccountUsageWarehouseMeteringHistory(Base):
         'schema' : os.environ.get('SCHEMA_NAME_AUDITS')
     }
 
-    id = Column(Integer, Sequence('id_reader_account_usage_warehouse_metering_history'), primary_key=True)
+    # constants.INDEX_READER_ACCOUNT_USAGE_WAREHOUSE_METERING_HISTORY = Column(Integer, Sequence('id_reader_account_usage_warehouse_metering_history'), primary_key=True, nullable=True)
+    id = Column(Integer, Sequence('id_reader_account_usage_warehouse_metering_history'), primary_key=True, nullable=True)
     reader_account_name = Column(Text, nullable=True)
     start_time = Column(TIMESTAMP, nullable=True)
     end_time = Column(TIMESTAMP, nullable=True)
