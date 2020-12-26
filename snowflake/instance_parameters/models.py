@@ -1,17 +1,18 @@
+import os
 import sys
 import datetime
-import os
 
 sys.path.insert(1,  '/snowflake-backend/snowflake/instance_connector')
 
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import String, Integer, Column, Text, Boolean, create_engine, Time, String, Sequence, DateTime, TIMESTAMP
-from snowflake.sqlalchemy import URL
+from sqlalchemy import String, Integer, Column, Text, Boolean, create_engine, Time, String, Sequence, DateTime, TIMESTAMP, Date, Float
+from snowflake.sqlalchemy import URL, VARIANT
 
-import constants
 from connection import SnowflakeConnector
 from connection import DisposeEngine
+import constants
+
 
 #using declarative base
 Base = declarative_base()
@@ -58,7 +59,7 @@ class InstanceDatabases(Base):
     '''
     This model will store the databases of the customers instances.
     '''
-    __tablename__ = constants.TABLE_DATABASE_PARAMETERS
+    __tablename__ = constants.TABLE_DATABASES
     __table_args__ = {
         'schema' : os.environ.get('SCHEMA_NAME_PARAMS'),
         'extend_existing' : True
@@ -91,7 +92,7 @@ class InstanceDatabasesSchemas(Base):
     This model will store the schema of the customers instances.
     '''
     
-    __tablename__ = constants.TABLE_SCHEMA_PARAMETERS
+    __tablename__ = constants.TABLE_SCHEMAS
     __table_args__ = {
         'schema' : os.environ.get('SCHEMA_NAME_PARAMS'),
         'extend_existing' : True
@@ -157,7 +158,7 @@ class ParametersInSchemas(Base):
     '''
     This model will store the parameters of each schema fetched from the customers instances.
     '''
-    __tablename__ = constants.TABLE_SCHEMA_LEVEL_PARAMETERS
+    __tablename__ = constants.TABLE_SCHEMA_PARAMETERS
     __table_args__ = {
         # 'extend_existing' : True,
         'schema' : os.environ.get('SCHEMA_NAME_PARAMS'),
