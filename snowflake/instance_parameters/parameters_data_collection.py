@@ -30,6 +30,7 @@ class CollectParametersData():
         #connect to SFO's snowflake instance
         self.sfo_connector = SnowflakeConnector(user=os.environ.get('SNOWFLAKE_ACCOUNT_USER'), password=os.environ.get('SNOWFLAKE_ACCOUNT_PASSWORD'), account=os.environ.get('SNOWFLAKE_ACCOUNT'), database_name=os.environ.get('SNOWFLAKE_DATABASE_NAME'), schema_name=os.environ.get('SCHEMA_NAME_PARAMS'), role=os.environ.get('ACCOUNT_ROLE'), warehouse=os.environ.get('ACCOUNT_WAREHOUSE'))
         self.sfo_engine = self.sfo_connector.get_engine()
+        self.sfo_con = self.sfo_connector.connect_snowflake_instance()
 
         #get data object
         self.get_data = GetCustomerData(self.customer_engine)
@@ -38,10 +39,10 @@ class CollectParametersData():
         self.associate = AssociateData(instance_id=self.instance_id, user_id=self.user_id, event=self.event, company_id=self.company_id)
 
         #load data 
-        self.load_data = LoadData(engine=self.sfo_engine)
+        self.load_data = LoadData(engine=self.sfo_engine, connection=self.sfo_con)
 
     
-    def collect_process_dump(self, sql, table_name):
+    def collect_process_dump(self, sql, table_name, index_label):
 
         if table_name == constants.TABLE_ACCOUNT_PARAMETERS:
 
@@ -86,14 +87,10 @@ class CollectParametersData():
             instance_databases_df = self.get_data.get_data(sql=constants.SQL_DATABASES, database_name = None, database_schema = None)
 
             for database in instance_databases_df['name']:
-                
-                print(database,">>>>>>>>>>>>>>>>>>>>")
-                
+                                
                 sql_query = constants.SQL_SCHEMAS_IN_DATABASES.format(database)
                 
                 instance_schemas_df = self.get_data.get_data(sql=sql_query, database_name = database, database_schema = None)
-
-                print("instance_schemas_df", instance_schemas_df)
                 
                 for schema in instance_schemas_df['name']:
 
@@ -108,7 +105,7 @@ class CollectParametersData():
                     
             associated_data_df = self.associate.associate_data(final_schema_parameters_df)
 
-        self.load_data.dump_data(table_name=table_name, dataframe=associated_data_df)
+        self.load_data.dump_data(table_name=table_name, dataframe=associated_data_df, index_label=index_label)
 
 
 
@@ -121,4 +118,4 @@ class CollectParametersData():
 
 # for query_table in queries_tables_list:
     
-#     temp.collect_process_dump(sql =query_table[0] , table_name = query_table[1])
+    # temp.collect_process_dump(sql =query_table[0] , table_name = query_table[1], index_label=query_table[2])

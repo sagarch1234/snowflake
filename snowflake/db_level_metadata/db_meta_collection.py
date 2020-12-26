@@ -44,13 +44,14 @@ class CollectMetaData():
         self.associate = AssociateData(instance_id=self.instance_id, user_id=self.user_id, event=self.event, company_id=self.company_id)
 
         #load data 
-        self.load_data = LoadData(engine=self.sfo_engine)
+        self.load_data = LoadData(engine=self.sfo_engine, connection=self.sfo_con)
 
         #df of customer's databases
         self.databases = df = pd.read_sql_query("show databases;", self.customer_engine)
 
 
-    def collect_process_dump(self, sql, table_name):
+    def collect_process_dump(self, sql, table_name, index_label):
+
         final_df = pd.DataFrame()
 
         for database in self.databases['name']:
@@ -62,16 +63,17 @@ class CollectMetaData():
 
         #associate_data
         associated_df = self.associate.associate_data(dataframe=final_df)
-        print(associated_df)
 
         #load_data
-        load_data = self.load_data.dump_data(table_name=table_name, dataframe=associated_df)
+        load_data = self.load_data.dump_data(table_name=table_name, dataframe=associated_df, index_label=index_label)
 
 
 # obj = CollectMetaData(account='lt90919.us-central1.gcp', user='shivkant', password='Shiva@123!!*', user_id=2, company_id=4, event="AUDITS", instance_id=4)
 # obj1 = obj.collect_process_dump(sql=f'SELECT * FROM SNOWFLAKE.INFORMATION_SCHEMA.APPLICABLE_ROLES;', table_name='info_schema_applicable_roles')
 
 # for queries_tables in queries_tables_list:
-    # print(">>>>>>>>>>",queries_tables)
-    # obj1 = obj.collect_process_dump(sql=queries_tables[0], table_name=queries_tables[1])
+
+#     print(">>>>>>>>>>",queries_tables)
+    
+#     obj1 = obj.collect_process_dump(sql=queries_tables[0], table_name=queries_tables[1], index_label=queries_tables[2])
 
