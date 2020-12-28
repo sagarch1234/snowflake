@@ -1,5 +1,6 @@
 import os
 import logging
+import sys
 
 from django.shortcuts import render
 from django.template.loader import render_to_string
@@ -10,10 +11,9 @@ from snowflake_optimizer.celery import app
 
 from snowflake_instances.constants import INSTANCES_CREATED
 
-from snowflake.instance_connector.connection import SnowflakeConnector, CloseSnowflakeConnection, DisposeEngine
+sys.path.insert(1,  '/snowflake-backend/snowflake/instance_connector')
 
-from snowflake.collect_metadata import constants, queries_and_tables
-from snowflake.collect_metadata.metadata_collection import CollectMetaData
+from connection import SnowflakeConnector, CloseSnowflakeConnection, DisposeEngine
 
 logging.basicConfig(format='%(asctime)s :: %(levelname)s :: %(funcName)s :: %(lineno)d :: %(message)s', level = logging.INFO)
 

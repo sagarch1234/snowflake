@@ -18,4 +18,6 @@ class AssociateData():
         dataframe['company_id'] = self.company_id
         dataframe['date_run'] = self.date_run
 
+        dataframe.columns = dataframe.columns.str.upper()
+        
         return dataframe

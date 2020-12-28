@@ -16,10 +16,18 @@ class LoadData():
         schema = str(os.environ.get('SCHEMA_NAME_PARAMS'))
         database = str(os.environ.get('SNOWFLAKE_DATABASE_NAME'))
         table_name = str(table_name.upper())
-        
+
         sql = 'SELECT max(ID) AS max_ID FROM' + ' ' + database + '.' + schema + '.' + table_name;
         
-        id = con.execute(sql).fetchone()
+        try:
+            
+            id = con.execute(sql).fetchone()
+
+        except Exception as identifier:
+
+            id=0
+
+            return id
 
         if id[0] is None:
 
@@ -31,13 +39,12 @@ class LoadData():
 
     def dump_data(self, table_name, dataframe, index_label):
 
-        # Write the data from the DataFrame to the table named in table_name agument.
-        dataframe.columns = [column.upper() for column in dataframe.columns]
+        dataframe.columns = dataframe.columns.str.upper()
 
         id = self.get_last_id(table_name=table_name)
         
         dataframe.index = range(id+1, len(dataframe)+id+1)
-        
+
         # insert df into snowflake database tables.
         dataframe.to_sql(table_name, self.engine, index=True, index_label=index_label, method=pd_writer, if_exists="append")
 

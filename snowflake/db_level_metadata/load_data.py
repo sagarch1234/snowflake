@@ -32,13 +32,12 @@ class LoadData():
     def dump_data(self, table_name, dataframe, index_label):
 
         # Write the data from the DataFrame to the table named in table_name agument.
-        dataframe.columns = [column.upper() for column in dataframe.columns]
 
+        dataframe.columns = [column.upper() for column in dataframe.columns]
+        
         id = self.get_last_id(table_name=table_name)
         
         dataframe.index = range(id+1, len(dataframe)+id+1)
-
-        print(dataframe)
         
         # insert df into snowflake database tables.
         dataframe.to_sql(table_name, self.engine, index=True, index_label=index_label, method=pd_writer, if_exists="append")

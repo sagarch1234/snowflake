@@ -63,21 +63,21 @@ class CollectParametersData():
         elif table_name == constants.TABLE_DB_LEVEL_PARAMETERS:
 
             instance_databases_df = self.get_data.get_data(sql=constants.SQL_DATABASES, database_name = None, database_schema = None)
-            
+                        
             final_db_level_paramaters_df = pd.DataFrame()
             
-            for database in instance_databases_df['name']:
+            for database in instance_databases_df['NAME']:
 
                 sql = sql.format(database)
 
                 db_level_parameters_df = self.get_data.get_data(sql=sql, database_name = database, database_schema = None)
 
-                db_level_parameters_df['database_name'] = database
+                db_level_parameters_df['DATABASES_NAME'] = database
                 
                 final_db_level_paramaters_df.append(db_level_parameters_df)
-
+            
             associated_data_df = self.associate.associate_data(final_db_level_paramaters_df)
-
+                
         elif table_name == constants.TABLE_SCHEMA_PARAMETERS:
 
             final_schema_parameters_df = pd.DataFrame()
@@ -86,20 +86,20 @@ class CollectParametersData():
             
             instance_databases_df = self.get_data.get_data(sql=constants.SQL_DATABASES, database_name = None, database_schema = None)
 
-            for database in instance_databases_df['name']:
+            for database in instance_databases_df['NAME']:
                                 
                 sql_query = constants.SQL_SCHEMAS_IN_DATABASES.format(database)
                 
                 instance_schemas_df = self.get_data.get_data(sql=sql_query, database_name = database, database_schema = None)
                 
-                for schema in instance_schemas_df['name']:
+                for schema in instance_schemas_df['NAME']:
 
                     sql = sql.format(database, schema)
                 
                     schema_parameters_df = self.get_data.get_data(sql=sql, database_name = database, database_schema = schema)
                     
-                    schema_parameters_df['schema_name'] = schema
-                    schema_parameters_df['database_name'] = database
+                    schema_parameters_df['SCHEMA'] = schema
+                    schema_parameters_df['DATABASE_NAME'] = database
                     
                     final_schema_parameters_df = final_schema_parameters_df.append(schema_parameters_df)
                     

@@ -1,5 +1,8 @@
 import jwt
 import datetime
+import sys
+
+sys.path.insert(1,  '/snowflake-backend/snowflake/instance_connector')
 
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import Group
@@ -12,7 +15,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 
-from snowflake.instance_connector.connection import SnowflakeConnector, CloseSnowflakeConnection, DisposeEngine
+from connection import SnowflakeConnector, CloseSnowflakeConnection, DisposeEngine
 
 from snowflake_instances.serializers import InstancesSerializer, AccountTypeSerializer
 from snowflake_instances.models import Instances, InstanceAccountType

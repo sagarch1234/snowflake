@@ -68,12 +68,12 @@ class CollectMetaData():
         load_data = self.load_data.dump_data(table_name=table_name, dataframe=associated_df, index_label=index_label)
 
 
-# obj = CollectMetaData(account='lt90919.us-central1.gcp', user='shivkant', password='Shiva@123!!*', user_id=2, company_id=4, event="AUDITS", instance_id=4)
+obj = CollectMetaData(account='lt90919.us-central1.gcp', user='shivkant', password='Shiva@123!!*', user_id=2, company_id=4, event="AUDITS", instance_id=4)
 # obj1 = obj.collect_process_dump(sql=f'SELECT * FROM SNOWFLAKE.INFORMATION_SCHEMA.APPLICABLE_ROLES;', table_name='info_schema_applicable_roles')
 
-# for queries_tables in queries_tables_list:
+for queries_tables in queries_tables_list:
 
-#     print(">>>>>>>>>>",queries_tables)
+    print(">>>>>>>>>>",queries_tables)
     
-#     obj1 = obj.collect_process_dump(sql=queries_tables[0], table_name=queries_tables[1], index_label=queries_tables[2])
+    obj1 = obj.collect_process_dump(sql=queries_tables[0], table_name=queries_tables[1], index_label=queries_tables[2])
 

@@ -24,5 +24,7 @@ class GetCustomerData():
         else:
             sql = sql.format(database_name, database_schema)
             df = pd.read_sql_query(sql, self.engine)
-        
+
+        df.columns = map(str.upper, df.columns)
+
         return df
