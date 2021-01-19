@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'advertisement',
     'drf_yasg',
     'snowflake_instances',
-    'storages'
+    'storages',
+    'rule_engine'
 ]
 
 MIDDLEWARE = [

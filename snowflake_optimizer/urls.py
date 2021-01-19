@@ -65,4 +65,6 @@ urlpatterns = [
     #redirect to snowflake-instances app where user can connect snowflake instances with our system and can also perform operations like test connection, update connection etc.
     path('api/snowflake-instances/', include('snowflake_instances.urls')),
 
+    path('api/rule-engine/', include('rule_engine.urls'))
+
 ]
