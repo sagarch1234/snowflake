@@ -1,7 +1,25 @@
 from rest_framework import serializers
 from django.db import transaction
 
-from rule_engine.models import OneQueryRules, OneQueryRuleArticles, IgnoreRules, Audits, AuditsResults
+from rule_engine.models import OneQueryRules, OneQueryRuleArticles, IgnoreRules, Audits, AuditsResults, DoNotNotifyUsers
+
+
+class DoNotNotifyUsersSerializer(serializers.ModelSerializer):
+    '''
+    '''
+    class Meta:
+        model = DoNotNotifyUsers
+        fields = ['id', 'audit', 'user']
+        extra_kwargs = {
+            'audit' : {
+                'required' : True,
+                'allow_null' : False,
+            },
+            'user' : {
+                'required' : True,
+                'allow_null' : False,
+            }
+        }
 
 
 class AuditsResultsSerializer(serializers.ModelSerializer):

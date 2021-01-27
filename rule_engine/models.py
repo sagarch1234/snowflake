@@ -80,12 +80,19 @@ class DoNotNotifyUsers(BaseModel):
     audit = models.ForeignKey(Audits, on_delete=models.CASCADE, blank=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
 
+    class Meta:
+        unique_together = (('audit', 'user'),)
+
     def __str__(self):
 
-        return 'Do Not NotifyUsers Object ({})'.format(self.id)
+        return 'Do Not Notify Users Object ({})'.format(self.id)
 
 
-class AuditStatus(BaseModel):
+class AuditStatus(models.Model):
     '''
     '''
     status = models.CharField(max_length=50, blank=False, null=False)
+
+    def __str__(self):
+
+        return 'Audit status Object ({})'.format(self.id)

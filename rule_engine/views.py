@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from rule_engine.serializers import OneQueryRuleSerializer, AuditsSerializer, AuditsResultsSerializer, IgnoreRulesSerializer
+from rule_engine.serializers import OneQueryRuleSerializer, AuditsSerializer, AuditsResultsSerializer, IgnoreRulesSerializer, DoNotNotifyUsersSerializer
 from rule_engine.models import OneQueryRules, Audits, AuditsResults, IgnoreRules
 
 from system_users.permissions import WhitelistSuperAdmin
@@ -198,7 +198,27 @@ class DoNotNotifyUsersView(APIView):
         '''
         '''
         
-        return Response("Done")
+        serialized_data = DoNotNotifyUsersSerializer(data=request.data)
+
+        if serialized_data.is_valid():
+            
+            try:
+                
+                created_object = serialized_data.save()
+
+            except Exception as identifier:
+                
+                return Response(identifier)
+            
+
+        else:
+            
+            return Response(serialized_data.errors)
+
+        return Response({
+            "message" : "User added to do not notifity list for this Audit.",
+            "status" : status.HTTP_200_OK
+        })
 
 
 class RunAuditView(APIView):

@@ -54,9 +54,9 @@ RUN pip install -U "celery[redis]"
 RUN pip install snowflake-connector-python[pandas]
 
 
-RUN python manage.py makemigrations &&\
-    python manage.py migrate
+# RUN python manage.py makemigrations &&\
+#     python manage.py migrate
 
-RUN python manage.py loaddata usergroup account_type audit_status
+# RUN python manage.py loaddata usergroup account_type audit_status
 
 # CMD [ "python", "manage.py", "runserver", "0.0.0.0:80"]
