@@ -1,7 +1,68 @@
 from rest_framework import serializers
 from django.db import transaction
 
-from rule_engine.models import OneQueryRules, OneQueryRuleArticles
+from rule_engine.models import OneQueryRules, OneQueryRuleArticles, IgnoreRules, Audits, AuditsResults
+
+
+class AuditsResultsSerializer(serializers.ModelSerializer):
+    '''
+    '''
+
+    class Meta:
+        model = AuditsResults
+        fields = ['id', 'recommendation', 'dataset']
+        extra_kwargs = {
+            'recommendation' : {
+                'required' : True,
+                'allow_null' : False,
+                'allow_blank' : False
+            },
+            'dataset' : {
+                'required' : True,
+                'allow_null' : False,
+                'allow_blank' : False
+            }
+        }
+
+
+class AuditsSerializer(serializers.ModelSerializer):
+    '''
+    '''
+
+    class Meta:
+        model = Audits
+        fields = ['id', 'status']
+        extra_kwargs = {
+            'status' : {
+                'required' : True,
+                'allow_null' : False,
+                'allow_blank' : False
+            }
+        }
+
+
+class IgnoreRulesSerializer(serializers.ModelSerializer):
+    '''
+    '''
+
+    class Meta:
+
+        model = IgnoreRules
+        fields = ['id', 'one_query_rule', 'instance', 'user']
+        extra_kwargs = {
+            'one_query_rule' : {
+                'required' : True,
+                'allow_null' : False,
+            },
+            'instance' : {
+                'required' : True,
+                'allow_null' : False,
+            },
+            'user' : {
+                'required' : False,
+                'allow_null' : False,
+            }
+        }
 
 
 class OneQueryRuleArticlesSerializer(serializers.ModelSerializer):

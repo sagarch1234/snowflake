@@ -1,0 +1,30 @@
+[
+    {
+        "model": "rule_engine.AuditStatus",
+        "pk": 1,
+        "fields": {
+            "status": "Connecting"
+        }
+    },
+    {
+        "model": "rule_engine.AuditStatus",
+        "pk": 2,
+        "fields": {
+            "status": "Connected"
+        }
+    },
+    {
+        "model": "rule_engine.AuditStatus",
+        "pk": 3,
+        "fields": {
+            "status": "Applying Rules"
+        }
+    },
+    {
+        "model": "rule_engine.AuditStatus",
+        "pk": 4,
+        "fields": {
+            "status": "Completed"
+        }
+    }
+]
