@@ -66,7 +66,17 @@ class CreateOneQueryRuleView(APIView):
 
         if serialized_data.is_valid():
 
-            created_rule = serialized_data.save()
+            try:
+                
+                created_rule = serialized_data.save()
+
+            except Exception as identifier:
+
+                return Response({
+                    "error" : str(identifier),
+                    "status" : status.HTTP_400_BAD_REQUEST
+                    })
+            
 
             return Response({
                 "message":"A new one query rule is registered and enabled for the audits.",
@@ -136,26 +146,33 @@ class EnableDisableOneQueryRuleView(APIView):
 
 class AddRuleToIgnoreListView(APIView):
     '''
-    Need to test.
     '''
+    
+    permission_classes = [IsAuthenticated & IsInstanceAccessible]
+
     def post(self, request, format=None):
         '''
         '''
+        
+        request.data['instance'] = request.query_params['instance_id']
 
-        serialized_data = IgnoreRulesSerializer(data=IgnoreRules)
+        serialized_data = IgnoreRulesSerializer(data=request.data)
 
         if serialized_data.is_valid():
 
-            serialized_data.validated_data['user'] = request.user
-            
             try:
                 
+                serialized_data.validated_data['user'] = request.user
+
                 ignored_rule_instance = serialized_data.save()
 
             except Exception as identifier:
-            
-                return Response(identifier)
 
+                return Response({
+                    "error" : str(identifier),
+                    "status" : status.HTTP_400_BAD_REQUEST
+                    })
+            
             return Response({
                 "message" : "Rule added to ignore list.",
                 "status" : status.HTTP_200_OK
@@ -168,8 +185,10 @@ class AddRuleToIgnoreListView(APIView):
 
 class RemoveRuleFromIgnoreListView(APIView):
     '''
-    Need to test.
     '''
+
+    permission_classes = [IsAuthenticated & IsInstanceAccessible]
+
     def delete(self, request, format=None):
         '''
         '''
@@ -179,7 +198,10 @@ class RemoveRuleFromIgnoreListView(APIView):
 
         except Exception as identifier:
 
-            return Response(identifier)
+            return Response({
+                    "error" : str(identifier),
+                    "status" : status.HTTP_400_BAD_REQUEST
+                    })
 
         ignored_rule_object.delete()
         
@@ -208,9 +230,11 @@ class DoNotNotifyUsersView(APIView):
 
             except Exception as identifier:
                 
-                return Response(identifier)
+                return Response({
+                    "error" : str(identifier),
+                    "status" : status.HTTP_400_BAD_REQUEST
+                    })
             
-
         else:
             
             return Response(serialized_data.errors)
@@ -224,4 +248,46 @@ class DoNotNotifyUsersView(APIView):
 class RunAuditView(APIView):
     '''
     '''
-    pass
+    def post(self, request, format=None):
+
+        # get instance_id in query_params.
+        # call get_instance method if instance not found then return appropriate message.
+        # generate the 'audit_id' with status connecting.
+        # use the sf_instance to get the sf connection credentials and try to connect to sf_instance. If failed to connect then update status to connection error. store the connection error in db. 
+        # get the final list of rules. 
+        # apply each rule and prepare the list of all the passed and failed rules (with recommendation)
+        
+        pass
+
+
+class UpdateRuleView(APIView):
+    '''
+    '''
+    def put(self, request, format=None):
+        '''
+        '''
+        instance = get_object_or_404(OneQueryRules, pk=request.query_params['rule_id'])
+
+        serialized_data = OneQueryRuleSerializer(instance, data=request.data, partial=True)
+        
+        if serialized_data.is_valid():
+
+            try:
+                
+                updated_instance = serialized_data.save()
+
+            except Exception as identifier:
+                
+                return Response({
+                    "error" : str(identifier),
+                    "status" : status.HTTP_400_BAD_REQUEST
+                    })
+
+        else:
+
+            return Response(serialized_data.errors)
+
+        return Response({
+            "message" : "Rule updated.",
+            "status" : status.HTTP_200_OK
+        })

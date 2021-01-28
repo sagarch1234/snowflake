@@ -32,7 +32,6 @@ from snowflake_optimizer.settings import SECRET_KEY
 from snowflake_optimizer.celery import app
 
 
-
 class ListAccountTypeView(ListAPIView):
     '''
     '''

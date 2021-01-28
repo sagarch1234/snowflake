@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.db import transaction
 
 from rule_engine.models import OneQueryRules, OneQueryRuleArticles, IgnoreRules, Audits, AuditsResults, DoNotNotifyUsers
-
+from snowflake_instances.models import Instances
 
 class DoNotNotifyUsersSerializer(serializers.ModelSerializer):
     '''
@@ -68,6 +68,10 @@ class IgnoreRulesSerializer(serializers.ModelSerializer):
         model = IgnoreRules
         fields = ['id', 'one_query_rule', 'instance', 'user']
         extra_kwargs = {
+            'id' : {
+                'required' : False,
+                'read_only' : True,
+            },
             'one_query_rule' : {
                 'required' : True,
                 'allow_null' : False,
@@ -171,3 +175,38 @@ class OneQueryRuleSerializer(serializers.ModelSerializer):
             article_id = OneQueryRuleArticles.objects.create(one_query_rule=rule, **article)
         
         return rule
+        
+    @transaction.atomic
+    def update(self, instance, validated_data):
+
+        if "one_query_rule_related_articles" in validated_data:
+
+            articles = validated_data.pop('one_query_rule_related_articles')
+            # print(articles)
+            for article in articles:
+                print(article)
+                try:
+
+                    article_instance = OneQueryRuleArticles.objects.get(id=article['id'])
+                
+                except Exception as identifier:
+
+                    print(str(identifier))
+                
+                article_instance.article_link = article['article_link']
+
+                article_instance.save()
+
+        instance.rule_name = validated_data.get('rule_name', instance.rule_name)
+        instance.rule_description = validated_data.get('rule_description', instance.rule_description)
+        instance.rule_evaluation_query = validated_data.get('rule_evaluation_query', instance.rule_evaluation_query)
+        instance.rule_evaluation_equation = validated_data.get('rule_evaluation_equation', instance.rule_evaluation_equation)
+        instance.failed_if = validated_data.get('failed_if', instance.failed_if)
+        instance.rule_recommendation = validated_data.get('rule_recommendation', instance.rule_recommendation)
+        instance.rule_dataset_query = validated_data.get('rule_dataset_query', instance.rule_dataset_query)
+        instance.is_enabled = validated_data.get('is_enabled', instance.is_enabled)
+
+        instance.save()
+        
+        return instance
+

@@ -22,6 +22,22 @@ class OneQueryRules(BaseModel):
         return 'One Query Rules Object ({})'.format(self.id)
 
 
+class AppliedRule(BaseModel):
+    '''
+    '''
+    rule_name = models.CharField(max_length=255, unique=True, null=False, blank=False)
+    rule_description = models.TextField(blank=True, null=True)
+    rule_evaluation_query = models.TextField(blank=False, null=False)
+    rule_evaluation_equation = models.TextField(blank=False, null=False)
+    failed_if = models.BooleanField(blank=False, null=False)
+    rule_recommendation = models.TextField(blank=False, null=False)
+    rule_dataset_query = models.TextField(blank=False, null=False)
+    is_enabled = models.BooleanField(default=True, blank=False, null=False)
+
+    def __str__(self):
+
+        return 'One Query Rules Object ({})'.format(self.id)
+
 
 class OneQueryRuleArticles(BaseModel):
     '''

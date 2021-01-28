@@ -1,6 +1,10 @@
 from django.urls import path, include
 
-from rule_engine.views import CreateOneQueryRuleView, ListOneQueryRuleView, EnableDisableOneQueryRuleView, AddRuleToIgnoreListView, RemoveRuleFromIgnoreListView, RunAuditView, ListAuditsView, ListAuditResultsView, DoNotNotifyUsersView
+from rule_engine.views import ( 
+CreateOneQueryRuleView, ListOneQueryRuleView, EnableDisableOneQueryRuleView, AddRuleToIgnoreListView,
+RemoveRuleFromIgnoreListView, RunAuditView, ListAuditsView, ListAuditResultsView, DoNotNotifyUsersView, 
+UpdateRuleView
+)
 
 urlpatterns = [
     path('create-one-query-rule/', CreateOneQueryRuleView.as_view()),
@@ -11,5 +15,6 @@ urlpatterns = [
     path('run-audit/', RunAuditView.as_view()),
     path('list-audits/', ListAuditsView.as_view()),
     path('list-audit-results/', ListAuditResultsView.as_view()),
-    path('do-not-notify-users/', DoNotNotifyUsersView.as_view())
+    path('do-not-notify-users/', DoNotNotifyUsersView.as_view()),
+    path('update-rule/', UpdateRuleView.as_view())
 ]
