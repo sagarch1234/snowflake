@@ -26,5 +26,12 @@
         "fields": {
             "status": "Completed"
         }
+    },
+    {
+        "model": "rule_engine.AuditStatus",
+        "pk": 5,
+        "fields": {
+            "status": "Connection Error"
+        }
     }
 ]

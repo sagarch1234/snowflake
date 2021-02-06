@@ -3,7 +3,7 @@ from django.urls import path, include
 from rule_engine.views import ( 
 CreateOneQueryRuleView, ListOneQueryRuleView, EnableDisableOneQueryRuleView, AddRuleToIgnoreListView,
 RemoveRuleFromIgnoreListView, RunAuditView, ListAuditsView, ListAuditResultsView, DoNotNotifyUsersView, 
-UpdateRuleView
+UpdateRuleView, RemoveDoNotNotifyUsersView
 )
 
 urlpatterns = [
@@ -16,5 +16,6 @@ urlpatterns = [
     path('list-audits/', ListAuditsView.as_view()),
     path('list-audit-results/', ListAuditResultsView.as_view()),
     path('do-not-notify-users/', DoNotNotifyUsersView.as_view()),
-    path('update-rule/', UpdateRuleView.as_view())
+    path('update-rule/', UpdateRuleView.as_view()),
+    path('remove-user-from-do-not-notify-list/', RemoveDoNotNotifyUsersView.as_view()),
 ]

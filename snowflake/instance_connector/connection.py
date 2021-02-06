@@ -40,7 +40,8 @@ class SnowflakeConnector():
 
             error = {
                 "error_message" : "Failed to connect to snowflake instance. Please very your credentials.",
-                "status" : status.HTTP_400_BAD_REQUEST
+                "status" : status.HTTP_400_BAD_REQUEST,
+                "error" : str(error_message)
             }
 
             return error

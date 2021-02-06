@@ -1,17 +1,34 @@
 from rest_framework import serializers
 from django.db import transaction
 
-from rule_engine.models import OneQueryRules, OneQueryRuleArticles, IgnoreRules, Audits, AuditsResults, DoNotNotifyUsers
+from rule_engine.models import OneQueryRules, OneQueryRuleArticles, IgnoreRules, Audits, AuditsResults, DoNotNotifyUsers, ApplicableRule, ApplicableRuleArticles
 from snowflake_instances.models import Instances
+
+
+class ApplicableRuleArticlesSerializer(serializers.ModelSerializer):
+    '''
+    '''
+    class Meta:
+        model = ApplicableRuleArticles
+        fields = ['id', 'applicable_rule', 'article_link']
+
+
+class ApplicableRuleSerializer(serializers.ModelSerializer):
+    '''
+    '''
+    class Meta:
+        model = ApplicableRuleArticles
+        fields = ['id', 'audit', 'rule_name', 'rule_description', 'rule_evaluation_query', 'rule_evaluation_equation', 'failed_if', 'rule_recommendation', 'rule_dataset_query']
+
 
 class DoNotNotifyUsersSerializer(serializers.ModelSerializer):
     '''
     '''
     class Meta:
         model = DoNotNotifyUsers
-        fields = ['id', 'audit', 'user']
+        fields = ['id', 'instance', 'user']
         extra_kwargs = {
-            'audit' : {
+            'instance' : {
                 'required' : True,
                 'allow_null' : False,
             },
@@ -49,12 +66,15 @@ class AuditsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Audits
-        fields = ['id', 'status']
+        fields = ['id', 'status', 'issue', 'user']
         extra_kwargs = {
             'status' : {
                 'required' : True,
                 'allow_null' : False,
-                'allow_blank' : False
+            },
+            'user' : {
+                'required' : True,
+                'allow_null' : False,
             }
         }
 
@@ -177,14 +197,14 @@ class OneQueryRuleSerializer(serializers.ModelSerializer):
         return rule
         
     @transaction.atomic
-    def update(self, instance, validated_data):
+    def update(self, instance, validated_data, articles=None):
 
-        if "one_query_rule_related_articles" in validated_data:
+        articles = self.context['articles']
 
-            articles = validated_data.pop('one_query_rule_related_articles')
-            # print(articles)
+        if not articles is None:
+
             for article in articles:
-                print(article)
+
                 try:
 
                     article_instance = OneQueryRuleArticles.objects.get(id=article['id'])
