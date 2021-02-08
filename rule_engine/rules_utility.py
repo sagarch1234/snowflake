@@ -153,6 +153,8 @@ def store_applicable_rules_and_articles(applicable_rules, audit_id):
         else:
 
             print(serialized_data.errors)
+            
+    return stored_applicable_rules
 
 
 def execute_appicable_rules(applicable_rules):
