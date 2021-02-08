@@ -7,18 +7,39 @@ from snowflake_instances.models import Instances
 
 class ApplicableRuleArticlesSerializer(serializers.ModelSerializer):
     '''
-    '''
+    ''' 
     class Meta:
         model = ApplicableRuleArticles
         fields = ['id', 'applicable_rule', 'article_link']
+        extra_kwargs = {
+            'applicable_rule' : {
+                'required' : False
+            }
+        }
 
 
 class ApplicableRuleSerializer(serializers.ModelSerializer):
     '''
     '''
+    one_query_rule_related_articles = ApplicableRuleArticlesSerializer(many=True)
     class Meta:
+        
         model = ApplicableRule
-        fields = ['id', 'audit', 'rule_name', 'rule_description', 'rule_evaluation_query', 'rule_evaluation_equation', 'failed_if', 'rule_recommendation', 'rule_dataset_query']
+        fields = ['id', 'audit', 'rule_name', 'rule_description', 'rule_evaluation_query', 'rule_evaluation_equation', 'failed_if', 'rule_recommendation', 'rule_dataset_query', 'one_query_rule_related_articles']
+    
+    def create(self, validated_data):
+
+        applicable_article = validated_data.pop('one_query_rule_related_articles')
+
+        obj = ApplicableRule.objects.create(**validated_data)
+
+        for each in applicable_article:
+
+            article_obj = ApplicableRuleArticles.objects.create(applicable_rule=obj, article_link=each['article_link'])
+        
+        return obj
+
+        
 
 
 class DoNotNotifyUsersSerializer(serializers.ModelSerializer):

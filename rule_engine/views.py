@@ -362,9 +362,8 @@ class RunAuditView(APIView):
         
         mail_list = mail_to_users(customer_instance.id, customer_instance.company.id)
 
-        rules_to_store = store_applicable_rules_and_articles(rule_list, audit_instance.id)
+        rules_stored = store_applicable_rules_and_articles(rule_list, audit_instance.id)
 
-        print(rules_to_store)
         
         return Response({
             "message" : "This might take a while. We will notify you via mail.",
