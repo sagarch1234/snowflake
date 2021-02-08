@@ -23,10 +23,11 @@ class ApplicableRuleSerializer(serializers.ModelSerializer):
     '''
     one_query_rule_related_articles = ApplicableRuleArticlesSerializer(many=True)
     class Meta:
-        
+
         model = ApplicableRule
         fields = ['id', 'audit', 'rule_name', 'rule_description', 'rule_evaluation_query', 'rule_evaluation_equation', 'failed_if', 'rule_recommendation', 'rule_dataset_query', 'one_query_rule_related_articles']
     
+    @transaction.atomic
     def create(self, validated_data):
 
         applicable_article = validated_data.pop('one_query_rule_related_articles')
