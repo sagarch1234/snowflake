@@ -17,7 +17,7 @@ class ApplicableRuleSerializer(serializers.ModelSerializer):
     '''
     '''
     class Meta:
-        model = ApplicableRuleArticles
+        model = ApplicableRule
         fields = ['id', 'audit', 'rule_name', 'rule_description', 'rule_evaluation_query', 'rule_evaluation_equation', 'failed_if', 'rule_recommendation', 'rule_dataset_query']
 
 

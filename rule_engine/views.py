@@ -16,7 +16,7 @@ from rule_engine.models import OneQueryRules, Audits, AuditsResults, IgnoreRules
 from system_users.permissions import WhitelistOrganisationAdmin, WhitelistOrganisationMember, WhitelistSuperAdmin
 from snowflake_instances.permissions import IsInstanceAccessible
 
-from rule_engine.rules_utility import get_instance, connect_to_customer_sf_instance, prepare_rule_set
+from rule_engine.rules_utility import get_instance, connect_to_customer_sf_instance, prepare_rule_set, mail_to_users, store_applicable_rules_and_articles
 
 
 class ListOneQueryRuleView(ListAPIView):    
@@ -359,6 +359,12 @@ class RunAuditView(APIView):
 
         connection = connect_to_customer_sf_instance(user=customer_instance.instance_user , password=customer_instance.instance_password , account=customer_instance.instance_account , audit_id=audit_instance.id)
         rule_list = prepare_rule_set(customer_instance.id)
+        
+        mail_list = mail_to_users(customer_instance.id, customer_instance.company.id)
+
+        rules_to_store = store_applicable_rules_and_articles(rule_list, audit_instance.id)
+
+        print(rules_to_store)
         
         return Response({
             "message" : "This might take a while. We will notify you via mail.",

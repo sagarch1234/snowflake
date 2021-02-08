@@ -107,7 +107,7 @@ class ApplicableRule(BaseModel):
 
     def __str__(self):
 
-        return 'One Query Rules Object ({})'.format(self.id)
+        return 'Applicable Rules Object ({})'.format(self.id)
 
 
 class ApplicableRuleArticles(BaseModel):

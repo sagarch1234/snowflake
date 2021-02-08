@@ -3,11 +3,15 @@ from snowflake_instances.models import Instances
 from snowflake.instance_connector.connection import SnowflakeConnector
 
 from rule_engine.models import Audits, AuditStatus, OneQueryRules, IgnoreRules, DoNotNotifyUsers, ApplicableRule, AuditRecommendedArticles
-from rule_engine.serializers import OneQueryRuleSerializer
+from rule_engine.serializers import OneQueryRuleSerializer, ApplicableRuleSerializer
 
 from snowflake_instances.models import Instances
 
 from system_users.models import User
+
+from rest_framework.parsers import JSONParser
+
+from django.db import transaction
 
 import status, json
 
@@ -88,8 +92,8 @@ def prepare_rule_set(instance):
 def mail_to_users(instance_id, company_id):
     '''
     '''
-    all_users = User.objects.fileter(company = company_id, is_active=True)
-    ignore_user = DoNotNotifyUsers.object.filter(instance = instance_id)
+    all_users = User.objects.filter(company = company_id, is_active=True)
+    ignore_user = DoNotNotifyUsers.objects.filter(instance = instance_id)
 
     final_all_users = []
     final_ignore_users =[]
@@ -97,7 +101,7 @@ def mail_to_users(instance_id, company_id):
     for user in all_users:
 
         user_email = user.email
-        final_all_users.append(user_id)
+        final_all_users.append(user_email)
     
     for obj in ignore_user:
 
@@ -107,6 +111,7 @@ def mail_to_users(instance_id, company_id):
     return list(set(final_all_users).symmetric_difference(set(final_ignore_users)))
 
 
+@transaction.atomic
 def store_applicable_rules_and_articles(applicable_rules, audit_id):
     '''
     This method will store the applicable rules for the audit in the table AppliedRules.
@@ -119,9 +124,25 @@ def store_applicable_rules_and_articles(applicable_rules, audit_id):
     rule_object = OneQueryRules.objects.filter(id__in=applicable_rules)
 
     #serialize rule object
-    applicable_rule_json = OneQueryRuleSerializer(rule_object, many=True)
+    applicable_rules = OneQueryRuleSerializer(rule_object, many=True)
 
-    print(applicable_rule_json)
+    rules_to_store = []
+
+    for each_rule in applicable_rules.data:
+        rule_to_json = json.dumps(each_rule)
+        rule_to_json = json.loads(rule_to_json)
+        rule_to_json['audit'] = audit_object
+        rules_to_store.append(rule_to_json)
+    
+    rule_obj_list = []
+
+    for each_rule in rules_to_store:
+    
+        rule_obj_list.append(ApplicableRule(audit = each_rule['audit'], rule_name = each_rule['rule_name'], rule_description = each_rule['rule_description'], rule_evaluation_query = each_rule['rule_evaluation_query'], rule_evaluation_equation= each_rule['rule_evaluation_equation'], failed_if= each_rule['failed_if'], rule_recommendation= each_rule['rule_recommendation'], rule_dataset_query= each_rule['rule_dataset_query']))
+
+    rules_saved = ApplicableRule.objects.bulk_create(rule_obj_list)
+
+    return rules_saved
 
 
 def execute_appicable_rules(applicable_rules):
