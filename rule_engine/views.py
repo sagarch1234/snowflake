@@ -358,7 +358,6 @@ class RunAuditView(APIView):
         audit_instance = Audits.objects.create(instance = customer_instance, status=audit_status_list[0], user=request.user)
 
         connection = connect_to_customer_sf_instance(user=customer_instance.instance_user , password=customer_instance.instance_password , account=customer_instance.instance_account , audit_id=audit_instance.id)
-
         rule_list = prepare_rule_set(customer_instance.id)
         
         return Response({

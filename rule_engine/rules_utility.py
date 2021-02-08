@@ -76,8 +76,8 @@ def prepare_rule_set(instance):
         final_all_rule.append(rule_id)
 
     
-    for rule in final_ignore_rule:
-
+    for rule in ignore_rule:
+        
         rule_id = rule.one_query_rule.id
 
         final_ignore_rule.append(rule_id)
