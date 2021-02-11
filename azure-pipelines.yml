@@ -28,4 +28,6 @@ stages:
         tags: |
           $(tag)
 - stage: Deploy
-name: DeploySnowflake
+name: snowflakebackend
+  jobs:Deploy
+
